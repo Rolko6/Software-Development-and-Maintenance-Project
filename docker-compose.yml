@@ -1,0 +1,27 @@
+services:
+
+  cloud:
+    build: ./cloud
+    ports:
+      - "8001:8001"
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "8000:8000"
+
+    environment:
+      CLOUD_URL: http://cloud:8001/data
+
+    depends_on:
+      - cloud
+
+  device:
+    build: ./device
+
+    environment:
+      GATEWAY_URL: http://gateway:8000/device-data
+      DEVICE_ID: legacy-sensor-001
+
+    depends_on:
+      - gateway
