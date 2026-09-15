@@ -104,7 +104,36 @@ exposed series count bounded regardless of fleet size:
 import os
 import platform
 
-from prometheus_client import Counter, Enum, Histogram, Info
+from prometheus_client import REGISTRY, Counter, Enum, Histogram, Info
+
+# Importing this module twice in one process registers every collector twice,
+# and prometheus_client rejects that as "Duplicated timeseries". That never
+# happens in a running container -- each service imports `app.metrics` once --
+# but the test harness loads each service package under an alias so that the
+# gateway's and the cloud's identically-named `app` packages can coexist, and
+# `uvicorn --reload` can do the same. Reusing the already-registered collector
+# keeps this module safe to import more than once without weakening anything:
+# in a real process the fallback is never taken.
+def _reusing(factory):
+    def build(name, *args, **kwargs):
+        try:
+            return factory(name, *args, **kwargs)
+        except ValueError:
+            existing = REGISTRY._names_to_collectors.get(name)
+
+            if existing is None:
+                raise
+
+            return existing
+
+    return build
+
+
+Counter = _reusing(Counter)
+Histogram = _reusing(Histogram)
+Enum = _reusing(Enum)
+Info = _reusing(Info)
+
 
 # Bucket boundaries are seconds. Both services run over loopback (bare
 # uvicorn locally, container-to-container on the Compose network), so

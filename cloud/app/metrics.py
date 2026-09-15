@@ -77,7 +77,37 @@ per-session label is used anywhere in this module:
 import os
 import platform
 
-from prometheus_client import Counter, Enum, Gauge, Histogram, Info, make_asgi_app
+from prometheus_client import REGISTRY, Counter, Enum, Gauge, Histogram, Info, make_asgi_app
+
+# Importing this module twice in one process registers every collector twice,
+# and prometheus_client rejects that as "Duplicated timeseries". That never
+# happens in a running container -- each service imports `app.metrics` once --
+# but the test harness loads each service package under an alias so that the
+# gateway's and the cloud's identically-named `app` packages can coexist, and
+# `uvicorn --reload` can do the same. Reusing the already-registered collector
+# keeps this module safe to import more than once without weakening anything:
+# in a real process the fallback is never taken.
+def _reusing(factory):
+    def build(name, *args, **kwargs):
+        try:
+            return factory(name, *args, **kwargs)
+        except ValueError:
+            existing = REGISTRY._names_to_collectors.get(name)
+
+            if existing is None:
+                raise
+
+            return existing
+
+    return build
+
+
+Counter = _reusing(Counter)
+Gauge = _reusing(Gauge)
+Histogram = _reusing(Histogram)
+Enum = _reusing(Enum)
+Info = _reusing(Info)
+
 
 # Same rationale as the gateway's buckets (see gateway/app/metrics.py):
 # loopback/Compose-network hops are normally sub-10ms; the range is

@@ -1,5 +1,7 @@
 # Evaluation method: plaintext vs. secured latency — 2026-09-15
 
+> **Superseded in part.** The Docker daemon was unavailable while this record was produced and was started later the same day, so the container checks listed here as not run were executed. See the [integration record](2026-09-15-integration.md).
+
 Scope: Work Package 5's comparison requirement ("baseline and secured
 measurements use comparable conditions"). This record defines the
 method and states, explicitly, what has and has not actually been run.

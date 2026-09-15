@@ -1,5 +1,7 @@
 # Reliability validation — 2026-09-15
 
+> **Superseded in part.** The Docker daemon was unavailable while this record was produced and was started later the same day, so the container checks listed here as not run were executed. See the [integration record](2026-09-15-integration.md).
+
 Scope: work package 2, "Test and improve reliability" (see the
 [project plan](../project-plan.md)). This record covers the
 `tests/reliability/` suite added for this task, the five README

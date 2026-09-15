@@ -101,6 +101,42 @@ cost is invisible at this message rate on loopback. It says nothing about
 handshake storms, constrained devices, real networks, or native vs. pure-Python
 implementations.
 
+## Metrics wired and observed moving
+
+The metric definitions were committed before anything incremented them. That left two
+defects: `monitoring/prometheus.yml` scraped a cloud `/metrics/` endpoint the cloud never
+mounted, and `gateway_security_mode` reported `off` while Compose ran `enabled` — a metric
+that actively lied. Both are fixed.
+
+Wiring a metric also exposed a latent shipping bug: `cloud/app/metrics.py` existed but
+`prometheus-client` was never added to `cloud/requirements.txt`, so the cloud container
+crashed at startup with `ModuleNotFoundError: No module named 'prometheus_client'` as soon
+as anything imported it. Added.
+
+Observed against the running stack after real traffic and a real cloud outage:
+
+| Metric | Observed |
+| --- | --- |
+| `cloud /metrics/` | HTTP 200 (was never mounted) |
+| `gateway_security_mode{...="enabled"}` | 1.0 — matches the running configuration |
+| `cloud_security_mode{...="enabled"}` | 1.0 |
+| `gateway_delivery_outcome_total{outcome="forwarded"}` | 6.0 → 12.0 across recovery |
+| `gateway_delivery_outcome_total{outcome="failed_after_retries"}` | 14.0, and flat after recovery |
+| `gateway_cloud_retry_attempts_total` | 48.0 against 20 requests — retries are visible |
+| `gateway_cloud_retries_exhausted_total` | 14.0 |
+| `gateway_request_duration_seconds_count{outcome,security_mode}` | observed on both label sets |
+| `cloud_readings_rejected_total{reason="invalid_device_id"}` | 1.0 |
+| `cloud_readings_rejected_total{reason="invalid_temperature"}` | 1.0 |
+| `cloud_readings_stored_total` / `cloud_stored_readings` | 10.0 / 10.0 |
+| `cloud_request_duration_seconds_count{outcome="stored"/"rejected"}` | observed on both |
+
+`forwarded` rising while `failed_after_retries` stayed flat is the evidence that the gateway
+re-handshaked automatically after the cloud restarted, rather than remaining stuck.
+
+Still not incremented: the handshake, rekey and encrypt/decrypt counters inside
+`gateway/app/crypto/` and `cloud/app/crypto/`. They register and are safe to scrape, but they
+read zero. That is a known, deliberate follow-up, not a claim of completeness.
+
 ## Test suites
 
 | Suite | Result |

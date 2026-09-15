@@ -11,7 +11,7 @@ services:
       # migration needs while the device still speaks plaintext. Flip to
       # "required" only once every producer uses the secure path; flip to
       # "off" to fall back to the pre-ML-KEM behaviour.
-      CLOUD_ML_KEM_MODE: enabled
+      CLOUD_ML_KEM_MODE: ${CLOUD_ML_KEM_MODE:-enabled}
 
       # Pre-shared secret authenticating the ML-KEM handshake in both
       # directions. ML-KEM establishes a shared secret but does not
@@ -45,7 +45,7 @@ services:
       # off | enabled | required. "enabled" and "required" behave identically
       # on the gateway: every reading goes through the secure channel with no
       # plaintext fallback.
-      GATEWAY_ML_KEM_MODE: enabled
+      GATEWAY_ML_KEM_MODE: ${GATEWAY_ML_KEM_MODE:-enabled}
 
       # Must match the cloud's value; see the note above.
       ML_KEM_PSK: ${ML_KEM_PSK:-dev-only-insecure-psk-change-me}

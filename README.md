@@ -183,17 +183,22 @@ docker compose logs cloud | grep -oE '"(GET|POST) /[a-z/]*' | sort | uniq -c | s
 `POST /secure/data` should dominate and plaintext `POST /data` should not appear at all unless
 you sent one yourself.
 
-To prove the legacy path can be closed, switch the cloud to `required`:
+To prove the legacy path can be closed, switch the cloud to `required` and restart just that
+service:
 
 ```bash
-docker compose run --rm -e CLOUD_ML_KEM_MODE=required -d cloud
+CLOUD_ML_KEM_MODE=required docker compose up -d --no-deps cloud
 curl -i -X POST http://localhost:8001/data \
   -H 'Content-Type: application/json' \
   -d '{"device_id":"plain-probe","temperature":20.0}'
 ```
 
 Expected result: HTTP `403`, and the reading is not stored, while readings sent through the
-gateway continue to arrive.
+gateway continue to arrive. Put the cloud back with:
+
+```bash
+docker compose up -d --no-deps cloud
+```
 
 Rolling back is `CLOUD_ML_KEM_MODE=off` and `GATEWAY_ML_KEM_MODE=off`, which restores the
 original plaintext behaviour. The services deliberately do not import the cryptographic code at
@@ -284,8 +289,8 @@ Compose supplies these environment variables to the containers:
 | Gateway | `CLOUD_FORWARD_BACKOFF_SECONDS` | not set | `0.2` (doubles per attempt) |
 | Gateway | `CLOUD_FORWARD_TOTAL_BUDGET_SECONDS` | not set | `4` (ceiling across all attempts) |
 | Cloud | `CLOUD_MAX_STORED_READINGS` | `1000` | `1000` (oldest readings are evicted past this) |
-| Cloud | `CLOUD_ML_KEM_MODE` | `enabled` | `off` (`off` / `enabled` / `required`) |
-| Gateway | `GATEWAY_ML_KEM_MODE` | `enabled` | `off` (`off` / `enabled` / `required`) |
+| Cloud | `CLOUD_ML_KEM_MODE` | `enabled` (overridable from the environment) | `off` (`off` / `enabled` / `required`) |
+| Gateway | `GATEWAY_ML_KEM_MODE` | `enabled` (overridable from the environment) | `off` (`off` / `enabled` / `required`) |
 | Both | `ML_KEM_PSK` | `dev-only-insecure-psk-change-me` | unset (unset means the handshake is **not** authenticated) |
 | Cloud | `CLOUD_ML_KEM_KEY_PATH` | `/keys/ml-kem-key.der` | unset (a fresh key pair each start) |
 | Cloud | `CLOUD_ML_KEM_SESSION_TTL_SECONDS` | `300` | `300` |

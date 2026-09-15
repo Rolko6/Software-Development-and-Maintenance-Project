@@ -6,6 +6,12 @@ import time
 
 import requests
 
+from .metrics import (
+    GATEWAY_CLOUD_REQUEST_DURATION_SECONDS,
+    GATEWAY_CLOUD_RETRIES_EXHAUSTED_TOTAL,
+    GATEWAY_CLOUD_RETRY_ATTEMPTS_TOTAL
+)
+
 
 CLOUD_URL = os.getenv(
     "CLOUD_URL",
@@ -104,6 +110,20 @@ def _send_secure(sensor_data: dict) -> dict:
     return send_secure(sensor_data)
 
 
+def _observe_attempt(started_at: float, outcome: str) -> None:
+    """Record one gateway-to-cloud attempt, not one request.
+
+    A request that succeeds on its third try produces three observations:
+    two failures and one success.
+    """
+    GATEWAY_CLOUD_REQUEST_DURATION_SECONDS.labels(
+        outcome=outcome,
+        security_mode=ML_KEM_MODE if ML_KEM_MODE in (
+            "off", "enabled", "required"
+        ) else "off"
+    ).observe(time.perf_counter() - started_at)
+
+
 def send_to_cloud(sensor_data: dict) -> dict:
     deadline = time.monotonic() + CLOUD_FORWARD_TOTAL_BUDGET_SECONDS
     last_error = None
@@ -115,9 +135,17 @@ def send_to_cloud(sensor_data: dict) -> dict:
 
         attempt_timeout = min(CLOUD_REQUEST_TIMEOUT_SECONDS, remaining)
 
+        GATEWAY_CLOUD_RETRY_ATTEMPTS_TOTAL.inc()
+
+        attempt_started = time.perf_counter()
+
         try:
             if ML_KEM_MODE != "off":
-                return _send_secure(sensor_data)
+                secure_result = _send_secure(sensor_data)
+
+                _observe_attempt(attempt_started, "success")
+
+                return secure_result
 
             response = requests.post(
                 CLOUD_URL,
@@ -126,11 +154,17 @@ def send_to_cloud(sensor_data: dict) -> dict:
             )
 
         except RETRYABLE_EXCEPTIONS as error:
+            _observe_attempt(attempt_started, "failure")
+
             last_error = error
 
         else:
             if response.status_code < 400:
+                _observe_attempt(attempt_started, "success")
+
                 return response.json()
+
+            _observe_attempt(attempt_started, "failure")
 
             if response.status_code < 500:
                 raise CloudRejected(
@@ -152,6 +186,11 @@ def send_to_cloud(sensor_data: dict) -> dict:
                 remaining
             )
             time.sleep(backoff)
+
+    # Every attempt is spent. CLOUD_FORWARD_FAILURES_TOTAL stays a
+    # once-per-request counter and is incremented by the caller in main.py;
+    # this one counts requests that exhausted the whole retry budget.
+    GATEWAY_CLOUD_RETRIES_EXHAUSTED_TOTAL.inc()
 
     raise CloudUnavailable(str(last_error)) from last_error
 

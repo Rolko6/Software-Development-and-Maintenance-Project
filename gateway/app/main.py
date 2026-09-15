@@ -1,4 +1,5 @@
 import logging
+import time
 
 from fastapi import FastAPI, HTTPException
 from prometheus_client import make_asgi_app
@@ -10,9 +11,13 @@ from app.cloud_client import (
     CloudRejected,
     CloudUnavailable
 )
+from app.cloud_client import ML_KEM_MODE
 from app.metrics import (
     DEVICE_MESSAGES_TOTAL,
-    CLOUD_FORWARD_FAILURES_TOTAL
+    CLOUD_FORWARD_FAILURES_TOTAL,
+    GATEWAY_DELIVERY_OUTCOME_TOTAL,
+    GATEWAY_REQUEST_DURATION_SECONDS,
+    GATEWAY_SECURITY_MODE
 )
 
 
@@ -34,6 +39,24 @@ app.mount(
     "/metrics",
     metrics_app
 )
+
+
+# Without this the enum defaults to "off" and would misreport the running
+# configuration -- a metric that lies is worse than no metric.
+SECURITY_MODE = ML_KEM_MODE if ML_KEM_MODE in (
+    "off", "enabled", "required"
+) else "off"
+
+GATEWAY_SECURITY_MODE.state(SECURITY_MODE)
+
+
+def _record(started_at: float, outcome: str) -> None:
+    GATEWAY_DELIVERY_OUTCOME_TOTAL.labels(outcome=outcome).inc()
+
+    GATEWAY_REQUEST_DURATION_SECONDS.labels(
+        outcome=outcome,
+        security_mode=SECURITY_MODE
+    ).observe(time.perf_counter() - started_at)
 
 
 @app.get("/health")
@@ -60,6 +83,8 @@ def ready():
 @app.post("/device-data")
 def receive_device_data(data: SensorData):
 
+    started_at = time.perf_counter()
+
     DEVICE_MESSAGES_TOTAL.inc()
 
     logger.info(
@@ -72,6 +97,8 @@ def receive_device_data(data: SensorData):
             data.model_dump()
         )
 
+        _record(started_at, "forwarded")
+
         return {
             "status": "forwarded",
             "cloud_response": result
@@ -80,6 +107,8 @@ def receive_device_data(data: SensorData):
     except CloudRejected as error:
 
         CLOUD_FORWARD_FAILURES_TOTAL.inc()
+
+        _record(started_at, "rejected_validation")
 
         logger.warning(
             "Cloud rejected reading: %s",
@@ -95,6 +124,8 @@ def receive_device_data(data: SensorData):
 
         CLOUD_FORWARD_FAILURES_TOTAL.inc()
 
+        _record(started_at, "failed_after_retries")
+
         logger.exception(
             "Failed to forward data to cloud"
         )
@@ -107,6 +138,8 @@ def receive_device_data(data: SensorData):
     except Exception as error:
 
         CLOUD_FORWARD_FAILURES_TOTAL.inc()
+
+        _record(started_at, "failed_after_retries")
 
         logger.exception(
             "Unexpected error forwarding data to cloud"

@@ -4,6 +4,12 @@
 import os
 from collections import deque
 
+from .metrics import (
+    CLOUD_READINGS_STORED_TOTAL,
+    CLOUD_STORAGE_EVICTIONS_TOTAL,
+    CLOUD_STORED_READINGS
+)
+
 
 # Bounded in-memory retention: once the limit is reached, the oldest reading
 # is dropped for each new one stored, instead of growing forever. Default
@@ -18,7 +24,16 @@ stored_data = deque(maxlen=MAX_STORED_READINGS)
 
 
 def save_sensor_data(data: dict):
+    # deque(maxlen=...) drops the oldest item silently once full, so the
+    # eviction has to be detected here: if we are already at capacity, this
+    # append will evict exactly one reading.
+    if len(stored_data) == stored_data.maxlen:
+        CLOUD_STORAGE_EVICTIONS_TOTAL.inc()
+
     stored_data.append(data)
+
+    CLOUD_READINGS_STORED_TOTAL.inc()
+    CLOUD_STORED_READINGS.set(len(stored_data))
 
 
 def get_all_data():
@@ -32,3 +47,4 @@ def clear_data():
     operational reset hook.
     """
     stored_data.clear()
+    CLOUD_STORED_READINGS.set(0)
