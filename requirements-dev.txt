@@ -1,0 +1,38 @@
+# Test-only dependencies. Runtime dependencies stay in each service's own
+# requirements.txt; nothing here is installed into a service image.
+#
+#   python3 -m venv .venv
+#   .venv/bin/pip install -r requirements-dev.txt
+#
+# Versions are pinned because the ML-KEM known-answer tests call kyber-py's
+# internal seeded functions (_keygen_internal, _encaps_internal). Those are the
+# only way to drive the deterministic algorithms ACVP specifies, and they are
+# private API, so an unpinned upgrade can break the suite without warning.
+
+pytest==9.1.1
+
+# ML-KEM (FIPS 203) implementation under test.
+# Educational implementation, not constant time and not for deployment; see
+# docs/testing/ml-kem-verification.md.
+kyber-py==1.2.0
+
+# Used by tests/integration (real HTTP against the running Compose stack) and
+# by the gateway contract tests. Each service pins its own runtime and test
+# dependencies in its own requirements files; nothing here reaches an image.
+requests==2.32.3
+prometheus-client==0.21.1
+
+# Needed by tests/reliability/ (work package 2), which drives the gateway
+# and cloud FastAPI apps in-process via fastapi.testclient.TestClient
+# (an httpx ASGI transport under the hood) instead of real sockets. fastapi
+# itself is already pulled in by gateway/requirements.txt and
+# cloud/requirements.txt; httpx is not a dependency of either and is listed
+# here for that reason.
+httpx==0.28.1
+
+# Listed for httpx-based request mocking. tests/reliability/ mocks HTTP at
+# the `requests` boundary instead (unittest.mock), since
+# gateway/app/cloud_client.py uses `requests`, not httpx; respx is currently
+# unused by that suite but kept available for any future httpx-based
+# transport (e.g. a crypto/ML-KEM link).
+respx==0.23.1
