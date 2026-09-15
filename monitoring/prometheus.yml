@@ -1,0 +1,49 @@
+# Prometheus scrape configuration for the edge-gateway / cloud prototype
+# (Work Package 5 — see docs/operations/monitoring.md).
+#
+# Targets below use the Compose service DNS names ("gateway", "cloud")
+# and container ports (8000, 8001) — correct when this file is mounted
+# into a Prometheus container that joins the same Compose network as
+# "gateway" and "cloud" (see monitoring/README.md for the service block
+# to add to docker-compose.yml, and monitoring/docker-compose.monitoring.yml
+# for a ready-to-run overlay). If you instead run Prometheus outside
+# Compose against services started locally (e.g. scripts/baseline/'s
+# ports 18000/18001, or bare uvicorn), change the targets to
+# "127.0.0.1:<port>" / "host.docker.internal:<port>" as appropriate.
+#
+# metrics_path is "/metrics/" (WITH the trailing slash) for both jobs.
+# Both services mount their Prometheus ASGI app with
+# `app.mount("/metrics", metrics_app)` (see gateway/app/main.py and, once
+# wired in, cloud/app/main.py). Starlette's Mount answers a bare
+# "/metrics" request with an HTTP 307 redirect to "/metrics/", and only
+# "/metrics/" itself returns the exposition body with a 200 — verified
+# directly against a FastAPI TestClient reproducing this app's exact
+# mount call (see the WP5 report for the transcript). Prometheus's HTTP
+# scrape client does follow 3xx redirects by default
+# (follow_redirects: true — see
+# https://github.com/prometheus/prometheus/blob/main/docs/configuration/configuration.md,
+# the <http_config> "Configure HTTP Request Settings" section), so
+# `metrics_path: /metrics` would also work in practice; this file points
+# at the exact serving path instead of relying on redirect-following, so
+# a scrape works even if that default is ever turned off in the
+# Prometheus deployment.
+
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: gateway
+    metrics_path: /metrics/
+    static_configs:
+      - targets: ["gateway:8000"]
+        labels:
+          service: gateway
+
+  - job_name: cloud
+    metrics_path: /metrics/
+    static_configs:
+      - targets: ["cloud:8001"]
+        labels:
+          service: cloud
