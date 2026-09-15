@@ -1,0 +1,56 @@
+# Lightweight documentation check. Reproduces the check described in
+# docs/validation/2026-09-15-documentation.md ("Reproducing the
+# documentation check") via .github/scripts/check_docs.py, which is
+# runnable locally with no dependency installation. See
+# docs/operations/ci.md for details.
+name: Docs check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+      - develop
+
+concurrency:
+  group: docs-check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  docs-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          # Full history so `git diff --check` can compare against the
+          # pull request's base commit rather than only the working tree.
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Determine git diff --check base
+        id: base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "ref=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run documentation checks
+        run: |
+          if [ -n "${{ steps.base.outputs.ref }}" ]; then
+            python .github/scripts/check_docs.py --diff-ref "${{ steps.base.outputs.ref }}"
+          else
+            python .github/scripts/check_docs.py
+          fi
