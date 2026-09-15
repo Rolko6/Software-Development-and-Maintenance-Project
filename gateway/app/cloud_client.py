@@ -2,6 +2,7 @@
 # Later, this will become the place where ML-KEM is integrated.
 
 import os
+import time
 
 import requests
 
@@ -12,13 +13,138 @@ CLOUD_URL = os.getenv(
 )
 
 
-def send_to_cloud(sensor_data: dict):
-    response = requests.post(
-        CLOUD_URL,
-        json=sensor_data,
-        timeout=5
-    )
+def _default_cloud_health_url(cloud_url: str) -> str:
+    if cloud_url.endswith("/data"):
+        return cloud_url[: -len("/data")] + "/health"
+    return cloud_url.rstrip("/") + "/health"
 
-    response.raise_for_status()
 
-    return response.json()
+# Defaults to CLOUD_URL with the /data suffix swapped for /health, so a
+# Compose deployment that only sets CLOUD_URL (e.g. http://cloud:8001/data)
+# still gets a working readiness check with no extra configuration. Set
+# CLOUD_HEALTH_URL explicitly to override.
+CLOUD_HEALTH_URL = os.getenv(
+    "CLOUD_HEALTH_URL",
+    _default_cloud_health_url(CLOUD_URL)
+)
+
+# Per-attempt network timeout for the gateway->cloud forward call. Previously
+# hardcoded to 5 seconds; lowered so that, combined with the retry budget
+# below, a fully-exhausted retry sequence still returns before the simulated
+# device's own default 5-second client timeout (see device/app/config.py).
+CLOUD_REQUEST_TIMEOUT_SECONDS = float(os.getenv(
+    "CLOUD_REQUEST_TIMEOUT_SECONDS",
+    "1"
+))
+
+# Timeout for the separate, single-attempt cloud health check used by
+# GET /ready. Not part of the forward retry budget below.
+CLOUD_READINESS_TIMEOUT_SECONDS = float(os.getenv(
+    "CLOUD_READINESS_TIMEOUT_SECONDS",
+    "2"
+))
+
+# Bounded retry for the gateway->cloud leg. This is a short, in-request
+# retry -- not a durable queue. A reading that still fails after the retry
+# budget is exhausted is discarded; see docs/validation/
+# 2026-09-15-reliability.md for the documented residual risk.
+CLOUD_FORWARD_MAX_ATTEMPTS = int(os.getenv(
+    "CLOUD_FORWARD_MAX_ATTEMPTS",
+    "3"
+))
+
+CLOUD_FORWARD_BACKOFF_SECONDS = float(os.getenv(
+    "CLOUD_FORWARD_BACKOFF_SECONDS",
+    "0.2"
+))
+
+# Wall-clock ceiling across every attempt and backoff sleep combined. Once
+# this elapses, no further attempt is started, so the retry loop cannot run
+# long enough to outlast the caller's own timeout. Default (4s) leaves
+# headroom under the device's fixed 5-second client timeout.
+CLOUD_FORWARD_TOTAL_BUDGET_SECONDS = float(os.getenv(
+    "CLOUD_FORWARD_TOTAL_BUDGET_SECONDS",
+    "4"
+))
+
+# Connection-level failures only. A 4xx response is a validation rejection,
+# never retried; a 5xx response is treated as retryable further down.
+RETRYABLE_EXCEPTIONS = (
+    requests.exceptions.ConnectionError,
+    requests.exceptions.Timeout
+)
+
+
+class CloudRejected(Exception):
+    """The cloud rejected the reading outright (HTTP 4xx). Never retried."""
+
+    def __init__(self, status_code, detail):
+        self.status_code = status_code
+        self.detail = detail
+        super().__init__(f"Cloud rejected reading: {status_code} {detail}")
+
+
+class CloudUnavailable(Exception):
+    """The cloud could not be reached, or kept failing after retries."""
+
+
+def send_to_cloud(sensor_data: dict) -> dict:
+    deadline = time.monotonic() + CLOUD_FORWARD_TOTAL_BUDGET_SECONDS
+    last_error = None
+
+    for attempt in range(1, CLOUD_FORWARD_MAX_ATTEMPTS + 1):
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            break
+
+        attempt_timeout = min(CLOUD_REQUEST_TIMEOUT_SECONDS, remaining)
+
+        try:
+            response = requests.post(
+                CLOUD_URL,
+                json=sensor_data,
+                timeout=attempt_timeout
+            )
+
+        except RETRYABLE_EXCEPTIONS as error:
+            last_error = error
+
+        else:
+            if response.status_code < 400:
+                return response.json()
+
+            if response.status_code < 500:
+                raise CloudRejected(
+                    response.status_code,
+                    response.text
+                )
+
+            last_error = requests.exceptions.HTTPError(
+                f"Cloud returned {response.status_code}"
+            )
+
+        if attempt < CLOUD_FORWARD_MAX_ATTEMPTS:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                break
+
+            backoff = min(
+                CLOUD_FORWARD_BACKOFF_SECONDS * (2 ** (attempt - 1)),
+                remaining
+            )
+            time.sleep(backoff)
+
+    raise CloudUnavailable(str(last_error)) from last_error
+
+
+def check_cloud_health() -> bool:
+    try:
+        response = requests.get(
+            CLOUD_HEALTH_URL,
+            timeout=CLOUD_READINESS_TIMEOUT_SECONDS
+        )
+
+    except requests.exceptions.RequestException:
+        return False
+
+    return response.status_code == 200

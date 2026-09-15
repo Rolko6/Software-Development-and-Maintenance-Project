@@ -28,6 +28,16 @@ def health():
     }
 
 
+@app.get("/ready")
+def ready():
+    # The cloud has no external dependency of its own (unlike the gateway,
+    # which depends on the cloud), so readiness here is process-level: once
+    # the process is up and serving requests, it is ready.
+    return {
+        "status": "ready"
+    }
+
+
 @app.post("/data")
 def receive_data(data: SensorData):
 

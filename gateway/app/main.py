@@ -4,7 +4,12 @@ from fastapi import FastAPI, HTTPException
 from prometheus_client import make_asgi_app
 
 from app.models import SensorData
-from app.cloud_client import send_to_cloud
+from app.cloud_client import (
+    send_to_cloud,
+    check_cloud_health,
+    CloudRejected,
+    CloudUnavailable
+)
 from app.metrics import (
     DEVICE_MESSAGES_TOTAL,
     CLOUD_FORWARD_FAILURES_TOTAL
@@ -38,6 +43,20 @@ def health():
     }
 
 
+@app.get("/ready")
+def ready():
+    if check_cloud_health():
+        return {
+            "status": "ready",
+            "cloud": "reachable"
+        }
+
+    raise HTTPException(
+        status_code=503,
+        detail="Cloud service unreachable"
+    )
+
+
 @app.post("/device-data")
 def receive_device_data(data: SensorData):
 
@@ -58,12 +77,39 @@ def receive_device_data(data: SensorData):
             "cloud_response": result
         }
 
-    except Exception as error:
+    except CloudRejected as error:
+
+        CLOUD_FORWARD_FAILURES_TOTAL.inc()
+
+        logger.warning(
+            "Cloud rejected reading: %s",
+            error.detail
+        )
+
+        raise HTTPException(
+            status_code=422,
+            detail=f"Cloud rejected reading: {error.detail}"
+        ) from error
+
+    except CloudUnavailable as error:
 
         CLOUD_FORWARD_FAILURES_TOTAL.inc()
 
         logger.exception(
             "Failed to forward data to cloud"
+        )
+
+        raise HTTPException(
+            status_code=502,
+            detail="Cloud service unavailable"
+        ) from error
+
+    except Exception as error:
+
+        CLOUD_FORWARD_FAILURES_TOTAL.inc()
+
+        logger.exception(
+            "Unexpected error forwarding data to cloud"
         )
 
         raise HTTPException(
