@@ -10,7 +10,19 @@
 | Record significant AI-assisted work | [AI evidence guide](ai/README.md) |
 | Find the prompts behind the initial work and rules | [Prompt record: 2026-09-15](ai/prompts/2026-09-15.md) |
 | Understand the shared-instructions design | [Decision 0001](decisions/0001-shared-agent-instructions.md) |
+| Understand how ML-KEM key establishment is designed and what it protects | [ML-KEM integration design](security/ml-kem-integration.md) |
+| Understand why that cryptographic library and protocol were chosen | [Decision 0002](decisions/0002-ml-kem-key-establishment.md) |
+| Run the CI pipeline, or reproduce a failing job locally | [CI guide](operations/ci.md) |
+| Deploy to a shared test environment | [Deployment runbook](operations/deployment.md) |
+| Scrape metrics and query delivery or handshake failures | [Monitoring guide](operations/monitoring.md) |
+| Understand what the ML-KEM tests do and do not prove | [ML-KEM verification](testing/ml-kem-verification.md) |
 | See what has actually been checked | [Documentation validation: 2026-09-15](validation/2026-09-15-documentation.md) |
+| See the measured plaintext baseline and how to reproduce it | [Baseline validation: 2026-09-15](validation/2026-09-15-baseline.md) |
+| See which reliability gap each fix closes, and its regression test | [Reliability validation: 2026-09-15](validation/2026-09-15-reliability.md) |
+| See the container evidence, the ML-KEM checks and the plaintext-vs-secured comparison | [Integration validation: 2026-09-15](validation/2026-09-15-integration.md) |
+| Understand how baseline and secured measurements are kept comparable | [Measurement method: 2026-09-15](validation/2026-09-15-measurement-method.md) |
+| See what has actually been checked for the device module restructuring | [Device modularization validation: 2026-09-15](validation/2026-09-15-device-modularization.md) |
+| See what has actually been checked for the automated tests and CI/CD | [Tests and CI/CD validation: 2026-09-15](validation/2026-09-15-tests-and-ci.md) |
 
 Current operating behaviour belongs in the project README. Proposed work belongs in the plan. Decisions explain choices; prompt and validation records preserve evidence. Update the authoritative location and link to it rather than copying the same rules across files.
 

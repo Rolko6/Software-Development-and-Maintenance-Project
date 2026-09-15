@@ -4,7 +4,7 @@ A small edge–cloud prototype for the University of Oulu course **Software Deve
 
 The project simulates a legacy temperature sensor sending readings through an edge gateway to a cloud service. It provides a baseline for testing, maintenance, operations, and a planned migration to post-quantum key establishment using ML-KEM.
 
-**Current status:** the repository contains the sensor simulator, gateway, cloud service, and Docker Compose configuration. ML-KEM, automated tests, and CI/CD are not implemented yet.
+**Current status:** the repository contains the sensor simulator, gateway, cloud service, and Docker Compose configuration, along with automated unit test suites for all three services, an integration test suite, and CI/CD workflows (see [Run the tests](#run-the-tests)). ML-KEM key establishment now protects the gateway→cloud link and is switched on in Compose; the device→gateway hop is still plaintext by design (see [Known limitations](#known-limitations)).
 
 ## Project documentation and AI assistants
 
@@ -16,7 +16,7 @@ AI assistants working here should follow [AGENTS.md](AGENTS.md). [CLAUDE.md](CLA
 
 ```text
 Simulated device                 Edge gateway                    Cloud service
-device/device.py                 gateway/app/                    cloud/app/
+device/app/                      gateway/app/                    cloud/app/
                    HTTP POST                       HTTP POST
                   /device-data                       /data
                ─────────────────►               ─────────────────►
@@ -25,7 +25,7 @@ Temperature readings             Validate and forward            Store in memory
                                  Host port 8000                  Host port 8001
 ```
 
-- **Device:** generates a random temperature between 15 and 30, attempts to send it, then waits five seconds before the next attempt.
+- **Device:** `device/app/` splits the simulator into `config.py` (environment validation), `models.py` (the reading and its wire payload), `sensor.py` (the temperature models), `gateway_client.py` (delivery to the gateway), `runner.py` (the send loop and signal handling), and `__main__.py` (entry point). By default it still generates a uniform random temperature between 15 and 30, attempts to send it, then waits five seconds before the next attempt; the temperature range, model, and interval are now configurable (see Configuration below).
 - **Gateway:** validates incoming readings and forwards them to the cloud. Forwarding failures return HTTP `502` and increment a failure counter.
 - **Cloud:** stores readings in a process-local list and exposes them through an API. Stored readings are lost when the cloud process restarts.
 
@@ -71,7 +71,7 @@ Press `Ctrl+C` to stop following logs. The detached containers keep running.
 
 ## Verify the data flow
 
-These are manual checks, not an automated test suite. Run them after the services have started.
+These are manual checks; they sit alongside the automated test suites described in [Run the tests](#run-the-tests) below. Run them after the services have started.
 
 ### 1. Check both APIs
 
@@ -123,23 +123,110 @@ Look for:
 
 Counters reset when the gateway process restarts. A Prometheus server and dashboard are not included.
 
+## Run the tests
+
+`gateway/`, `cloud/`, and `device/` each have their own `pytest` suite, and `tests/integration/` has a suite that exercises the running Docker Compose stack over HTTP. Running them needs a local Python environment; the Quick start above does not.
+
+Install a service's test dependencies (each `requirements-dev.txt` also pulls in the service's own `requirements.txt`):
+
+```bash
+pip install -r gateway/requirements-dev.txt
+```
+
+Run that service's suite from inside its own directory — `gateway/app`, `cloud/app`, and `device/app` are three separate packages all named `app`, so each suite must run from its own service directory rather than the repository root:
+
+```bash
+cd gateway && python -m pytest
+```
+
+To run all three service suites together, continuing past a failing suite and printing a combined summary:
+
+```bash
+./scripts/run-unit-tests.sh
+```
+
+For a full end-to-end run, use `./scripts/smoke-test.sh`. It builds the service images, starts the Docker Compose stack, runs the integration suite (`tests/integration/`) against the running containers, and always tears the stack down afterwards, including on failure. It needs host ports `8000` and `8001` free, the same as the Quick start above.
+
+The device suite covers configuration validation, the reading and its wire payload, both temperature models, the gateway client, and the send loop. Observed on 2026-09-15 with `cd device && ../.venv/bin/python -m pytest -q`: `43 passed`; see the [device modularization validation record](docs/validation/2026-09-15-device-modularization.md) for the full evidence.
+
+Both scripts accept a `PYTHON` environment variable to select a specific interpreter. It must be an absolute path, because the runner changes directory into each service before invoking it: `PYTHON="$PWD/.venv/bin/python" ./scripts/run-unit-tests.sh`. CI installs the same dependency files and runs the same commands on Python 3.12, matching the containers.
+
+### Continuous integration
+
+Two GitHub Actions workflows automate the checks above:
+
+- **CI** (`.github/workflows/ci.yml`) runs on pull requests and on pushes to `main` and `develop`. It runs each service's unit test suite, validates and builds the Docker Compose configuration, and runs a smoke test that brings up the full stack and runs the integration suite against it.
+- **Publish images** (`.github/workflows/publish.yml`) runs on pushes to `main` and on version tags (`v*.*.*`). It builds the gateway, cloud, and device images and pushes them to the GitHub Container Registry (GHCR).
+
+Image publishing targets GHCR only; no deployment environment is configured yet.
+
+## Verify the secure channel
+
+Compose starts with `CLOUD_ML_KEM_MODE=enabled` and `GATEWAY_ML_KEM_MODE=enabled`, so every
+reading the gateway forwards already goes through ML-KEM-768 key establishment. The cloud still
+accepts the legacy plaintext `POST /data` in this mode, which is what makes the migration
+possible while the device remains a plaintext producer.
+
+Confirm the cloud is publishing an encapsulation key:
+
+```bash
+curl -fsS http://localhost:8001/secure/handshake
+```
+
+Confirm readings actually travel the protected path rather than falling back to plaintext, by
+looking at which endpoints the cloud is serving:
+
+```bash
+docker compose logs cloud | grep -oE '"(GET|POST) /[a-z/]*' | sort | uniq -c | sort -rn
+```
+
+`POST /secure/data` should dominate and plaintext `POST /data` should not appear at all unless
+you sent one yourself.
+
+To prove the legacy path can be closed, switch the cloud to `required`:
+
+```bash
+docker compose run --rm -e CLOUD_ML_KEM_MODE=required -d cloud
+curl -i -X POST http://localhost:8001/data \
+  -H 'Content-Type: application/json' \
+  -d '{"device_id":"plain-probe","temperature":20.0}'
+```
+
+Expected result: HTTP `403`, and the reading is not stored, while readings sent through the
+gateway continue to arrive.
+
+Rolling back is `CLOUD_ML_KEM_MODE=off` and `GATEWAY_ML_KEM_MODE=off`, which restores the
+original plaintext behaviour. The services deliberately do not import the cryptographic code at
+all in `off` mode, so a broken dependency cannot stop them from starting.
+
+**Set `ML_KEM_PSK` to a real shared secret before using this anywhere that matters.** Without it
+the handshake is unauthenticated; the value in `docker-compose.yml` is a visible placeholder.
+Full design, threat model and residual risks: [ML-KEM integration](docs/security/ml-kem-integration.md).
+
 ## API endpoints
 
 | Service | Method | Path | Purpose |
 | --- | --- | --- | --- |
-| Gateway | GET | `/health` | Check that the gateway API responds |
+| Gateway | GET | `/health` | Liveness: the gateway API responds |
+| Gateway | GET | `/ready` | Readiness: the gateway can actually reach the cloud |
 | Gateway | POST | `/device-data` | Validate and forward a sensor reading |
 | Gateway | GET | `/metrics/` | Read Prometheus metrics |
-| Cloud | GET | `/health` | Check that the cloud API responds |
-| Cloud | POST | `/data` | Store a sensor reading directly |
+| Cloud | GET | `/health` | Liveness: the cloud API responds |
+| Cloud | GET | `/ready` | Readiness: the cloud process is serving |
+| Cloud | POST | `/data` | Store a sensor reading directly (legacy plaintext path) |
 | Cloud | GET | `/data` | Retrieve all readings in memory |
+| Cloud | GET | `/secure/handshake` | Publish the ML-KEM encapsulation key |
+| Cloud | POST | `/secure/handshake` | Complete key establishment and open a session |
+| Cloud | POST | `/secure/data` | Store an AEAD-protected reading |
 
 Interactive API documentation is available while the services are running:
 
 - [Gateway API documentation](http://localhost:8000/docs)
 - [Cloud API documentation](http://localhost:8001/docs)
 
-The payload contains `device_id` (a string) and `temperature` (a number). The gateway additionally requires a device ID between 1 and 100 characters. Neither service currently enforces a physical temperature range.
+The payload contains `device_id` (a string) and `temperature` (a number). Both services now apply the same rules: a device ID of 1–100 characters and a temperature within −40 °C to 60 °C. A rejected reading returns HTTP 422.
+
+`/health` keeps its original fixed response so existing probes are unaffected. `/ready` is the new endpoint that reflects reality: the gateway's returns 503 when the cloud is unreachable.
 
 ## Manual failure checks
 
@@ -183,6 +270,29 @@ Compose supplies these environment variables to the containers:
 | Gateway | `CLOUD_URL` | `http://cloud:8001/data` | `http://localhost:8001/data` |
 | Device | `GATEWAY_URL` | `http://gateway:8000/device-data` | `http://localhost:8000/device-data` |
 | Device | `DEVICE_ID` | `legacy-sensor-001` | `legacy-sensor-001` |
+| Device | `SEND_INTERVAL_SECONDS` | not set | `5.0` (must be greater than 0) |
+| Device | `REQUEST_TIMEOUT_SECONDS` | not set | `5.0` (must be greater than 0) |
+| Device | `TEMPERATURE_MIN` | not set | `15.0` |
+| Device | `TEMPERATURE_MAX` | not set | `30.0` (must be greater than or equal to `TEMPERATURE_MIN`) |
+| Device | `TEMPERATURE_MODEL` | not set | `uniform` (or `random-walk`, case-sensitive) |
+| Device | `RANDOM_SEED` | not set | unset (an integer; makes runs reproducible) |
+| Device | `LOG_LEVEL` | not set | `INFO` (one of `CRITICAL`/`ERROR`/`WARNING`/`INFO`/`DEBUG`, case-insensitive) |
+| Gateway | `CLOUD_HEALTH_URL` | not set | derived from `CLOUD_URL` by swapping `/data` for `/health` |
+| Gateway | `CLOUD_REQUEST_TIMEOUT_SECONDS` | not set | `1` |
+| Gateway | `CLOUD_READINESS_TIMEOUT_SECONDS` | not set | `2` |
+| Gateway | `CLOUD_FORWARD_MAX_ATTEMPTS` | not set | `3` |
+| Gateway | `CLOUD_FORWARD_BACKOFF_SECONDS` | not set | `0.2` (doubles per attempt) |
+| Gateway | `CLOUD_FORWARD_TOTAL_BUDGET_SECONDS` | not set | `4` (ceiling across all attempts) |
+| Cloud | `CLOUD_MAX_STORED_READINGS` | `1000` | `1000` (oldest readings are evicted past this) |
+| Cloud | `CLOUD_ML_KEM_MODE` | `enabled` | `off` (`off` / `enabled` / `required`) |
+| Gateway | `GATEWAY_ML_KEM_MODE` | `enabled` | `off` (`off` / `enabled` / `required`) |
+| Both | `ML_KEM_PSK` | `dev-only-insecure-psk-change-me` | unset (unset means the handshake is **not** authenticated) |
+| Cloud | `CLOUD_ML_KEM_KEY_PATH` | `/keys/ml-kem-key.der` | unset (a fresh key pair each start) |
+| Cloud | `CLOUD_ML_KEM_SESSION_TTL_SECONDS` | `300` | `300` |
+| Gateway | `GATEWAY_CLOUD_BASE_URL` | `http://cloud:8001` | `http://localhost:8001` |
+| Gateway | `GATEWAY_ML_KEM_PINNED_EK_FINGERPRINT` | not set | unset (optional hex SHA-256 pin of the cloud key) |
+
+The current `docker-compose.yml` sets only `GATEWAY_URL` and `DEVICE_ID` for the device; the remaining device variables fall back to the defaults above unless set in the environment.
 
 Edit the `environment` entries in `docker-compose.yml` to change the container configuration. Compose uses service names (`cloud` and `gateway`) for communication within its network; the host-side checks use `localhost`.
 
@@ -211,21 +321,41 @@ This stops and removes the project containers and network. Sensor data is not pe
 │   │   ├── main.py          # Cloud API routes
 │   │   ├── models.py        # Cloud input model
 │   │   └── storage.py       # In-memory reading storage
+│   ├── tests/                 # Automated unit tests
 │   ├── Dockerfile
+│   ├── pytest.ini
+│   ├── requirements-dev.txt
 │   └── requirements.txt
 ├── device/
-│   ├── device.py            # Simulated temperature sensor
+│   ├── app/
+│   │   ├── __main__.py       # Entry point
+│   │   ├── config.py         # Environment configuration and validation
+│   │   ├── models.py         # Sensor reading and wire payload
+│   │   ├── sensor.py         # Temperature models and reading generation
+│   │   ├── gateway_client.py # HTTP delivery to the gateway
+│   │   └── runner.py         # Send loop and signal handling
+│   ├── tests/                # Unit tests (43 tests)
 │   ├── Dockerfile
-│   └── requirements.txt
+│   ├── pytest.ini
+│   ├── requirements.txt
+│   └── requirements-dev.txt
 ├── gateway/
 │   ├── app/
 │   │   ├── main.py          # Gateway routes and error handling
 │   │   ├── cloud_client.py  # HTTP forwarding to the cloud
 │   │   ├── metrics.py       # Gateway counters
 │   │   └── models.py        # Gateway input validation
+│   ├── tests/                 # Automated unit tests
 │   ├── Dockerfile
+│   ├── pytest.ini
+│   ├── requirements-dev.txt
 │   └── requirements.txt
 ├── docs/                   # Plan, decisions, prompts, and verification records
+├── .github/
+│   └── workflows/          # CI and image-publish GitHub Actions workflows
+├── scripts/                # Test-running and smoke-test helper scripts
+├── tests/
+│   └── integration/        # HTTP-level integration tests against the running stack
 ├── AGENTS.md               # Shared agent instructions
 ├── CLAUDE.md               # Claude Code import of the shared instructions
 ├── docker-compose.yml
@@ -234,17 +364,17 @@ This stops and removes the project containers and network. Sensor data is not pe
 
 ## Known limitations
 
-- **Communication security:** both links use plain HTTP. Authentication, authorization, and ML-KEM are not implemented. The APIs are intended for a controlled development environment; the current port mappings do not restrict access to host loopback.
-- **Storage:** readings disappear on cloud restart, and the in-memory list grows without a retention limit.
-- **Delivery:** failed readings are discarded. There is no delivery queue, retry of the same reading, or duplicate detection.
-- **Device reporting:** the simulator prints “Sent data” even for HTTP error responses; inspect the response code to determine success.
-- **Validation:** the cloud accepts device IDs that the gateway rejects. Input rules are not yet consistent.
-- **Readiness:** health endpoints return a fixed response, and Compose has no configured health checks.
-- **Verification and operations:** automated tests, CI/CD, shared test deployment, and cryptographic performance measurements are not yet included.
+- **Communication security:** the gateway→cloud link is protected by ML-KEM-768 key establishment with AES-256-GCM (see the [design](docs/security/ml-kem-integration.md)). The **device→gateway hop is still plain HTTP** — that is the legacy compatibility the project is about, not an oversight. ML-KEM establishes a shared secret but does **not** authenticate the peer: without a matching `ML_KEM_PSK` on both sides the handshake is open to an active machine-in-the-middle, and the value shipped in Compose is a visible development placeholder that must be replaced. There is still no user authentication or authorization, and the port mappings do not restrict access to host loopback.
+- **Storage:** readings still disappear on cloud restart. Retention is now bounded by `CLOUD_MAX_STORED_READINGS` (default 1000); past that, the oldest readings are silently evicted. There is still no database.
+- **Delivery:** the gateway now retries a transient cloud failure with backoff, bounded by `CLOUD_FORWARD_MAX_ATTEMPTS` and a total time budget. A 4xx rejection is never retried. This is **not** a durable queue: once the budget is exhausted the reading is still lost, and there is no duplicate detection.
+- **Device reporting:** the simulator now logs each delivery outcome and never reports a non-2xx response as success: a delivered reading logs at INFO, a non-2xx gateway response logs at WARNING, and a connection or timeout failure logs at ERROR. Failed readings are still discarded — see Delivery above; there is no retry or queue.
+- **Validation:** gateway and cloud now enforce the same device ID and temperature rules.
+- **Readiness:** `/ready` on both services reflects the real dependency state, but Compose still has no `healthcheck:` entries, so startup ordering remains best-effort.
+- **Verification and operations:** unit suites for all three services, an integration suite and CI/CD workflows are included (see [Run the tests](#run-the-tests)), and a plaintext-vs-ML-KEM latency comparison has been measured in containers (see the [integration record](docs/validation/2026-09-15-integration.md)). The CI workflows have **never executed on GitHub**, no shared test environment is provisioned, and no Prometheus instance has been run — the metrics are defined but most counters are not yet incremented from the service code.
 
 ## Planned next steps
 
-See the [proposed project plan](docs/project-plan.md) for work packages, completion evidence, and suggested group coordination. The plan describes future work, not completed features.
+See the [project plan](docs/project-plan.md) for the work packages, their completion evidence and their current status. Work packages 1–3 are implemented and 4–5 are partly implemented; the remaining items are human steps (a fresh-checkout baseline run, group acceptance of the cryptographic library, provisioning a shared environment, and actually executing the CI workflows).
 
 ## AI-assisted development records
 
