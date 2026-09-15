@@ -55,4 +55,3 @@ General programming, business-logic debugging, refactoring, and code review do n
 ## Maintaining these rules
 
 Edit shared rules here and detailed evidence requirements in [docs/ai/README.md](docs/ai/README.md). Keep tool entry points thin. Record every material rule change in the prompt log, with its source and rationale; preserve earlier records as history.
-

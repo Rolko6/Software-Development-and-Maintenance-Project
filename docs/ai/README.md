@@ -59,4 +59,3 @@ Copy this structure for the next significant task and fill it with known facts. 
 - [Initial prompts and rule-setting request](prompts/2026-09-15.md)
 - [Shared-instructions decision](../decisions/0001-shared-agent-instructions.md)
 - [Documentation verification](../validation/2026-09-15-documentation.md)
-

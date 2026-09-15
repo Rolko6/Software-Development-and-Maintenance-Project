@@ -23,4 +23,3 @@ Start reliability work with the existing gaps identified in the [README](../READ
 For a group of four or five, possible responsibilities are baseline/testing, cryptographic integration, CI/deployment, monitoring/evaluation, and migration/report coordination. Assign actual owners in issues after the group agrees. Each contributor records their own evidence; human acceptance and individual reflection must come from the students.
 
 Select the report perspective early and gather evidence alongside implementation. The supplied brief lists peer-review submission on 11 October 2026 and final submission on 25 October 2026; confirm course announcements before relying on those dates.
-

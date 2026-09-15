@@ -32,4 +32,3 @@ Static file and import checks are recorded in [validation](../validation/2026-09
 - [Codex AGENTS.md discovery](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
 - [Claude Code imports and instruction memory](https://code.claude.com/docs/en/memory)
 - User-supplied writing-great-skills skill and glossary, read from the user's local skill directory on 2026-09-15.
-
