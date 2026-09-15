@@ -1,0 +1,31 @@
+# Pinned crypto dependencies for the ML-KEM gateway<->cloud secure channel
+# (project plan work package 3). Merge these lines into the two service
+# requirements files that need them -- do not add a third file or a shared
+# requirements-crypto.txt install step; each service installs its own
+# requirements.txt inside its own Dockerfile, and this file only exists so
+# the exact pin is decided and recorded in one place.
+#
+# Needed by:            gateway/requirements.txt   (gateway/app/crypto/**)
+# Needed by:            cloud/requirements.txt      (cloud/app/crypto/**)
+# NOT needed by:        device/requirements.txt     (device stays plaintext HTTP)
+#
+# `cryptography` provides ML-KEM-768 (hazmat.primitives.asymmetric.mlkem,
+# OpenSSL-backed), HKDF, and AES-256-GCM -- everything both packages use. No
+# second crypto dependency ships in either container; see
+# docs/decisions/0002-ml-kem-key-establishment.md for why kyber-py
+# (pure-Python, already in the shared dev .venv, and used here only to
+# cross-check test vectors during library selection) was NOT chosen for the
+# services themselves.
+#
+# Version pin verified locally: `./.venv/bin/pip show cryptography` reports
+# 50.0.1 in the shared dev virtualenv, and
+# `cryptography.hazmat.primitives.asymmetric.mlkem.MLKEM768PrivateKey` was
+# exercised directly (generate/encapsulate/decapsulate round trip, DER/PKCS8
+# persistence round trip, implicit-rejection tamper behaviour) -- see the
+# decision record's Verification section. Confirm this version resolves for
+# the containers' Python 3.12 target (linux/amd64 and/or arm64 manylinux
+# wheels) at build time; if it does not yet exist on PyPI for that platform,
+# pin the nearest release that ships the mlkem module instead and update the
+# decision record.
+
+cryptography==50.0.1

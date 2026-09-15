@@ -88,6 +88,22 @@ class CloudUnavailable(Exception):
     """The cloud could not be reached, or kept failing after retries."""
 
 
+# "off" keeps today's plaintext POST. "enabled"/"required" route every reading
+# through the ML-KEM secure channel with no plaintext fallback. Read once at
+# import, matching the other settings in this module.
+#
+# app.crypto is imported lazily inside _send_secure rather than at module level
+# so that a broken cryptography wheel cannot stop the gateway from starting in
+# "off" mode. See docs/security/ml-kem-integration.md, "Residual risks".
+ML_KEM_MODE = os.getenv("GATEWAY_ML_KEM_MODE", "off").strip().lower()
+
+
+def _send_secure(sensor_data: dict) -> dict:
+    from app.crypto import send_secure
+
+    return send_secure(sensor_data)
+
+
 def send_to_cloud(sensor_data: dict) -> dict:
     deadline = time.monotonic() + CLOUD_FORWARD_TOTAL_BUDGET_SECONDS
     last_error = None
@@ -100,6 +116,9 @@ def send_to_cloud(sensor_data: dict) -> dict:
         attempt_timeout = min(CLOUD_REQUEST_TIMEOUT_SECONDS, remaining)
 
         try:
+            if ML_KEM_MODE != "off":
+                return _send_secure(sensor_data)
+
             response = requests.post(
                 CLOUD_URL,
                 json=sensor_data,

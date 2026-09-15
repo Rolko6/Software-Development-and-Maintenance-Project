@@ -5,6 +5,35 @@ services:
     ports:
       - "8001:8001"
 
+    environment:
+      # off | enabled | required. "enabled" accepts both the legacy plaintext
+      # POST /data and the ML-KEM protected /secure/* path, which is what the
+      # migration needs while the device still speaks plaintext. Flip to
+      # "required" only once every producer uses the secure path; flip to
+      # "off" to fall back to the pre-ML-KEM behaviour.
+      CLOUD_ML_KEM_MODE: enabled
+
+      # Pre-shared secret authenticating the ML-KEM handshake in both
+      # directions. ML-KEM establishes a shared secret but does not
+      # authenticate the peer, so without this the handshake is open to an
+      # active machine-in-the-middle. The default below is a visible
+      # placeholder for local development only -- override it with
+      # `ML_KEM_PSK=... docker compose up` anywhere that matters.
+      ML_KEM_PSK: ${ML_KEM_PSK:-dev-only-insecure-psk-change-me}
+
+      # Persist the cloud's ML-KEM private key so it survives container
+      # recreation. Without this the cloud generates a fresh key pair on every
+      # start and every gateway session must re-handshake.
+      CLOUD_ML_KEM_KEY_PATH: /keys/ml-kem-key.der
+
+      CLOUD_ML_KEM_SESSION_TTL_SECONDS: "300"
+
+      # Bounded in-memory retention; oldest readings are evicted past this.
+      CLOUD_MAX_STORED_READINGS: "1000"
+
+    volumes:
+      - cloud-keys:/keys
+
   gateway:
     build: ./gateway
     ports:
@@ -12,6 +41,17 @@ services:
 
     environment:
       CLOUD_URL: http://cloud:8001/data
+
+      # off | enabled | required. "enabled" and "required" behave identically
+      # on the gateway: every reading goes through the secure channel with no
+      # plaintext fallback.
+      GATEWAY_ML_KEM_MODE: enabled
+
+      # Must match the cloud's value; see the note above.
+      ML_KEM_PSK: ${ML_KEM_PSK:-dev-only-insecure-psk-change-me}
+
+      # Base URL (no path) used to build /secure/handshake and /secure/data.
+      GATEWAY_CLOUD_BASE_URL: http://cloud:8001
 
     depends_on:
       - cloud
@@ -25,3 +65,6 @@ services:
 
     depends_on:
       - gateway
+
+volumes:
+  cloud-keys:
