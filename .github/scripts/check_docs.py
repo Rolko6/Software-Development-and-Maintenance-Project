@@ -240,7 +240,12 @@ def check_git_diff(
     if diff_ref:
         args.append(diff_ref)
     result = run_git(repo_root, *args)
-    if result.returncode not in (0, 1):
+    # `git diff --check` exits 2 when it FINDS whitespace errors, writing them
+    # to stdout; 0 when clean. Treating 2 as a failure-to-run meant every real
+    # finding was reported as "could not run (unknown error)" and then dropped
+    # by the early return below -- the check silently passed on exactly the
+    # input it exists to catch. Anything outside 0/1/2 is a genuine failure.
+    if result.returncode not in (0, 1, 2):
         violations.append(
             Violation(
                 "git diff --check",
