@@ -127,3 +127,5 @@ def test_from_env_defaults_to_os_environ_when_no_mapping_given(monkeypatch):
     config = DeviceConfig.from_env()
 
     assert config.device_id == "from-os-environ"
+
+# Github Actions trigger push
