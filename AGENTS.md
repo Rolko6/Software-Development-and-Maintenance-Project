@@ -15,7 +15,7 @@ These instructions apply to this repository and its subdirectories. This file is
 2. **Choose.** For behaviour or architecture changes, describe the intended outcome and how it will be verified. Resolve routine choices within the request; ask only when missing information materially changes scope or correctness. Finish with an observable completion criterion.
 3. **Change.** Make a focused change following existing service boundaries. Keep current behaviour documented in the README and proposals in the roadmap. Finish when every requested artifact exists and related documentation agrees.
 4. **Verify.** Apply the relevant checks below. Separate source inspection, executed checks, and checks not run. Finish with evidence for each claim or an explicit limitation.
-5. **Record and hand off.** For significant work, follow [AI evidence records](docs/ai/README.md). Report changed files, verification results, and remaining work. Finish only when the requested work and its necessary records are complete.
+5. **Record and hand off.** For significant work, follow [AI evidence records](docs/ai/README.md). Name each prompt record `docs/ai/prompts/YYYY-MM-DD-<person>.md`, where `<person>` is the GitHub username of the person who gave the prompts (for example `2026-09-24-yyy-tom.md`), keep one file per person per day, and start every entry with a `Person:` line. Report changed files, verification results, and remaining work. Finish only when the requested work and its necessary records are complete.
 
 ## Project boundaries
 
