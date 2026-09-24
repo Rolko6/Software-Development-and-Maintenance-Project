@@ -9,6 +9,14 @@
 # only way to drive the deterministic algorithms ACVP specifies, and they are
 # private API, so an unpinned upgrade can break the suite without warning.
 
+# tests/crypto and tests/reliability import gateway/app and cloud/app
+# in-process, so they need both services' runtime dependencies (fastapi,
+# cryptography, prometheus-client, ...). These used to be assumed present
+# in a shared venv; a clean install from this file alone could not import
+# them. Including the service files keeps the pins in one place.
+-r gateway/requirements.txt
+-r cloud/requirements.txt
+
 pytest==9.1.1
 
 # ML-KEM (FIPS 203) implementation under test.
@@ -25,9 +33,8 @@ prometheus-client==0.21.1
 # Needed by tests/reliability/ (work package 2), which drives the gateway
 # and cloud FastAPI apps in-process via fastapi.testclient.TestClient
 # (an httpx ASGI transport under the hood) instead of real sockets. fastapi
-# itself is already pulled in by gateway/requirements.txt and
-# cloud/requirements.txt; httpx is not a dependency of either and is listed
-# here for that reason.
+# comes from the service requirements included above; httpx is not a
+# runtime dependency of either service and is listed here for that reason.
 httpx==0.28.1
 
 # Listed for httpx-based request mocking. tests/reliability/ mocks HTTP at

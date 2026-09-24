@@ -2,7 +2,9 @@
 
 These tests exercise the real Docker Compose stack (device, gateway, cloud)
 over HTTP. They are not unit tests and are skipped from the per-service
-suites via the root pytest.ini (`testpaths = tests/integration`).
+suites because each service runs pytest from its own directory; from the
+repository root they are selected with `pytest tests/integration -m
+integration`, which is what scripts/smoke-test.sh does.
 """
 
 import os

@@ -111,6 +111,98 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  # The root-level suites under tests/ (ML-KEM conformance and integration,
+  # reliability, protected-path source scan, docs-checker regression tests).
+  # Each suite runs in its own job and its own pytest process: tests/crypto
+  # and tests/reliability both load gateway/app and cloud/app under private
+  # aliases and juggle sys.modules to do it, so sharing one interpreter
+  # would make their results depend on collection order. tests/integration
+  # is excluded here because it needs the running Compose stack; the smoke
+  # job covers it.
+  root-tests:
+    name: Root tests (${{ matrix.suite }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Skip and xfail budgets: the job fails if a suite skips, or
+        # expects to fail, more tests than this. Each allowed one waits on a
+        # group decision named in its reason:
+        #   protected_path: the module-level skip of
+        #     test_protected_path_contract.py;
+        #   crypto: the strict xfail that the device id travels in clear
+        #     (test_protected_path_session.py).
+        # Raising a budget needs a recorded reason.
+        include:
+          - suite: crypto
+            max_skipped: 0
+            max_xfailed: 1
+          - suite: reliability
+            max_skipped: 0
+            max_xfailed: 0
+          - suite: protected_path
+            max_skipped: 1
+            max_xfailed: 0
+          - suite: tooling
+            max_skipped: 0
+            max_xfailed: 0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Verify test harness inputs
+        run: |
+          set -euo pipefail
+          if [ ! -d "tests/${{ matrix.suite }}" ]; then
+            echo "::error::tests/${{ matrix.suite }}/ is missing. This job expects that root suite to exist; see docs/operations/ci.md."
+            exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements-dev.txt
+            gateway/requirements.txt
+            cloud/requirements.txt
+
+      # requirements-dev.txt includes gateway/ and cloud/requirements.txt,
+      # because these suites import both services' code (fastapi,
+      # cryptography) in-process.
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+
+      # Fail here, with a clear message, rather than as a collection error
+      # if the service dependencies stop being installed.
+      - name: Check service dependencies import
+        run: python -c "import fastapi, httpx, cryptography; from cryptography.hazmat.primitives.asymmetric import mlkem"
+
+      - name: Run pytest
+        run: python -m pytest "tests/${{ matrix.suite }}" -ra --junitxml="root-${{ matrix.suite }}-report.xml"
+
+      # Runs even when pytest failed, so the summary is always written; it
+      # fails the job only when the skip budget above is exceeded.
+      - name: Write job summary and check skip and xfail budgets
+        if: always()
+        run: |
+          set -o pipefail
+          python .github/scripts/junit_summary.py \
+            --title "Root tests: ${{ matrix.suite }}" \
+            --max-skipped "${{ matrix.max_skipped }}" \
+            --max-xfailed "${{ matrix.max_xfailed }}" \
+            "root-${{ matrix.suite }}-report.xml" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload JUnit report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: junit-root-${{ matrix.suite }}
+          path: root-${{ matrix.suite }}-report.xml
+          if-no-files-found: error
+          retention-days: 14
+
   compose-validate:
     name: Validate Compose file
     runs-on: ubuntu-latest
@@ -152,7 +244,7 @@ jobs:
 
   smoke:
     name: Smoke test (Compose stack)
-    needs: [build, test]
+    needs: [build, test, root-tests]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -191,6 +283,13 @@ jobs:
       # executable bit surviving checkout.
       - name: Run smoke test
         run: bash scripts/smoke-test.sh --junitxml=smoke-report.xml
+
+      - name: Write job summary
+        if: always()
+        run: |
+          python .github/scripts/junit_summary.py \
+            --title "Smoke test: integration suite" \
+            smoke-report.xml >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload smoke test report
         if: always()

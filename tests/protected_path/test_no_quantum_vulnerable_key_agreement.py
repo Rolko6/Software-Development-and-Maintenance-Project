@@ -7,9 +7,10 @@ by accident: a library defaults to X25519, the ML-KEM call is left in place,
 and every functional test still passes.
 
 These are heuristics over source text, not proofs. They catch the obvious
-regression; they cannot see what a dependency does internally. They run today,
-before any integration exists, and pass because no key agreement is present at
-all — which is itself accurate, and is recorded in the README as a limitation.
+regression; they cannot see what a dependency does internally. The services
+now establish keys with ML-KEM-768 from `cryptography` (gateway/app/crypto,
+cloud/app/crypto; ADR 0002) and use no classical key agreement. The pin check
+at the end runs against those modules.
 """
 
 import os
@@ -41,7 +42,34 @@ QUANTUM_VULNERABLE = (
 
 POST_QUANTUM = (r"ml[_\-]?kem", r"\bkyber\b", r"\bml[_\-]?dsa\b", r"dilithium")
 
-ML_KEM_LIBRARIES = ("kyber-py", "liboqs", "oqs", "pqcrypto", "quantcrypt")
+# `cryptography` is the library the services actually use: its native
+# `cryptography.hazmat.primitives.asymmetric.mlkem`, pinned as
+# cryptography==50.0.1 in gateway/ and cloud/requirements.txt. See
+# docs/decisions/0002-ml-kem-key-establishment.md, "Library selection".
+ML_KEM_LIBRARIES = ("cryptography", "kyber-py", "liboqs", "oqs", "pqcrypto", "quantcrypt")
+
+# How a service module shows that it uses each allowlisted library for ML-KEM.
+# `cryptography` counts only when its mlkem module is imported: the services
+# also use it for AES-GCM and HKDF, which say nothing about ML-KEM.
+ML_KEM_IMPORTS = {
+    "cryptography": (
+        r"from\s+cryptography\.hazmat\.primitives\.asymmetric\s+import\s+[^\n]*\bmlkem\b"
+        r"|cryptography\.hazmat\.primitives\.asymmetric\.mlkem\b"
+    ),
+    "kyber-py": r"^\s*(from|import)\s+kyber_py\b",
+    "liboqs": r"^\s*(from|import)\s+oqs\b",
+    "oqs": r"^\s*(from|import)\s+oqs\b",
+    "pqcrypto": r"^\s*(from|import)\s+pqcrypto\b",
+    "quantcrypt": r"^\s*(from|import)\s+quantcrypt\b",
+}
+
+# The service modules that do the ML-KEM work (ADR 0002).
+ML_KEM_MODULES = (
+    os.path.join("gateway", "app", "crypto", "client.py"),
+    os.path.join("cloud", "app", "crypto", "keys.py"),
+)
+
+ML_KEM_SERVICES = ("gateway", "cloud")
 
 
 def service_sources():
@@ -98,24 +126,73 @@ def test_classical_key_agreement_is_never_used_on_its_own(path):
     )
 
 
-def test_ml_kem_is_pinned_wherever_the_gateway_imports_it():
+def ml_kem_libraries_imported_by(service):
+    """Allowlisted libraries whose ML-KEM API the service's sources import,
+    mapped to the importing files."""
+    found = {}
+    prefix = os.path.join(REPO_ROOT, service) + os.sep
+
+    for path in service_sources():
+        if not path.startswith(prefix):
+            continue
+
+        with open(path, encoding="utf-8", errors="replace") as handle:
+            source = handle.read()
+
+        for library, pattern in ML_KEM_IMPORTS.items():
+            if re.search(pattern, source, re.MULTILINE):
+                found.setdefault(library, []).append(os.path.relpath(path, REPO_ROOT))
+
+    return found
+
+
+def exact_pin(requirements, library):
+    """The exact `==` version the requirements text pins for `library`, or None."""
+    pattern = rf"^\s*{re.escape(library)}(\[[^\]]*\])?\s*==\s*([^\s;#]+)"
+    match = re.search(pattern, requirements, re.IGNORECASE | re.MULTILINE)
+    return match.group(2) if match else None
+
+
+@pytest.mark.parametrize("module", ML_KEM_MODULES)
+def test_ml_kem_modules_import_the_allowlisted_library(module):
+    """The implementation ADR 0002 describes is really there.
+
+    This keeps the pin test below from passing vacuously: if these modules
+    stopped importing an allowlisted ML-KEM library, the pin test would have
+    nothing to check.
+    """
+    with open(os.path.join(REPO_ROOT, module), encoding="utf-8") as handle:
+        source = handle.read()
+
+    assert re.search(ML_KEM_IMPORTS["cryptography"], source, re.MULTILINE), (
+        f"{module} no longer imports cryptography.hazmat.primitives.asymmetric.mlkem"
+    )
+
+
+@pytest.mark.parametrize("service", ML_KEM_SERVICES)
+def test_ml_kem_is_pinned_wherever_a_service_imports_it(service):
     """The container must ship the library the tests exercise.
 
     The suite runs against the shared .venv while the services run in their own
-    images. An ML-KEM module that imports a library missing from
-    gateway/requirements.txt passes locally and fails in Compose.
+    images. An ML-KEM module that imports a library missing from the service's
+    requirements.txt passes locally and fails in Compose. Every allowlisted
+    ML-KEM library a service imports must be pinned to an exact version in that
+    service's requirements.txt.
     """
-    kem_module = os.path.join(REPO_ROOT, "gateway", "app", "kem.py")
+    imported = ml_kem_libraries_imported_by(service)
 
-    if not os.path.exists(kem_module):
-        return
-
-    with open(os.path.join(REPO_ROOT, "gateway", "requirements.txt")) as handle:
-        requirements = handle.read().lower()
-
-    assert any(library in requirements for library in ML_KEM_LIBRARIES), (
-        "gateway/app/kem.py exists but gateway/requirements.txt pins no ML-KEM "
-        f"library (looked for {list(ML_KEM_LIBRARIES)})"
+    assert imported, (
+        f"{service}/ imports no allowlisted ML-KEM library "
+        f"(looked for {list(ML_KEM_LIBRARIES)}); ADR 0002 says it uses "
+        "cryptography's mlkem"
     )
 
-    assert "==" in requirements, "pin the ML-KEM library to an exact version"
+    with open(os.path.join(REPO_ROOT, service, "requirements.txt"), encoding="utf-8") as handle:
+        requirements = handle.read()
+
+    for library, importers in sorted(imported.items()):
+        assert library in ML_KEM_LIBRARIES
+        assert exact_pin(requirements, library), (
+            f"{', '.join(importers)} import(s) {library} for ML-KEM, but "
+            f"{service}/requirements.txt does not pin it with =="
+        )
