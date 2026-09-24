@@ -6,6 +6,17 @@ The project simulates a legacy temperature sensor sending readings through an ed
 
 **Current status:** the repository contains the sensor simulator, gateway, cloud service, and Docker Compose configuration, along with automated unit test suites for all three services, an integration test suite, and CI/CD workflows (see [Run the tests](#run-the-tests)). ML-KEM key establishment now protects the gateway→cloud link and is switched on in Compose; the device→gateway hop is still plaintext by design (see [Known limitations](#known-limitations)).
 
+## Versions
+
+Each release is a Git tag and a GitHub Release. A long-lived `release/*` branch is kept for each version so the two can be checked out and evaluated side by side.
+
+| Version | Milestone | Branch | Release notes and AI record |
+| --- | --- | --- | --- |
+| v1.0.0 | Initial edge–cloud baseline: plaintext device → gateway → cloud | `release/1.0.0` | [GitHub release](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/releases/tag/v1.0.0), [v1.0.0 record](docs/ai/prompts/v1.0.0.md) |
+| v2.0.0 | ML-KEM-768 on the gateway → cloud link, reliability fixes, observability, automated tests and CI/CD | `release/2.0.0` | [GitHub release](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/releases/tag/v2.0.0), [v2.0.0 record](docs/ai/prompts/v2.0.0.md) |
+
+Upgrading from v1.0.0 changes the default wire behaviour; see [Migrating from v1.0.0](docs/ai/prompts/v2.0.0.md#migrating-from-v100).
+
 ## Project documentation and AI assistants
 
 Start with the [documentation index](docs/README.md) for the project plan, decisions, prompt history, and verification records.
@@ -375,7 +386,7 @@ This stops and removes the project containers and network. Sensor data is not pe
 - **Device reporting:** the simulator now logs each delivery outcome and never reports a non-2xx response as success: a delivered reading logs at INFO, a non-2xx gateway response logs at WARNING, and a connection or timeout failure logs at ERROR. Failed readings are still discarded — see Delivery above; there is no retry or queue.
 - **Validation:** gateway and cloud now enforce the same device ID and temperature rules.
 - **Readiness:** `/ready` on both services reflects the real dependency state, but Compose still has no `healthcheck:` entries, so startup ordering remains best-effort.
-- **Verification and operations:** unit suites for all three services, an integration suite and CI/CD workflows are included (see [Run the tests](#run-the-tests)), and a plaintext-vs-ML-KEM latency comparison has been measured in containers (see the [integration record](docs/validation/2026-09-15-integration.md)). The CI workflows have **never executed on GitHub**, no shared test environment is provisioned, and no Prometheus instance has been run — the metrics are defined but most counters are not yet incremented from the service code.
+- **Verification and operations:** unit suites for all three services, an integration suite and CI/CD workflows are included (see [Run the tests](#run-the-tests)), and a plaintext-vs-ML-KEM latency comparison has been measured in containers (see the [integration record](docs/validation/2026-09-15-integration.md)). The `CI` and `Docs check` workflows have run green on GitHub for pull requests #1–#3; the `Publish images` workflow first runs on the `v2.0.0` release (see [P009](docs/ai/prompts/2026-09-24.md#p009-merge-develop-into-main-and-release-v200) for its outcome). No shared test environment is provisioned and no Prometheus instance has been run. Delivery, retry, validation, storage and duration metrics are wired; the handshake and encrypt/decrypt counters in the crypto packages still read zero.
 
 ## Planned next steps
 
@@ -383,7 +394,7 @@ See the [project plan](docs/project-plan.md) for the work packages, their comple
 
 ## AI-assisted development records
 
-Follow the [AI evidence guide](docs/ai/README.md) to record significant prompts, generated artifacts, review decisions, and verification. The [initial prompt record](docs/ai/prompts/2026-09-15.md) includes the request that established the shared agent rules.
+Follow the [AI evidence guide](docs/ai/README.md) to record significant prompts, generated artifacts, review decisions, and verification. The [initial prompt record](docs/ai/prompts/2026-09-15.md) includes the request that established the shared agent rules. Each release also has a version record summarising its prompts and decisions: [v1.0.0](docs/ai/prompts/v1.0.0.md) and [v2.0.0](docs/ai/prompts/v2.0.0.md).
 
 Expected responses in this README are derived from the source. See the [documentation validation record](docs/validation/2026-09-15-documentation.md) for checks performed so far.
 
