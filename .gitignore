@@ -10,3 +10,6 @@ __pycache__/
 
 # Staged file removals (see AGENTS.md "File removal: stage, never destroy")
 .trash/
+
+# Local, untracked working files
+local/
