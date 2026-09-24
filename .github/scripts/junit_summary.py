@@ -114,6 +114,11 @@ def _detail_lines(suites: list[ET.Element]) -> list[str]:
                 message = element.get("message") or ""
                 if outcome == "skipped" and element.text and not _is_xfail(element):
                     message = element.text
+                    # A module-level skip's text is a tuple repr,
+                    # "('/abs/path.py', 57, 'Skipped: reason')"; keep the reason.
+                    marker = "Skipped: "
+                    if marker in message:
+                        message = message.split(marker, 1)[1].rstrip("')\n ")
                 message = message.replace("|", "\\|")
                 message = " ".join(message.split())[:300]
                 rows.append(f"| {label} | `{name}` | {message} |")

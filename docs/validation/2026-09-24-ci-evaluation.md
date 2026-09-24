@@ -63,10 +63,11 @@ Also checked: failure propagation is sound (default `bash -e`, `set -euo pipefai
 | `requirements-dev.txt` includes `-r gateway/requirements.txt` and `-r cloud/requirements.txt` | Accepted | The suites import both services in-process. No pin conflicts (`pip check` clean). The alternative, extra `-r` flags only in the workflow, would have left local setup broken. |
 | `junit_summary.py`: lists failed/errored/skipped tests with reasons, `NO TESTS PASSED` status, optional `--max-skipped` exit code | Accepted | Criteria 4–5. Without `--max-skipped` it still always exits 0, so the unit and smoke jobs behave as before. |
 | Skip and xfail budgets: all 0 except 1 skip for protected_path and 1 xfail for crypto | Accepted | Each allowed one names the group decision it waits on. |
-| `tests/tooling/test_junit_summary.py` (8 tests) | Accepted | The budget check is what turns a silent skip into a red job, so it needs its own regression tests. |
+| `tests/tooling/test_junit_summary.py` (9 tests) | Accepted | The budget check is what turns a silent skip into a red job, so it needs its own regression tests. |
 | Combine all root suites into one pytest run | Rejected | Order- and environment-dependent, as above. |
 | Make `smoke` reuse the `build` images | Not done | Worth doing, but outside the gaps this task confirmed. |
 | Build arm64 images in `publish.yml` | Not done | A finding for the group, not a CI coverage gap. |
+| Other `publish.yml` gaps: not gated on CI passing, older action majors than `ci.yml` (`checkout@v4`, `build-push-action@v6`), unscoped GitHub Actions build cache | Not done | Publishing works (verified below); these are hardening for a later change. |
 | Protected-path contract port and scan fix | See below | |
 | Stale-documentation corrections: README, project plan, `docs/operations/ci.md`, `docs/security/ml-kem-integration.md`, `docs/testing/ml-kem-verification.md`, `pytest.ini`, `tests/conftest.py`, `tests/integration/conftest.py` | Accepted | Criterion 8. Historical validation and prompt records are unchanged. |
 
@@ -106,7 +107,7 @@ The source scan `test_no_quantum_vulnerable_key_agreement.py` was also fixed. It
 | `tests/crypto` | 116 passed, 1 xfailed (106 before the port) | **No** | Yes |
 | `tests/reliability` | 57 passed | **No** | Yes |
 | `tests/protected_path` | 35 passed, 1 skipped (32 passed, 1 skipped before) | **No** | Yes |
-| `tests/tooling` | 11 passed (3 before; 8 new for the budget check) | **No** | Yes |
+| `tests/tooling` | 12 passed (3 before; 9 new for the summary and budget check) | **No** | Yes |
 
 ## Deliberate faults
 
@@ -153,14 +154,19 @@ The fault runs are local executions of CI's commands, not GitHub runs. Remote ve
 | --- | --- | --- | --- |
 | CI on PR #5 (`pull_request`, before) | `82535f3` | 75 s | smoke 31 s |
 | CI on push to `main` (before) | `9bb782a` | 80 s | smoke 33 s |
-| CI on this branch's pull request (after) | REMOTE_PENDING | | |
+| CI on draft PR #6 (after), run 35976176991 | `f275b5e` | 78 s | smoke 35 s; root-tests legs 14–24 s, in parallel with the unit legs |
 
 Durations are GitHub-hosted runs and vary with runner load; a single run on each side is not a controlled comparison. Locally the four root suites take about 0.3–2.3 s each after a ~7 s dependency install.
 
 ## Remote CI
 
-REMOTE_PENDING
+Draft pull request [#6](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/6) (`ci/root-suites` → `develop`) was opened so CI could run on the branch, because `ci.yml` triggers only on pull requests and on pushes to `main` and `develop`.
 
+- `CI` run 35976176991 on `f275b5e`: all 13 jobs passed, including the four new `Root tests` legs on GitHub's Python 3.12.14. The dependency import check passed on the clean runner. Counts: crypto 116 passed, 1 xfailed; reliability 57; protected_path 35 passed, 1 skipped; tooling 11; gateway 24, cloud 20, device 43.
+- The job summaries rendered as intended: crypto listed its xfail with the Stanley/Tiago reason, and protected_path listed its skip. That run showed the skip reason as a raw tuple with the runner's file path. The final commit fixes that, adds a regression test for it (tooling: 12 tests), and records this section.
+- `Docs check` run 35976176919 on `f275b5e`: passed.
+- The final commit gets its own `CI` and `Docs check` runs on PR #6. Their result is in the PR's checks, not here, because this record is part of that commit.
+- The deliberate faults were not pushed to GitHub. Their detection was shown by running CI's commands locally (above), not by a failing GitHub run.
 ## Remaining skips and risks
 
 - `tests/protected_path/test_protected_path_contract.py` still skips as a module; its skip reason names the decisions it waits on.

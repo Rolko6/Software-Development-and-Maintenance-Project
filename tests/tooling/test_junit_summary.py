@@ -37,7 +37,7 @@ REPORT = """<?xml version="1.0" encoding="utf-8"?>
 
 ALL_SKIPPED = """<?xml version="1.0" encoding="utf-8"?>
 <testsuites><testsuite name="pytest" errors="0" failures="0" skipped="1" tests="1" time="0.1">
-<testcase classname="t" name="test_skip" time="0.01"><skipped message="collection skipped">reason</skipped></testcase>
+<testcase classname="" name="t" time="0.01"><skipped message="collection skipped">('/abs/t.py', 57, 'Skipped: module waits on a decision')</skipped></testcase>
 </testsuite></testsuites>
 """
 
@@ -87,3 +87,9 @@ def test_a_suite_where_nothing_passed_is_not_shown_as_passed(tmp_path):
     text = junit_summary.render_summary(_write(tmp_path, ALL_SKIPPED), "demo")
     assert "NO TESTS PASSED" in text
     assert ": PASSED" not in text
+
+
+def test_a_module_level_skip_shows_its_reason_not_the_tuple(tmp_path):
+    text = junit_summary.render_summary(_write(tmp_path, ALL_SKIPPED), "demo")
+    assert "| module waits on a decision |" in text
+    assert "/abs/t.py" not in text
