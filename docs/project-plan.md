@@ -1,6 +1,6 @@
 # Proposed project plan
 
-Recorded: 2026-09-15. Source: the prototype inspection and course brief discussed in [P001](ai/prompts/2026-09-15.md#p001-next-work-suggestions).
+Recorded: 2026-09-15. Source: the prototype inspection and course brief discussed in [P001](ai/prompts/2026-09-15-yyy-tom.md#p001-next-work-suggestions).
 
 This was a proposed backlog. On 2026-09-15 the user asked for the listed work to be carried out, so the implementation status below is now part of the record. Owners and estimates were still never agreed by the group, and the items marked **human step** cannot be discharged by an assistant at all.
 

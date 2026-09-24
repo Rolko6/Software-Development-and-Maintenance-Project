@@ -386,7 +386,7 @@ This stops and removes the project containers and network. Sensor data is not pe
 - **Device reporting:** the simulator now logs each delivery outcome and never reports a non-2xx response as success: a delivered reading logs at INFO, a non-2xx gateway response logs at WARNING, and a connection or timeout failure logs at ERROR. Failed readings are still discarded — see Delivery above; there is no retry or queue.
 - **Validation:** gateway and cloud now enforce the same device ID and temperature rules.
 - **Readiness:** `/ready` on both services reflects the real dependency state, but Compose still has no `healthcheck:` entries, so startup ordering remains best-effort.
-- **Verification and operations:** unit suites for all three services, an integration suite and CI/CD workflows are included (see [Run the tests](#run-the-tests)), and a plaintext-vs-ML-KEM latency comparison has been measured in containers (see the [integration record](docs/validation/2026-09-15-integration.md)). The `CI` and `Docs check` workflows have run green on GitHub for pull requests #1–#3; the `Publish images` workflow first runs on the `v2.0.0` release (see [P009](docs/ai/prompts/2026-09-24.md#p009-merge-develop-into-main-and-release-v200) for its outcome). No shared test environment is provisioned and no Prometheus instance has been run. Delivery, retry, validation, storage and duration metrics are wired; the handshake and encrypt/decrypt counters in the crypto packages still read zero.
+- **Verification and operations:** unit suites for all three services, an integration suite and CI/CD workflows are included (see [Run the tests](#run-the-tests)), and a plaintext-vs-ML-KEM latency comparison has been measured in containers (see the [integration record](docs/validation/2026-09-15-integration.md)). The `CI` and `Docs check` workflows have run green on GitHub for pull requests #1–#3; the `Publish images` workflow first runs on the `v2.0.0` release (see [P009](docs/ai/prompts/2026-09-24-yyy-tom.md#p009-merge-develop-into-main-and-release-v200) for its outcome). No shared test environment is provisioned and no Prometheus instance has been run. Delivery, retry, validation, storage and duration metrics are wired; the handshake and encrypt/decrypt counters in the crypto packages still read zero.
 
 ## Planned next steps
 
@@ -394,7 +394,7 @@ See the [project plan](docs/project-plan.md) for the work packages, their comple
 
 ## AI-assisted development records
 
-Follow the [AI evidence guide](docs/ai/README.md) to record significant prompts, generated artifacts, review decisions, and verification. The [initial prompt record](docs/ai/prompts/2026-09-15.md) includes the request that established the shared agent rules. Each release also has a version record summarising its prompts and decisions: [v1.0.0](docs/ai/prompts/v1.0.0.md) and [v2.0.0](docs/ai/prompts/v2.0.0.md).
+Follow the [AI evidence guide](docs/ai/README.md) to record significant prompts, generated artifacts, review decisions, and verification. The [initial prompt record](docs/ai/prompts/2026-09-15-yyy-tom.md) includes the request that established the shared agent rules. Each release also has a version record summarising its prompts and decisions: [v1.0.0](docs/ai/prompts/v1.0.0.md) and [v2.0.0](docs/ai/prompts/v2.0.0.md).
 
 Expected responses in this README are derived from the source. See the [documentation validation record](docs/validation/2026-09-15-documentation.md) for checks performed so far.
 

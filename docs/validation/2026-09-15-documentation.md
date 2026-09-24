@@ -1,6 +1,6 @@
 # Documentation validation — 2026-09-15
 
-Scope: README, shared agent instructions, and the documentation/evidence structure created for [P002 and P003](../ai/prompts/2026-09-15.md).
+Scope: README, shared agent instructions, and the documentation/evidence structure created for [P002 and P003](../ai/prompts/2026-09-15-yyy-tom.md).
 
 ## Evidence already observed
 

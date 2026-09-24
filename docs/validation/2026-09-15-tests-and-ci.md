@@ -1,6 +1,6 @@
 # Tests and CI/CD validation — 2026-09-15
 
-Scope: the per-service `pytest` suites (`gateway/tests/`, `cloud/tests/`, `device/tests/`), the root `tests/integration/` HTTP suite, the helper scripts (`scripts/run-unit-tests.sh`, `scripts/smoke-test.sh`), and the two GitHub Actions workflows (`.github/workflows/ci.yml`, `.github/workflows/publish.yml`) added for [P006](../ai/prompts/2026-09-15.md). It does not cover the ML-KEM/crypto test suite, `tests/vectors/`, `scripts/baseline/`, or the device module restructuring — those have their own validation records (see the [documentation index](../README.md)).
+Scope: the per-service `pytest` suites (`gateway/tests/`, `cloud/tests/`, `device/tests/`), the root `tests/integration/` HTTP suite, the helper scripts (`scripts/run-unit-tests.sh`, `scripts/smoke-test.sh`), and the two GitHub Actions workflows (`.github/workflows/ci.yml`, `.github/workflows/publish.yml`) added for [P006](../ai/prompts/2026-09-15-yyy-tom.md). It does not cover the ML-KEM/crypto test suite, `tests/vectors/`, `scripts/baseline/`, or the device module restructuring — those have their own validation records (see the [documentation index](../README.md)).
 
 This record was written while several other Claude Code sessions were actively editing the same working tree (see [Remaining uncertainty](#remaining-uncertainty)). It separates what this session actually executed from what the coordinating session reported as already verified before those concurrent edits landed.
 

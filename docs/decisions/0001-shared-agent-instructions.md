@@ -2,7 +2,7 @@
 
 - Date: 2026-09-15
 - Status: implemented under the user's request; human review of the wording not recorded.
-- Origin: [P003](../ai/prompts/2026-09-15.md#p003-shared-rules-and-prompt-records).
+- Origin: [P003](../ai/prompts/2026-09-15-yyy-tom.md#p003-shared-rules-and-prompt-records).
 
 ## Context
 

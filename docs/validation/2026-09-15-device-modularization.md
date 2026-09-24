@@ -1,7 +1,7 @@
 # Device modularization validation — 2026-09-15
 
 Scope: the restructuring of `device/device.py` into the `device/app/` package
-and `device/tests/` suite, recorded as [P005](../ai/prompts/2026-09-15.md).
+and `device/tests/` suite, recorded as [P005](../ai/prompts/2026-09-15-yyy-tom.md).
 This record covers only that change; it does not cover the gateway, cloud,
 root, or ML-KEM test suites added by concurrent sessions in the same working
 tree.
@@ -28,7 +28,7 @@ tree.
 - `docker compose up --build`, any container image build, and any in-container
   runtime check — the Docker daemon was not running in this environment.
 - The repo-root and integration test suites owned by the concurrent session
-  recorded as [P004](../ai/prompts/2026-09-15.md) (ML-KEM verification tests).
+  recorded as [P004](../ai/prompts/2026-09-15-yyy-tom.md) (ML-KEM verification tests).
 
 ## Reproducing
 
