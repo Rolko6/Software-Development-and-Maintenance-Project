@@ -25,6 +25,7 @@
 | Understand how baseline and secured measurements are kept comparable | [Measurement method: 2026-09-15](validation/2026-09-15-measurement-method.md) |
 | See what has actually been checked for the device module restructuring | [Device modularization validation: 2026-09-15](validation/2026-09-15-device-modularization.md) |
 | See what has actually been checked for the automated tests and CI/CD | [Tests and CI/CD validation: 2026-09-15](validation/2026-09-15-tests-and-ci.md) |
+| See what CI checks, which faults it detects, and the evidence for image publishing | [CI evaluation: 2026-09-24](validation/2026-09-24-ci-evaluation.md) |
 
 Current operating behaviour belongs in the project README. Proposed work belongs in the plan. Decisions explain choices; prompt and validation records preserve evidence. Update the authoritative location and link to it rather than copying the same rules across files.
 

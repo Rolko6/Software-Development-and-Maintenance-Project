@@ -5,7 +5,8 @@ what each job does, what it proves and does not prove, how to reproduce it
 locally, how to read a failure, and how to add a new check. It is part of
 Work Package 4 ("Automate build and deployment", [project plan](../project-plan.md)).
 For publishing images to GHCR, see `.github/workflows/publish.yml` (a
-separate, main-branch-only workflow; it is not covered here). For running
+separate workflow triggered by pushes to `main`, `v*.*.*` tags and manual
+dispatch, never by `develop`; it is not covered here). For running
 the stack, see the [README](../../README.md); for a shared test
 deployment, see [deployment.md](deployment.md).
 
@@ -76,6 +77,57 @@ pytest -ra --junitxml=unit-report.xml
 Or run all three in one combined pass/fail report: `./scripts/run-unit-tests.sh`
 (owned by the testing task; see that script for details).
 
+### `root-tests` — root suites (matrix: `crypto`, `reliability`, `protected_path`, `tooling`)
+
+**Does:** runs each root-level suite under `tests/` in its own job and its
+own `python -m pytest tests/<suite>` process on Python 3.12, from the
+repository root. Installs `requirements-dev.txt`, which includes
+`gateway/requirements.txt` and `cloud/requirements.txt` because these suites
+import both services' code in-process, then checks that `fastapi`, `httpx`
+and `cryptography`'s `mlkem` import before pytest starts. Writes a job
+summary listing every failed, errored and skipped test with its reason,
+uploads the JUnit report as `junit-root-<suite>`, and enforces a skip
+budget and an expected-failure (xfail) budget per suite (`max_skipped` and
+`max_xfailed` in the matrix): the job fails if a suite skips, or expects to
+fail, more tests than its budget. Every budget is 0 except two, each of
+which waits on a group decision named in the test's reason:
+`protected_path` may skip 1 (the module-level skip of
+`test_protected_path_contract.py`), and `crypto` may xfail 1 (the strict
+xfail recording that the device id travels in clear,
+`test_protected_path_session.py`). The budget check is
+`.github/scripts/junit_summary.py --max-skipped/--max-xfailed`, tested by
+`tests/tooling/test_junit_summary.py`.
+
+| Suite | What it checks |
+| --- | --- |
+| `crypto` | ML-KEM against NIST ACVP known-answer vectors and FIPS 203 properties; the gateway and cloud secure-channel code (handshake, secure data, replay, mode switch); the protected-path requirements ported to the session design (`test_protected_path_session.py`) |
+| `reliability` | Validation rules, bounded retry, readiness and bounded storage in the gateway and cloud apps, in-process |
+| `protected_path` | Source scan for classical key agreement and the ML-KEM library pin; the original sessionless contract (skipped) |
+| `tooling` | Regression tests for `.github/scripts/check_docs.py` and the budget check in `.github/scripts/junit_summary.py` |
+
+**Why separate processes:** `gateway/app` and `cloud/app` are both packages
+named `app`. `tests/crypto` and `tests/reliability` each load both under
+private aliases and manipulate `sys.modules` and `os.environ` to do it, so
+running them in one interpreter would make results depend on collection
+order. `tests/integration` is excluded because it needs the running stack;
+`smoke` runs it.
+
+**Proves:** the four suites pass from a clean checkout with only the pinned
+dependencies, and no new skip appears silently.
+
+**Does not prove:** anything about the containers (see `build` and
+`smoke`), or side-channel resistance of the ML-KEM implementation (see
+[ML-KEM verification](../testing/ml-kem-verification.md)).
+
+**Reproduce locally:**
+
+```bash
+python3.12 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
+for suite in crypto reliability protected_path tooling; do
+  .venv/bin/python -m pytest "tests/$suite" -ra || echo "FAILED: $suite"
+done
+```
+
 ### `compose-validate` — validate the Compose file
 
 **Does:** `docker compose config --quiet`.
@@ -129,14 +181,15 @@ whether the build succeeds.)
 
 ### `smoke` — smoke test against the real Compose stack
 
-**Does:** runs only after `build` and `test` succeed. Verifies
+**Does:** runs only after `build`, `test` and `root-tests` succeed. Verifies
 `requirements-dev.txt`, `scripts/smoke-test.sh`, `pytest.ini`, and
 `tests/integration/` exist (failing loudly if not), installs the root dev
 dependencies, then runs `scripts/smoke-test.sh --junitxml=smoke-report.xml`.
 That script (owned by the testing task, not this one) already:
 
 1. Runs `docker compose config --quiet`.
-2. `docker compose up --build -d`.
+2. `docker compose up --build -d`. This rebuilds the images; the ones
+   `build` produced are not reused.
 3. Polls both `/health` endpoints (up to 90s) — since Compose has no
    health checks configured, this script's own polling is what "wait for
    the health endpoints" means here.
