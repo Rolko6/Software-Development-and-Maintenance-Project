@@ -2,4 +2,14 @@
 
 .DS_Store
 
+# Local Python environments and caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Staged file removals (see AGENTS.md "File removal: stage, never destroy")
+.trash/
+
+# Local, untracked working files
 local/

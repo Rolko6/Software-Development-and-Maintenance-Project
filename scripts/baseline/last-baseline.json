@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-09-15T10:29:23.496959+00:00",
+  "environment": {
+    "python_version": "3.13.12",
+    "platform": "macOS-15.7.5-arm64-arm-64bit-Mach-O"
+  },
+  "config": {
+    "gateway_url": "http://127.0.0.1:18000/device-data",
+    "cloud_url": "http://127.0.0.1:18001/data",
+    "samples": 50,
+    "warmup": 5,
+    "timeout_s": 5.0,
+    "device_id": "latency-baseline-001"
+  },
+  "results": {
+    "device_data": {
+      "url": "http://127.0.0.1:18000/device-data",
+      "samples_requested": 50,
+      "warmup": 5,
+      "failures": 0,
+      "stats_ms": {
+        "count": 50,
+        "min_ms": 2.375,
+        "mean_ms": 3.187,
+        "median_ms": 3.041,
+        "p95_ms": 5.029,
+        "max_ms": 7.138
+      }
+    },
+    "cloud_data": {
+      "url": "http://127.0.0.1:18001/data",
+      "samples_requested": 50,
+      "warmup": 5,
+      "failures": 0,
+      "stats_ms": {
+        "count": 50,
+        "min_ms": 0.848,
+        "mean_ms": 1.134,
+        "median_ms": 1.104,
+        "p95_ms": 1.384,
+        "max_ms": 2.332
+      }
+    }
+  }
+}

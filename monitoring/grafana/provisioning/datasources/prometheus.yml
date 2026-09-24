@@ -1,0 +1,19 @@
+# Auto-provisions a "Prometheus" datasource in Grafana so the operator
+# does not have to click through the UI to add it. Mounted read-only at
+# /etc/grafana/provisioning/datasources/ inside the Grafana container
+# (see the grafana service block in monitoring/README.md).
+#
+# "http://prometheus:9090" relies on Grafana and Prometheus sharing the
+# same Compose network and Prometheus being named "prometheus" — both
+# true for the service blocks in monitoring/README.md /
+# monitoring/docker-compose.monitoring.yml.
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true

@@ -1,0 +1,202 @@
+# Pull-request / push pipeline for Work Package 4 ("Automate build and
+# deployment", docs/project-plan.md). See docs/operations/ci.md for what
+# each job proves, what it does not prove, and how to reproduce it locally.
+#
+# Action versions pinned against the released majors current as of
+# 2026-09-15 (checked via Context7 against each action's own repository):
+#   actions/checkout@v5, actions/setup-python@v7, actions/upload-artifact@v7,
+#   docker/setup-buildx-action@v4, docker/build-push-action@v7.
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+      - develop
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.12"
+  # Pinned inside the workflow rather than requirements-dev.txt, which
+  # another concurrent task owns. Verified installable from PyPI on
+  # 2026-09-15; bump when convenient (see docs/operations/ci.md).
+  RUFF_VERSION: "0.14.5"
+
+jobs:
+  lint:
+    name: Lint / static checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Compile-check all Python sources
+        run: python -m compileall -q -f . -x '(\.venv|\.git|\.trash)/'
+
+      - name: Install ruff (pinned in workflow, not requirements-dev.txt)
+        run: python -m pip install --quiet "ruff==${{ env.RUFF_VERSION }}"
+
+      - name: Run ruff
+        run: ruff check .
+
+  test:
+    name: Unit tests (${{ matrix.service }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [cloud, gateway, device]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Verify test harness inputs
+        run: |
+          set -euo pipefail
+          missing=0
+          if [ ! -f "${{ matrix.service }}/requirements-dev.txt" ]; then
+            echo "::error::${{ matrix.service }}/requirements-dev.txt is missing. This job expects the pytest suite's dev dependencies to be pinned there; see docs/operations/ci.md."
+            missing=1
+          fi
+          if [ ! -d "${{ matrix.service }}/tests" ]; then
+            echo "::error::${{ matrix.service }}/tests/ is missing. This job expects per-service unit tests there; see docs/operations/ci.md."
+            missing=1
+          fi
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: ${{ matrix.service }}/requirements-dev.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r ${{ matrix.service }}/requirements-dev.txt
+
+      - name: Run pytest
+        working-directory: ${{ matrix.service }}
+        run: python -m pytest -ra --junitxml=unit-report.xml
+
+      - name: Write job summary
+        if: always()
+        run: |
+          python .github/scripts/junit_summary.py \
+            --title "Unit tests: ${{ matrix.service }}" \
+            "${{ matrix.service }}/unit-report.xml" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload JUnit report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: junit-${{ matrix.service }}
+          path: ${{ matrix.service }}/unit-report.xml
+          if-no-files-found: error
+          retention-days: 14
+
+  compose-validate:
+    name: Validate Compose file
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: docker compose config --quiet
+        run: docker compose config --quiet
+
+  build:
+    name: Build image (${{ matrix.service }})
+    needs: [lint, compose-validate]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [cloud, gateway, device]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build ${{ matrix.service }} image (no push)
+        uses: docker/build-push-action@v7
+        with:
+          context: ./${{ matrix.service }}
+          push: false
+          tags: local/${{ matrix.service }}:ci
+          # Each matrix leg needs its own cache scope: the GHA cache
+          # backend defaults to a single "buildkit" scope, and without a
+          # distinct scope per image, concurrent matrix builds overwrite
+          # each other's cache (docker/docs build/cache/backends/gha.md,
+          # "Scope", checked via Context7 2026-09-15).
+          cache-from: type=gha,scope=build-${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=build-${{ matrix.service }}
+
+  smoke:
+    name: Smoke test (Compose stack)
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Verify smoke test inputs
+        run: |
+          set -euo pipefail
+          missing=0
+          for f in requirements-dev.txt scripts/smoke-test.sh pytest.ini tests/integration; do
+            if [ ! -e "$f" ]; then
+              echo "::error::required smoke test input '$f' is missing; see docs/operations/ci.md."
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+
+      # scripts/smoke-test.sh (owned by the testing task) already builds
+      # and starts the stack, polls the /health endpoints, runs the
+      # integration suite covering the README's known-reading and
+      # invalid-device-id checks, dumps `docker compose logs` on failure,
+      # and always tears the stack down with `docker compose down -v
+      # --remove-orphans`. Invoked with `bash` rather than relying on the
+      # executable bit surviving checkout.
+      - name: Run smoke test
+        run: bash scripts/smoke-test.sh --junitxml=smoke-report.xml
+
+      - name: Upload smoke test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: smoke-report
+          path: smoke-report.xml
+          if-no-files-found: warn
+          retention-days: 14

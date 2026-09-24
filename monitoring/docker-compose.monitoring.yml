@@ -1,0 +1,45 @@
+# Optional Compose overlay adding Prometheus + Grafana, without editing
+# the project's docker-compose.yml directly. Run alongside it with:
+#
+#   docker compose -f docker-compose.yml -f monitoring/docker-compose.monitoring.yml up --build -d
+#
+# This joins the same default Compose network as "gateway" and "cloud"
+# (both files share one project name when run from the repo root), so
+# Prometheus can resolve "gateway:8000" / "cloud:8001" as configured in
+# monitoring/prometheus.yml, and Grafana can resolve "prometheus:9090"
+# as configured in monitoring/grafana/provisioning/datasources/prometheus.yml.
+#
+# If the main docker-compose.yml is instead edited directly to add these
+# services permanently, see monitoring/README.md for the equivalent
+# service blocks to paste in there (drop the top-level "services:" key
+# below and merge the two service entries into the existing file).
+#
+# Image tags below are known-good pins at the time this was written;
+# confirm/update them against Docker Hub before relying on this in a
+# real deployment — this repository's sandbox has no Docker daemon
+# available to pull and verify them (see docs/operations/monitoring.md,
+# "Not run").
+
+services:
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - gateway
+      - cloud
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
