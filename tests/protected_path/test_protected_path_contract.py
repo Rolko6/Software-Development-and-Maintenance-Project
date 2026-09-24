@@ -37,6 +37,24 @@ Interface assumed below, proposed by these tests rather than decided:
 If work package 3 settles on different names, change this file with the
 implementation and say so in the decision record. Do not delete a test to make
 the suite pass.
+
+Status: work package 3 chose the session design, not the flat interface above.
+The implementation is session-based and lives in gateway/app/crypto and
+cloud/app/crypto (docs/decisions/0002-ml-kem-key-establishment.md), so
+gateway/app/kem.py does not exist and this module still skips. It is kept as
+the statement of the requirements. Requirements a (parameter set), b (sizes),
+c (reading hidden in recorded traffic; the temperature and field-name parts),
+d (recorded traffic carries ML-KEM material), e (the ML-KEM secret changes the
+session key) and g1 (failed key establishment fails closed) are ported to
+tests/crypto/test_protected_path_session.py and run there. Three decisions
+remain open for Stanley/Tiago:
+
+* c: the device id travels in cleartext as routing and AEAD associated data.
+  The port keeps this assertion as a strict xfail.
+* f (test_a_classical_secret_alone_is_not_accepted): wire.derive_session_key
+  has no 32-byte length guard on the ML-KEM secret.
+* g2: nothing increments the handshake-failure counter
+  (GATEWAY_HANDSHAKE_FAILED_TOTAL in gateway/app/metrics.py).
 """
 
 import json
@@ -57,8 +75,12 @@ if GATEWAY_ROOT not in sys.path:
 kem = pytest.importorskip(
     "app.kem",
     reason=(
-        "gateway/app/kem.py does not exist yet: ML-KEM integration is project "
-        "plan work package 3. These tests define what it has to satisfy."
+        "gateway/app/kem.py does not exist: the implemented design is "
+        "session-based in gateway/app/crypto. Requirements a, b, c (partly), "
+        "d, e and g1 are ported to tests/crypto/test_protected_path_session.py. "
+        "Open decisions for Stanley/Tiago: device id in cleartext (c), "
+        "32-byte length guard in derive_session_key (f), handshake-failure "
+        "counter (g2)."
     ),
 )
 
