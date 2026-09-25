@@ -54,6 +54,11 @@ jobs:
       - name: Run ruff
         run: ruff check .
 
+      - name: Check wire.py is identical in gateway and cloud
+        run: |
+          diff cloud/app/crypto/wire.py gateway/app/crypto/wire.py || \
+            (echo "::error::cloud/app/crypto/wire.py and gateway/app/crypto/wire.py have diverged. They must be kept identical — edit both files together." && exit 1)
+
   test:
     name: Unit tests (${{ matrix.service }})
     runs-on: ubuntu-latest

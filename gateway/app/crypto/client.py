@@ -40,12 +40,31 @@ from cryptography.hazmat.primitives.asymmetric import mlkem
 from . import wire
 from .exceptions import HandshakeAuthenticationError, PeerTrustError, ProtocolError
 from .session import ClientSession
+from ..metrics import (
+    GATEWAY_HANDSHAKE_DURATION_SECONDS,
+    GATEWAY_HANDSHAKE_FAILED_TOTAL,
+    GATEWAY_HANDSHAKE_STARTED_TOTAL,
+    GATEWAY_HANDSHAKE_SUCCEEDED_TOTAL,
+    GATEWAY_SESSION_REKEYS_TOTAL,
+)
 
 DEFAULT_TIMEOUT_SECONDS = 5.0
 DEFAULT_REKEY_SKEW_SECONDS = 15.0
 
 HttpGet = Callable[[str, float], "requests.Response"]
 HttpPost = Callable[[str, dict, float], "requests.Response"]
+
+
+def _classify_handshake_error(exc: Exception) -> str:
+    if isinstance(exc, requests.exceptions.Timeout):
+        return "timeout"
+    if isinstance(exc, requests.exceptions.ConnectionError):
+        return "peer_unavailable"
+    if isinstance(exc, ProtocolError):
+        return "decode_error"
+    if isinstance(exc, (HandshakeAuthenticationError, PeerTrustError)):
+        return "verification_failed"
+    return "other"
 
 
 def _default_http_get(url: str, timeout: float) -> "requests.Response":
@@ -116,64 +135,79 @@ class SecureCloudClient:
         return key_id, ek_bytes, fingerprint
 
     def _handshake(self) -> ClientSession:
-        key_id, ek_bytes, fingerprint = self._fetch_encapsulation_key()
-        public_key = mlkem.MLKEM768PublicKey.from_public_bytes(ek_bytes)
-        shared_secret, ciphertext = public_key.encapsulate()
-        client_nonce = os.urandom(wire.CLIENT_NONCE_LEN)
-        fingerprint_bytes = bytes.fromhex(fingerprint)
-
-        mac_b64 = None
-        if self._psk is not None:
-            mac = wire.compute_mac(
-                self._psk, b"client", key_id.encode("utf-8"), client_nonce, fingerprint_bytes, ciphertext
-            )
-            mac_b64 = base64.b64encode(mac).decode("ascii")
-
-        request_body = {
-            "key_id": key_id,
-            "client_nonce": base64.b64encode(client_nonce).decode("ascii"),
-            "ciphertext": base64.b64encode(ciphertext).decode("ascii"),
-            "mac": mac_b64,
-        }
-        response = self._http_post(self._handshake_url(), request_body, self._timeout)
-        response.raise_for_status()
-
+        GATEWAY_HANDSHAKE_STARTED_TOTAL.inc()
+        started_at = time.perf_counter()
         try:
-            body = response.json()
-            session_id = body["session_id"]
-            expires_at = float(body["expires_at"])
-            server_mac_b64 = body.get("server_mac")
-        except (KeyError, TypeError, ValueError) as exc:
-            raise ProtocolError("malformed handshake response from cloud") from exc
+            key_id, ek_bytes, fingerprint = self._fetch_encapsulation_key()
+            public_key = mlkem.MLKEM768PublicKey.from_public_bytes(ek_bytes)
+            shared_secret, ciphertext = public_key.encapsulate()
+            client_nonce = os.urandom(wire.CLIENT_NONCE_LEN)
+            fingerprint_bytes = bytes.fromhex(fingerprint)
 
-        if self._psk is not None:
-            expected = wire.compute_mac(
-                self._psk,
-                b"server",
-                key_id.encode("utf-8"),
-                client_nonce,
-                fingerprint_bytes,
-                ciphertext,
-                session_id.encode("utf-8"),
-            )
-            try:
-                got = base64.b64decode(server_mac_b64, validate=True) if server_mac_b64 else b""
-            except (binascii.Error, ValueError) as exc:
-                raise ProtocolError("malformed server_mac from cloud") from exc
-            if not wire.constant_time_equal(expected, got):
-                raise HandshakeAuthenticationError(
-                    "cloud did not prove knowledge of the pre-shared key "
-                    "(wrong ML_KEM_PSK, or a machine-in-the-middle)"
+            mac_b64 = None
+            if self._psk is not None:
+                mac = wire.compute_mac(
+                    self._psk, b"client", key_id.encode("utf-8"), client_nonce, fingerprint_bytes, ciphertext
                 )
+                mac_b64 = base64.b64encode(mac).decode("ascii")
 
-        session_key = wire.derive_session_key(shared_secret, client_nonce, key_id)
-        session = ClientSession(session_id=session_id, key=session_key, expires_at=expires_at, counter=-1)
-        self._session = session
-        return session
+            request_body = {
+                "key_id": key_id,
+                "client_nonce": base64.b64encode(client_nonce).decode("ascii"),
+                "ciphertext": base64.b64encode(ciphertext).decode("ascii"),
+                "mac": mac_b64,
+            }
+            response = self._http_post(self._handshake_url(), request_body, self._timeout)
+            response.raise_for_status()
+
+            try:
+                body = response.json()
+                session_id = body["session_id"]
+                expires_at = float(body["expires_at"])
+                server_mac_b64 = body.get("server_mac")
+            except (KeyError, TypeError, ValueError) as exc:
+                raise ProtocolError("malformed handshake response from cloud") from exc
+
+            if self._psk is not None:
+                expected = wire.compute_mac(
+                    self._psk,
+                    b"server",
+                    key_id.encode("utf-8"),
+                    client_nonce,
+                    fingerprint_bytes,
+                    ciphertext,
+                    session_id.encode("utf-8"),
+                )
+                try:
+                    got = base64.b64decode(server_mac_b64, validate=True) if server_mac_b64 else b""
+                except (binascii.Error, ValueError) as exc:
+                    raise ProtocolError("malformed server_mac from cloud") from exc
+                if not wire.constant_time_equal(expected, got):
+                    raise HandshakeAuthenticationError(
+                        "cloud did not prove knowledge of the pre-shared key "
+                        "(wrong ML_KEM_PSK, or a machine-in-the-middle)"
+                    )
+
+            session_key = wire.derive_session_key(shared_secret, client_nonce, key_id)
+            session = ClientSession(session_id=session_id, key=session_key, expires_at=expires_at, counter=-1)
+            self._session = session
+            GATEWAY_HANDSHAKE_SUCCEEDED_TOTAL.inc()
+            GATEWAY_HANDSHAKE_DURATION_SECONDS.labels(outcome="success").observe(
+                time.perf_counter() - started_at
+            )
+            return session
+        except Exception as exc:
+            GATEWAY_HANDSHAKE_FAILED_TOTAL.labels(reason=_classify_handshake_error(exc)).inc()
+            GATEWAY_HANDSHAKE_DURATION_SECONDS.labels(outcome="failure").observe(
+                time.perf_counter() - started_at
+            )
+            raise
 
     def _ensure_fresh_session(self) -> ClientSession:
         session = self._session
         if session is None or time.time() >= (session.expires_at - self._skew):
+            if session is not None:
+                GATEWAY_SESSION_REKEYS_TOTAL.labels(reason="expired").inc()
             session = self._handshake()
         return session
 
@@ -212,6 +246,7 @@ class SecureCloudClient:
             # cloud process restarted and forgot its in-memory sessions.
             # Re-handshake once and retry the same reading rather than
             # dropping it.
+            GATEWAY_SESSION_REKEYS_TOTAL.labels(reason="forced").inc()
             self._session = None
             return self._send_locked(payload, _retried=True)
 
