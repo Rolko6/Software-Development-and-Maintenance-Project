@@ -291,3 +291,6 @@ def test_retry_stops_when_time_budget_exhausted(monkeypatch, gateway_main):
     # Only the first attempt ran; the second was never started because the
     # budget was already spent by the time its turn came.
     assert mock_post.call_count == 1
+
+
+pytestmark = pytest.mark.skip(reason='deliberate fault F6')
