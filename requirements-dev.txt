@@ -11,6 +11,12 @@
 
 pytest==9.1.1
 
+# Runtime dependencies imported by the service code loaded during root-level
+# test runs (tests/crypto, tests/reliability, tests/protected_path load the
+# gateway and cloud app packages in-process).
+cryptography==50.0.1
+fastapi==0.115.6
+
 # ML-KEM (FIPS 203) implementation under test.
 # Educational implementation, not constant time and not for deployment; see
 # docs/testing/ml-kem-verification.md.

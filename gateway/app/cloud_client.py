@@ -1,6 +1,3 @@
-# Initially, this sends data normally.
-# Later, this will become the place where ML-KEM is integrated.
-
 import os
 import time
 

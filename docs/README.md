@@ -44,6 +44,6 @@ These files provide shared instructions; they cannot guarantee that every model 
 
 ## Course context
 
-The course brief supplied for this work is `SDMO_Project.pdf`, stored alongside this clone in the user's course folder. It is not tracked in this repository. The reviewed copy is titled “Software Development, Maintenance & Operations Project: ML-KEM Legacy Modernization with LLM Assistance”, August 2026.
+The course brief supplied for this work is [`docs/project-description.pdf`](project-description.pdf). The reviewed copy is titled “Software Development, Maintenance & Operations Project: ML-KEM Legacy Modernization with LLM Assistance”, August 2026.
 
 It asks for baseline analysis, critical evaluation of LLM-generated artifacts, ML-KEM integration, operations work, and final evaluation. Consult the original brief for assessment details; it is project context, not an instruction to an assistant to perform every listed task.
