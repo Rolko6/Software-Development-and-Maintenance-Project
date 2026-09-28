@@ -128,4 +128,78 @@ def test_from_env_defaults_to_os_environ_when_no_mapping_given(monkeypatch):
 
     assert config.device_id == "from-os-environ"
 
+
+FAULT_VARIABLES = (
+    "FAULT_DISCONNECT_RATE",
+    "FAULT_POWER_ON_RESET_RATE",
+    "FAULT_NAN_RATE",
+    "FAULT_STUCK_RATE",
+)
+
+
+def test_ds18b20_temperature_model_is_accepted():
+    config = DeviceConfig.from_env({"TEMPERATURE_MODEL": "ds18b20"})
+
+    assert config.temperature_model == "ds18b20"
+
+
+def test_fault_rates_default_to_zero_so_the_legacy_device_never_misbehaves():
+    config = DeviceConfig.from_env({})
+
+    assert config.fault_disconnect_rate == 0.0
+    assert config.fault_power_on_reset_rate == 0.0
+    assert config.fault_nan_rate == 0.0
+    assert config.fault_stuck_rate == 0.0
+
+
+def test_fault_rates_can_be_set_via_env():
+    config = DeviceConfig.from_env({
+        "FAULT_DISCONNECT_RATE": "0.05",
+        "FAULT_POWER_ON_RESET_RATE": "0.01",
+        "FAULT_NAN_RATE": "0.02",
+        "FAULT_STUCK_RATE": "0.03",
+    })
+
+    assert config.fault_disconnect_rate == 0.05
+    assert config.fault_power_on_reset_rate == 0.01
+    assert config.fault_nan_rate == 0.02
+    assert config.fault_stuck_rate == 0.03
+
+
+@pytest.mark.parametrize("variable", FAULT_VARIABLES)
+@pytest.mark.parametrize("raw", ["-0.1", "1.5", "often"])
+def test_fault_rate_outside_zero_to_one_raises_value_error(variable, raw):
+    with pytest.raises(ValueError, match=variable):
+        DeviceConfig.from_env({variable: raw})
+
+
+def test_fault_rates_summing_above_one_raise_value_error():
+    """Each reading draws at most one fault, so the rates are shares of a
+    single probability and together cannot exceed 1."""
+    with pytest.raises(ValueError, match="FAULT_"):
+        DeviceConfig.from_env({
+            "FAULT_DISCONNECT_RATE": "0.6",
+            "FAULT_NAN_RATE": "0.6",
+        })
+
+
+def test_fault_rates_summing_to_exactly_one_are_allowed():
+    config = DeviceConfig.from_env({
+        "FAULT_DISCONNECT_RATE": "0.5",
+        "FAULT_NAN_RATE": "0.5",
+    })
+
+    assert config.fault_disconnect_rate + config.fault_nan_rate == 1.0
+
+
+def test_fault_rates_summing_to_one_are_allowed_despite_float_rounding():
+    """0.33 + 0.56 + 0.11 is 1.0000000000000002 in floating point."""
+    config = DeviceConfig.from_env({
+        "FAULT_POWER_ON_RESET_RATE": "0.33",
+        "FAULT_NAN_RATE": "0.56",
+        "FAULT_STUCK_RATE": "0.11",
+    })
+
+    assert config.fault_stuck_rate == 0.11
+
 # Github Actions trigger push
