@@ -6,10 +6,18 @@ from dataclasses import dataclass
 from typing import Mapping, Optional
 
 
-KNOWN_TEMPERATURE_MODELS = ("uniform", "random-walk")
+KNOWN_TEMPERATURE_MODELS = ("uniform", "random-walk", "ds18b20")
 
 
 KNOWN_LOG_LEVELS = ("CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG")
+
+
+FAULT_RATE_VARIABLES = (
+    "FAULT_DISCONNECT_RATE",
+    "FAULT_POWER_ON_RESET_RATE",
+    "FAULT_NAN_RATE",
+    "FAULT_STUCK_RATE",
+)
 
 
 @dataclass(frozen=True)
@@ -23,6 +31,13 @@ class DeviceConfig:
     temperature_model: str
     random_seed: Optional[int]
     log_level: str
+
+    # Per-reading probabilities of a simulated sensor fault. All default to
+    # 0 so the device behaves exactly as before unless faults are asked for.
+    fault_disconnect_rate: float = 0.0
+    fault_power_on_reset_rate: float = 0.0
+    fault_nan_rate: float = 0.0
+    fault_stuck_rate: float = 0.0
 
     @classmethod
     def from_env(cls, env: Optional[Mapping[str, str]] = None) -> "DeviceConfig":
@@ -95,6 +110,20 @@ class DeviceConfig:
                 f"got {log_level!r}"
             )
 
+        fault_rates = {
+            name: _parse_probability(source, name)
+            for name in FAULT_RATE_VARIABLES
+        }
+
+        # Each reading draws at most one fault, so the rates are shares of a
+        # single probability. The tolerance absorbs float rounding, so rates
+        # such as 0.33 + 0.56 + 0.11 that are exactly 1 are not rejected.
+        if sum(fault_rates.values()) > 1.0 + 1e-9:
+            raise ValueError(
+                "FAULT_* rates must add up to at most 1, "
+                f"got {fault_rates!r}"
+            )
+
         return cls(
             gateway_url=gateway_url,
             device_id=device_id,
@@ -104,7 +133,11 @@ class DeviceConfig:
             temperature_max=temperature_max,
             temperature_model=temperature_model,
             random_seed=random_seed,
-            log_level=log_level
+            log_level=log_level,
+            fault_disconnect_rate=fault_rates["FAULT_DISCONNECT_RATE"],
+            fault_power_on_reset_rate=fault_rates["FAULT_POWER_ON_RESET_RATE"],
+            fault_nan_rate=fault_rates["FAULT_NAN_RATE"],
+            fault_stuck_rate=fault_rates["FAULT_STUCK_RATE"]
         )
 
 
@@ -125,6 +158,17 @@ def _parse_positive_float(source: Mapping[str, str], name: str, default: str) ->
     if value <= 0:
         raise ValueError(
             f"{name} must be a positive number, got {value!r}"
+        )
+
+    return value
+
+
+def _parse_probability(source: Mapping[str, str], name: str) -> float:
+    value = _parse_float(source, name, "0")
+
+    if not 0.0 <= value <= 1.0:
+        raise ValueError(
+            f"{name} must be between 0 and 1, got {value!r}"
         )
 
     return value
