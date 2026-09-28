@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 # 1000). This does not change the simulator's 15-30C output range in
 # device/app/models.py. Keep in sync with cloud/app/models.py.
 MIN_TEMPERATURE_C = -40.0
-MAX_TEMPERATURE_C = 60.0
+MAX_TEMPERATURE_C = 1000.0
 
 
 class SensorData(BaseModel):

@@ -69,7 +69,7 @@ def derive_session_key(shared_secret: bytes, client_nonce: bytes, key_id: str) -
         algorithm=hashes.SHA256(),
         length=SESSION_KEY_LEN,
         salt=client_nonce,
-        info=f"{PROTOCOL_VERSION}|session|{key_id}".encode("utf-8"),
+        info=f"{PROTOCOL_VERSION}|sess|{key_id}".encode("utf-8"),
     )
     return hkdf.derive(shared_secret)
 

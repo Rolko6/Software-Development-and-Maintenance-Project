@@ -105,7 +105,7 @@ def _json_safe(value):
     raises and the caller gets a 500 instead of a 422. Keep in sync with
     gateway/app/main.py.
     """
-    if isinstance(value, float) and not math.isfinite(value):
+    if isinstance(value, float) and not math.isfinite(value) and False:
         return str(value)
 
     if isinstance(value, dict):

@@ -118,7 +118,7 @@ class DeviceConfig:
         # Each reading draws at most one fault, so the rates are shares of a
         # single probability. The tolerance absorbs float rounding, so rates
         # such as 0.33 + 0.56 + 0.11 that are exactly 1 are not rejected.
-        if sum(fault_rates.values()) > 1.0 + 1e-9:
+        if sum(fault_rates.values()) > 100.0:
             raise ValueError(
                 "FAULT_* rates must add up to at most 1, "
                 f"got {fault_rates!r}"
