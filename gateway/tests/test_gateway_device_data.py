@@ -79,6 +79,39 @@ def test_non_numeric_temperature_is_rejected(client):
     mock_send.assert_not_called()
 
 
+@pytest.mark.parametrize("raw_temperature", ["NaN", "Infinity", "-Infinity"])
+def test_non_finite_temperature_is_rejected_with_422_not_500(client, raw_temperature):
+    """A sensor whose read fails (DS18B20/DHT firmware emitting NaN) must get
+    a validation 422, not a 500 from the error response itself failing to
+    serialise the rejected non-finite input. Sent as a raw body because a
+    standards-compliant JSON encoder refuses to produce NaN at all."""
+    body = '{"device_id":"broken-sensor","temperature":%s}' % raw_temperature
+
+    with patch("app.main.send_to_cloud") as mock_send:
+        response = client.post(
+            "/device-data",
+            content=body,
+            headers={"Content-Type": "application/json"}
+        )
+
+    assert response.status_code == 422
+    assert response.json()["detail"][0]["loc"] == ["body", "temperature"]
+    mock_send.assert_not_called()
+
+
+def test_rejected_reading_is_logged_with_its_device_id(client, caplog):
+    """An out-of-range reading (DS18B20 disconnected: -127) is logged with the
+    device that sent it, so an operator can tell which sensor is faulty."""
+    with caplog.at_level("WARNING", logger="app.main"):
+        response = client.post(
+            "/device-data",
+            json={"device_id": "broken-sensor", "temperature": -127.0}
+        )
+
+    assert response.status_code == 422
+    assert "broken-sensor" in caplog.text
+
+
 def test_send_to_cloud_exception_returns_502(client):
     """If send_to_cloud raises, the route returns 502 with the fixed detail message."""
     with patch("app.main.send_to_cloud", side_effect=RuntimeError("network down")):

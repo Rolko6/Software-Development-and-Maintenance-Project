@@ -1,4 +1,5 @@
 import logging
+import math
 import os
 import time
 
@@ -95,6 +96,27 @@ async def _observe_request_duration(request, call_next):
     return response
 
 
+def _json_safe(value):
+    """Replace non-finite floats with their string form, recursively.
+
+    A validation error echoes the rejected input back to the caller. When a
+    sensor's read fails and it sends NaN or Infinity, that input cannot be
+    written as standard JSON, so without this the error response itself
+    raises and the caller gets a 500 instead of a 422. Keep in sync with
+    gateway/app/main.py.
+    """
+    if isinstance(value, float) and not math.isfinite(value):
+        return str(value)
+
+    if isinstance(value, dict):
+        return {key: _json_safe(item) for key, item in value.items()}
+
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(item) for item in value]
+
+    return value
+
+
 @app.exception_handler(RequestValidationError)
 async def _count_validation_rejections(request, exc):
     errors = exc.errors()
@@ -103,10 +125,11 @@ async def _count_validation_rejections(request, exc):
         reason=_rejection_reason(errors)
     ).inc()
 
-    # Mirrors FastAPI's own default handler so the response body is unchanged.
+    # Mirrors FastAPI's own default handler so the response body is unchanged
+    # for every finite input.
     return JSONResponse(
         status_code=422,
-        content=jsonable_encoder({"detail": errors})
+        content=_json_safe(jsonable_encoder({"detail": errors}))
     )
 
 
