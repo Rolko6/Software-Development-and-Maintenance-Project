@@ -11,6 +11,7 @@
 | Find the prompts behind the initial work and rules | [Prompt record: 2026-09-15, yyy-tom](ai/prompts/2026-09-15-yyy-tom.md) |
 | See what each release contains, why, and how to evaluate it | [v1.0.0 record](ai/prompts/v1.0.0.md), [v2.0.0 record](ai/prompts/v2.0.0.md) |
 | Find the prompt behind the v2.0.0 release | [Prompt record: 2026-09-24, yyy-tom](ai/prompts/2026-09-24-yyy-tom.md) |
+| Find the prompts behind the DS18B20 device and the NaN fixes | [Prompt record: 2026-09-26, Rolko6](ai/prompts/2026-09-26-Rolko6.md), [Prompt record: 2026-09-28, Rolko6](ai/prompts/2026-09-28-Rolko6.md) |
 | Understand the shared-instructions design | [Decision 0001](decisions/0001-shared-agent-instructions.md) |
 | Understand how ML-KEM key establishment is designed and what it protects | [ML-KEM integration design](security/ml-kem-integration.md) |
 | Understand why that cryptographic library and protocol were chosen | [Decision 0002](decisions/0002-ml-kem-key-establishment.md) |
@@ -25,6 +26,7 @@
 | Understand how baseline and secured measurements are kept comparable | [Measurement method: 2026-09-15](validation/2026-09-15-measurement-method.md) |
 | See what has actually been checked for the device module restructuring | [Device modularization validation: 2026-09-15](validation/2026-09-15-device-modularization.md) |
 | See what has actually been checked for the automated tests and CI/CD | [Tests and CI/CD validation: 2026-09-15](validation/2026-09-15-tests-and-ci.md) |
+| See the faulty-sensor simulation, the NaN fixes and the open findings | [DS18B20 fault validation: 2026-09-28](validation/2026-09-28-ds18b20-faults.md) |
 
 Current operating behaviour belongs in the project README. Proposed work belongs in the plan. Decisions explain choices; prompt and validation records preserve evidence. Update the authoritative location and link to it rather than copying the same rules across files.
 
