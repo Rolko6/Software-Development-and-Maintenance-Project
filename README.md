@@ -14,6 +14,8 @@ Each release is a Git tag and a GitHub Release. A long-lived `release/*` branch 
 | --- | --- | --- | --- |
 | v1.0.0 | Initial edge–cloud baseline: plaintext device → gateway → cloud | `release/1.0.0` | [GitHub release](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/releases/tag/v1.0.0), [v1.0.0 record](docs/ai/prompts/v1.0.0.md) |
 | v2.0.0 | ML-KEM-768 on the gateway → cloud link, reliability fixes, observability, automated tests and CI/CD | `release/2.0.0` | [GitHub release](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/releases/tag/v2.0.0), [v2.0.0 record](docs/ai/prompts/v2.0.0.md) |
+| v2.1.0 | Crypto metrics wired, Grafana dashboard, `wire.py` consistency and root test suites in CI | — (tag `v2.1.0` only) | [GitHub release](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/releases/tag/v2.1.0), [v2.1.0 record](docs/ai/prompts/v2.1.0.md) |
+| v2.2.0 | Realistic DS18B20 device with hardware fault injection; `NaN` readings rejected with `422` instead of `500`; gateway rejections counted and logged | `release/2.2.0` | [GitHub release](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/releases/tag/v2.2.0), [v2.2.0 record](docs/ai/prompts/v2.2.0.md) |
 
 Upgrading from v1.0.0 changes the default wire behaviour; see [Migrating from v1.0.0](docs/ai/prompts/v2.0.0.md#migrating-from-v100).
 

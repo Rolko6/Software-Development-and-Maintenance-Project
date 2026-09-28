@@ -9,9 +9,9 @@
 | Choose future work and define completion | [Project plan](project-plan.md) |
 | Record significant AI-assisted work | [AI evidence guide](ai/README.md) |
 | Find the prompts behind the initial work and rules | [Prompt record: 2026-09-15, yyy-tom](ai/prompts/2026-09-15-yyy-tom.md) |
-| See what each release contains, why, and how to evaluate it | [v1.0.0 record](ai/prompts/v1.0.0.md), [v2.0.0 record](ai/prompts/v2.0.0.md) |
+| See what each release contains, why, and how to evaluate it | [v1.0.0 record](ai/prompts/v1.0.0.md), [v2.0.0 record](ai/prompts/v2.0.0.md), [v2.1.0 record](ai/prompts/v2.1.0.md), [v2.2.0 record](ai/prompts/v2.2.0.md) |
 | Find the prompt behind the v2.0.0 release | [Prompt record: 2026-09-24, yyy-tom](ai/prompts/2026-09-24-yyy-tom.md) |
-| Find the prompts behind the DS18B20 device and the NaN fixes | [Prompt record: 2026-09-26, Rolko6](ai/prompts/2026-09-26-Rolko6.md), [Prompt record: 2026-09-28, Rolko6](ai/prompts/2026-09-28-Rolko6.md) |
+| Find the prompts behind the DS18B20 device and the NaN fixes | [Prompt record: 2026-09-26, Rolko6](ai/prompts/2026-09-26-Rolko6.md), [Prompt record: 2026-09-28, Rolko6](ai/prompts/2026-09-28-Rolko6.md), [Prompt record: 2026-09-29, Rolko6 (v2.2.0 release)](ai/prompts/2026-09-29-Rolko6.md) |
 | Understand the shared-instructions design | [Decision 0001](decisions/0001-shared-agent-instructions.md) |
 | Understand how ML-KEM key establishment is designed and what it protects | [ML-KEM integration design](security/ml-kem-integration.md) |
 | Understand why that cryptographic library and protocol were chosen | [Decision 0002](decisions/0002-ml-kem-key-establishment.md) |
