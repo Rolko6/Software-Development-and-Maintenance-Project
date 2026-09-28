@@ -155,9 +155,63 @@ jobs:
           cache-from: type=gha,scope=build-${{ matrix.service }}
           cache-to: type=gha,mode=max,scope=build-${{ matrix.service }}
 
+  test-root:
+    name: Root-level tests (crypto / reliability / protected-path)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Verify test inputs
+        run: |
+          set -euo pipefail
+          missing=0
+          for d in tests/crypto tests/reliability tests/protected_path; do
+            if [ ! -d "$d" ]; then
+              echo "::error::$d is missing; see docs/testing/ml-kem-verification.md."
+              missing=1
+            fi
+          done
+          if [ ! -f "requirements-dev.txt" ]; then
+            echo "::error::requirements-dev.txt is missing."
+            missing=1
+          fi
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Run root-level test suites
+        run: python -m pytest tests/crypto tests/reliability tests/protected_path -ra --junitxml=root-tests-report.xml
+
+      - name: Write job summary
+        if: always()
+        run: |
+          python .github/scripts/junit_summary.py \
+            --title "Root-level tests (crypto / reliability / protected-path)" \
+            root-tests-report.xml >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload JUnit report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: junit-root-tests
+          path: root-tests-report.xml
+          if-no-files-found: error
+          retention-days: 14
+
   smoke:
     name: Smoke test (Compose stack)
-    needs: [build, test]
+    needs: [build, test, test-root]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
