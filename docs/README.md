@@ -27,6 +27,7 @@
 | See what has actually been checked for the device module restructuring | [Device modularization validation: 2026-09-15](validation/2026-09-15-device-modularization.md) |
 | See what has actually been checked for the automated tests and CI/CD | [Tests and CI/CD validation: 2026-09-15](validation/2026-09-15-tests-and-ci.md) |
 | See the faulty-sensor simulation, the NaN fixes and the open findings | [DS18B20 fault validation: 2026-09-28](validation/2026-09-28-ds18b20-faults.md) |
+| See how the ML-KEM link handles tampering, replay, wrong keys and lost responses, and what a handshake costs | [Security evidence: 2026-09-29](validation/2026-09-29-security-evidence.md) |
 
 Current operating behaviour belongs in the project README. Proposed work belongs in the plan. Decisions explain choices; prompt and validation records preserve evidence. Update the authoritative location and link to it rather than copying the same rules across files.
 
