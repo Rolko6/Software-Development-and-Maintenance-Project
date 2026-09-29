@@ -13,8 +13,8 @@ All failures raise a subclass of ``requests.exceptions.RequestException``
 ``send_to_cloud`` raises today.
 
 Concurrency: sending is serialized per client instance with a single lock
-held across "read counter -> encrypt -> POST -> commit counter" (including
-the re-handshake-and-retry path). FastAPI's sync endpoints run on a
+held across "reserve counter -> encrypt -> POST" (including the
+re-handshake-and-retry path). FastAPI's sync endpoints run on a
 threadpool, so without this a race between two concurrent device-data
 requests could increment the shared counter non-atomically and reuse a
 nonce under the same AES-GCM key -- catastrophic for GCM. For this
@@ -227,6 +227,12 @@ class SecureCloudClient:
     def _send_locked(self, payload: dict, _retried: bool = False) -> dict:
         session = self._ensure_fresh_session()
         counter = session.counter + 1
+        # Reserve the counter before anything leaves the process. A request
+        # can fail after the cloud has already stored the reading (lost
+        # response) or after it was seen on the wire, so a counter is spent
+        # as soon as it is used: the next message always gets a new nonce.
+        # The cloud only requires counters to increase, so gaps are fine.
+        session.counter = counter
         nonce = wire.counter_to_nonce(counter)
         device_id = str(payload.get("device_id", ""))
         plaintext = json.dumps(payload).encode("utf-8")
@@ -241,17 +247,19 @@ class SecureCloudClient:
         }
         response = self._http_post(self._data_url(), request_body, self._timeout)
 
-        if response.status_code in (404, 410) and not _retried:
-            # Unknown/expired session on the cloud side -- most likely the
-            # cloud process restarted and forgot its in-memory sessions.
-            # Re-handshake once and retry the same reading rather than
-            # dropping it.
+        if response.status_code in (404, 409, 410) and not _retried:
+            # 404/410: unknown/expired session on the cloud side -- most
+            # likely the cloud process restarted and forgot its in-memory
+            # sessions. 409: the cloud's counter for this session is ahead of
+            # ours, so this session cannot deliver anything any more. The
+            # cloud rejects both before decrypting, so the reading was not
+            # stored: re-handshake once and retry it under a fresh key rather
+            # than dropping it.
             GATEWAY_SESSION_REKEYS_TOTAL.labels(reason="forced").inc()
             self._session = None
             return self._send_locked(payload, _retried=True)
 
         response.raise_for_status()
-        session.counter = counter
         return response.json()
 
 

@@ -41,7 +41,7 @@ def test_concurrent_sends_do_not_reuse_a_counter(test_client, cloud_app, monkeyp
     """Two threads calling send_secure concurrently on one SecureCloudClient
     must not produce two messages with the same (session, counter): the
     client's internal lock serializes the whole
-    read-counter/encrypt/post/commit sequence."""
+    reserve-counter/encrypt/post sequence."""
     from .conftest import gateway_client_module
 
     monkeypatch.delenv("ML_KEM_PSK", raising=False)
@@ -73,3 +73,90 @@ def test_concurrent_sends_do_not_reuse_a_counter(test_client, cloud_app, monkeyp
         t.join()
 
     assert len(seen_nonces) == len(set(seen_nonces)) == 8
+
+
+def _stored_temperatures():
+    from .conftest import cloud_storage_module
+
+    return [reading["temperature"] for reading in cloud_storage_module.stored_data]
+
+
+def _client_with_flaky_data_post(test_client, fail_on_call, fail_after_delivery):
+    """A SecureCloudClient whose ``fail_on_call``-th POST /secure/data raises
+    a timeout. With ``fail_after_delivery`` the request reaches the cloud
+    first (the reading is stored, the response is lost); without it the
+    request never arrives. Returns (client, sent) where ``sent`` lists the
+    base64 nonce of every /secure/data request the client made."""
+    from .conftest import gateway_client_module
+
+    http_get, http_post = make_transport(test_client)
+    sent = []
+
+    def flaky_post(url, json_body, timeout):
+        if not url.endswith("/secure/data"):
+            return http_post(url, json_body, timeout)
+        sent.append(json_body["nonce"])
+        if len(sent) == fail_on_call:
+            if fail_after_delivery:
+                http_post(url, json_body, timeout)
+            raise requests.exceptions.ReadTimeout("simulated lost response")
+        return http_post(url, json_body, timeout)
+
+    client = gateway_client_module.SecureCloudClient(
+        base_url="http://cloud:8001", http_get=http_get, http_post=flaky_post
+    )
+    return client, sent
+
+
+def test_lost_response_does_not_reuse_a_nonce(test_client, cloud_app, monkeypatch):
+    """S1 regression: the cloud stores a reading but its response is lost.
+    The next, different reading must not be encrypted under the same key
+    with the same nonce (AES-GCM nonce reuse), and the cloud must accept it
+    instead of answering 409 until the session expires."""
+    monkeypatch.delenv("ML_KEM_PSK", raising=False)
+    client, sent = _client_with_flaky_data_post(test_client, fail_on_call=2, fail_after_delivery=True)
+
+    client.send_secure({"device_id": "d1", "temperature": 20.0})
+    try:
+        client.send_secure({"device_id": "d1", "temperature": 21.0})
+    except requests.exceptions.Timeout:
+        pass
+    client.send_secure({"device_id": "d1", "temperature": 22.0})
+
+    assert len(sent) == len(set(sent)) == 3
+    assert _stored_temperatures() == [20.0, 21.0, 22.0]
+
+
+def test_request_lost_before_delivery_leaves_a_usable_session(test_client, cloud_app, monkeypatch):
+    """A request that never reaches the cloud also consumes its counter.
+    The cloud accepts the resulting gap, so the session keeps working."""
+    monkeypatch.delenv("ML_KEM_PSK", raising=False)
+    client, sent = _client_with_flaky_data_post(test_client, fail_on_call=2, fail_after_delivery=False)
+
+    client.send_secure({"device_id": "d1", "temperature": 20.0})
+    session_id = client._session.session_id
+    try:
+        client.send_secure({"device_id": "d1", "temperature": 21.0})
+    except requests.exceptions.Timeout:
+        pass
+    client.send_secure({"device_id": "d1", "temperature": 22.0})
+
+    assert len(sent) == len(set(sent)) == 3
+    assert client._session.session_id == session_id
+    assert _stored_temperatures() == [20.0, 22.0]
+
+
+def test_counter_rejected_as_replay_triggers_a_new_session(secure_client, cloud_app):
+    """If the cloud still answers 409 (client and cloud counters out of
+    step for any reason), the client drops the session, re-handshakes and
+    delivers the reading under a fresh key instead of failing every reading
+    until the session expires."""
+    secure_client.send_secure({"device_id": "d1", "temperature": 20.0})
+    secure_client.send_secure({"device_id": "d1", "temperature": 21.0})
+    first_session_id = secure_client._session.session_id
+    secure_client._session.counter = -1  # force the next nonce to repeat counter 0
+
+    secure_client.send_secure({"device_id": "d1", "temperature": 22.0})
+
+    assert secure_client._session.session_id != first_session_id
+    assert _stored_temperatures() == [20.0, 21.0, 22.0]

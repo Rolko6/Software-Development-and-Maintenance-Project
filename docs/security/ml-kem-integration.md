@@ -121,8 +121,15 @@ not whether it is authenticated.
      gateway's cached session (e.g. to survive a restart without
      re-handshaking) would break it, and must not be done without also
      durably and atomically persisting the counter.
-  4. Sending is serialized per gateway process with a lock held across
-     "read counter -> encrypt -> POST -> commit" (see
+  4. The gateway **spends a counter as soon as it uses it**, before the
+     request is sent, not after a successful response. A request can fail
+     after the cloud has stored the reading (the response is lost) or after
+     the ciphertext was already seen on the network, so reusing that
+     counter for the next, different reading would reuse a (key, nonce)
+     pair. The cloud only requires counters to increase, so the gaps left
+     by failed sends are accepted.
+  5. Sending is serialized per gateway process with a lock held across
+     "reserve counter -> encrypt -> POST" (see
      `gateway/app/crypto/client.py`), so two concurrent callers in the same
      process cannot race the counter and reuse a nonce. This project's
      single-device, one-reading-per-five-seconds workload does not need
@@ -211,17 +218,23 @@ not whether it is authenticated.
 | Tampered AEAD ciphertext or AAD | `400` | `HTTPError` -> `502`. **Not** auto-retried: a `400` indicates possible tampering, and silently re-handshaking and resending would mask that rather than surface it |
 | Unknown `session_id` at `/secure/data` (cloud never saw it, or restarted and forgot it) | `404` | **Auto-recovered**: the client clears its cached session, re-handshakes, and retries the same reading once, transparently |
 | Expired `session_id` | `410` | **Auto-recovered**, same as unknown-session (re-handshake + retry once) |
-| Replayed or out-of-order counter | `409` | `HTTPError` -> `502`. **Not** auto-retried, for the same "don't mask a possible attack" reason as tampering |
-| Cloud unreachable (connection refused/timeout) during handshake or data send | *(no response)* | `requests.exceptions.ConnectionError`/`Timeout` (both `RequestException` subclasses) propagate unchanged -> `502`, identical in shape to today's plaintext `send_to_cloud` failure |
+| Replayed or out-of-order counter on the gateway's own request | `409` | **Auto-recovered**, same as unknown-session: the gateway spends every counter it uses, so a `409` here means its session is out of step with the cloud and cannot deliver anything more. The cloud rejects before storing, so resending under a fresh session is safe |
+| Cloud unreachable (connection refused/timeout) during handshake or data send | *(no response)* | `requests.exceptions.ConnectionError`/`Timeout` (both `RequestException` subclasses) propagate unchanged -> `502`, identical in shape to today's plaintext `send_to_cloud` failure. The counter used for that request stays spent, so the session keeps working |
+| Response lost after the cloud stored the reading | `200`, never received | The gateway sees a `Timeout`/`ConnectionError`. The reading is stored even though the attempt failed; the gateway's retry in `send_to_cloud` can store it a second time under the next counter, as on the plaintext path |
 | `CLOUD_ML_KEM_MODE=required` and a legacy client still POSTs plaintext `/data` | `403` (via `enforce_legacy_mode`, wired into `cloud/app/main.py` by the integration patch) | N/A (this is the device/legacy-gateway path, not the secure client) |
 
 Two design choices worth calling out explicitly:
 
-- **Auto-recovery is scoped narrowly.** Only "the cloud doesn't know this
-  session" (`404`/`410`) triggers an automatic, transparent re-handshake
-  and retry -- this is exactly "cloud restarted and forgot the session,"
-  which must not cost the operator a dropped reading. Every other failure
-  (tamper, replay, auth failure, connectivity) is a hard failure for that
+- **Auto-recovery is scoped narrowly.** Only "this session can no longer
+  be used" (`404`/`410`, and `409` on the gateway's own request) triggers
+  an automatic, transparent re-handshake and retry of that reading, once.
+  `404`/`410` are exactly "cloud restarted and forgot the session," which
+  must not cost the operator a dropped reading. A `409` answers the
+  gateway's own, never-reused counter, so it means the two sides are out
+  of step, not that an attacker's replay succeeded (an attacker replaying
+  an old message receives the `409` itself); without recovery the session
+  would reject every reading until it expired. Every other failure
+  (tamper, auth failure, connectivity) is a hard failure for that
   reading, surfaced the same way a plaintext forwarding failure is today
   (`502`), rather than silently retried in a way that could mask an
   ongoing attack or a persistent misconfiguration.
@@ -358,6 +371,11 @@ model" below.
   captured MAC-valid handshake stays MAC-valid when replayed verbatim,
   PSK or not. A server-chosen freshness token, rejected on reuse, would
   close this completely; not implemented here.
+- **A lost response can store a reading twice.** The reading is stored,
+  the gateway sees a failure and may retry it under a new counter. Nonce
+  uniqueness holds, but the cloud cannot tell the two copies apart: the
+  payload carries no sequence number or measurement time. The plaintext
+  path has the same behaviour.
 - **No rate limiting on `/secure/handshake` or `/secure/data`.** A
   malicious or malfunctioning client could hammer either endpoint;
   FastAPI/Starlette and this package add no throttling of their own.

@@ -21,4 +21,4 @@ class ClientSession:
     session_id: str
     key: bytes
     expires_at: float
-    counter: int = -1  # last counter successfully sent; next message uses counter + 1
+    counter: int = -1  # last counter used, whether or not that send succeeded; next message uses counter + 1
