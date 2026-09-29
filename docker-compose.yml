@@ -63,6 +63,19 @@ services:
       GATEWAY_URL: http://gateway:8000/device-data
       DEVICE_ID: legacy-sensor-001
 
+      # uniform | random-walk | ds18b20. The defaults below keep the original
+      # fault-free device; override from the shell to simulate a faulty
+      # sensor, e.g. in PowerShell:
+      #   $env:TEMPERATURE_MODEL="ds18b20"; $env:FAULT_NAN_RATE="0.05"; docker compose up -d
+      TEMPERATURE_MODEL: ${TEMPERATURE_MODEL:-uniform}
+
+      # Per-reading fault probabilities (0..1, together at most 1). A stuck
+      # fault lasts 5-20 readings, so keep FAULT_STUCK_RATE small (~0.01).
+      FAULT_DISCONNECT_RATE: ${FAULT_DISCONNECT_RATE:-0}
+      FAULT_POWER_ON_RESET_RATE: ${FAULT_POWER_ON_RESET_RATE:-0}
+      FAULT_NAN_RATE: ${FAULT_NAN_RATE:-0}
+      FAULT_STUCK_RATE: ${FAULT_STUCK_RATE:-0}
+
     depends_on:
       - gateway
 

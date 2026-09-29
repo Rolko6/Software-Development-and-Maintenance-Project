@@ -117,16 +117,18 @@ and passes; classical key agreement with no ML-KEM in the same module does not.
 This is a text heuristic over first-party source. It cannot see inside a
 dependency.
 
-**Status (updated 2026-09-24).** Work package 3 built a session design in
+**Status (updated 2026-09-29).** Work package 3 built a session design in
 `gateway/app/crypto/` and `cloud/app/crypto/`, not the sessionless
 `gateway/app/kem.py` this contract assumed, so `test_protected_path_contract.py`
 still skips as a module and is kept as the statement of the requirements. The
 requirements that fit the session design are ported, at the same strength, to
 `tests/crypto/test_protected_path_session.py`: the parameter set, key and
 ciphertext sizes, the reading hidden in recorded traffic, ML-KEM material in
-recorded traffic, the ML-KEM secret determining the session key, and failed key
-establishment failing closed with nothing sent in plaintext. Three decisions
-remain open for Stanley and Tiago:
+recorded traffic, the ML-KEM secret determining the session key, failed key
+establishment failing closed with nothing sent in plaintext, and, since v2.1.0
+made `gateway/app/crypto/client.py` increment `GATEWAY_HANDSHAKE_FAILED_TOTAL`,
+every failed handshake attempt being counted once under its `reason`. Two
+decisions remain open for Stanley and Tiago:
 
 - The device id travels in clear in every `/secure/data` body, as routing data
   and AEAD associated data. The port keeps the original assertion as a strict
@@ -134,9 +136,6 @@ remain open for Stanley and Tiago:
 - `wire.derive_session_key` has no 32-byte length guard on the ML-KEM secret
   (the contract's `test_a_classical_secret_alone_is_not_accepted`). Adding one
   changes production code in both `wire.py` copies.
-- Nothing increments the handshake-failure counter
-  (`GATEWAY_HANDSHAKE_FAILED_TOTAL`), so the counter half of the fail-closed
-  requirement cannot be tested.
 
 This paragraph originally said these tests skip because `gateway/app/kem.py`
 did not exist yet and that no test here is marked `xfail`; both statements

@@ -14,6 +14,8 @@ Each release is a Git tag and a GitHub Release. A long-lived `release/*` branch 
 | --- | --- | --- | --- |
 | v1.0.0 | Initial edge–cloud baseline: plaintext device → gateway → cloud | `release/1.0.0` | [GitHub release](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/releases/tag/v1.0.0), [v1.0.0 record](docs/ai/prompts/v1.0.0.md) |
 | v2.0.0 | ML-KEM-768 on the gateway → cloud link, reliability fixes, observability, automated tests and CI/CD | `release/2.0.0` | [GitHub release](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/releases/tag/v2.0.0), [v2.0.0 record](docs/ai/prompts/v2.0.0.md) |
+| v2.1.0 | Crypto metrics wired, Grafana dashboard, `wire.py` consistency and root test suites in CI | — (tag `v2.1.0` only) | [GitHub release](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/releases/tag/v2.1.0), [v2.1.0 record](docs/ai/prompts/v2.1.0.md) |
+| v2.2.0 | Realistic DS18B20 device with hardware fault injection; `NaN` readings rejected with `422` instead of `500`; gateway rejections counted and logged | `release/2.2.0` | [GitHub release](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/releases/tag/v2.2.0), [v2.2.0 record](docs/ai/prompts/v2.2.0.md) |
 
 Upgrading from v1.0.0 changes the default wire behaviour; see [Migrating from v1.0.0](docs/ai/prompts/v2.0.0.md#migrating-from-v100).
 
@@ -36,8 +38,8 @@ Temperature readings             Validate and forward            Store in memory
                                  Host port 8000                  Host port 8001
 ```
 
-- **Device:** `device/app/` splits the simulator into `config.py` (environment validation), `models.py` (the reading and its wire payload), `sensor.py` (the temperature models), `gateway_client.py` (delivery to the gateway), `runner.py` (the send loop and signal handling), and `__main__.py` (entry point). By default it still generates a uniform random temperature between 15 and 30, attempts to send it, then waits five seconds before the next attempt; the temperature range, model, and interval are now configurable (see Configuration below).
-- **Gateway:** validates incoming readings and forwards them to the cloud. Forwarding failures return HTTP `502` and increment a failure counter.
+- **Device:** `device/app/` splits the simulator into `config.py` (environment validation), `models.py` (the reading and its wire payload), `sensor.py` (the temperature models), `gateway_client.py` (delivery to the gateway), `runner.py` (the send loop and signal handling), and `__main__.py` (entry point). By default it still generates a uniform random temperature between 15 and 30, attempts to send it, then waits five seconds before the next attempt; the temperature range, model, and interval are now configurable (see Configuration below). The `ds18b20` model simulates a DS18B20 sensor on an Arduino — a slowly drifting temperature, a fixed calibration error of up to ±0.5 °C and 0.0625 °C resolution — and can inject its typical hardware faults (see [Simulate a faulty sensor](#simulate-a-faulty-sensor)).
+- **Gateway:** validates incoming readings and forwards them to the cloud. A rejected reading returns HTTP `422`, is counted as `gateway_delivery_outcome_total{outcome="rejected_validation"}` and is logged with its `device_id`. Forwarding failures return HTTP `502` and increment a failure counter.
 - **Cloud:** stores readings in a process-local list and exposes them through an API. Stored readings are lost when the cloud process restarts.
 
 Both API services use FastAPI. Containers use Python 3.12, and the gateway exposes metrics through the Prometheus Python client.
@@ -131,8 +133,9 @@ Look for:
 
 - `device_messages_total`: validated readings received by the gateway, including those whose forwarding fails.
 - `cloud_forward_failures_total`: exceptions encountered while forwarding readings to the cloud.
+- `gateway_delivery_outcome_total`: requests by final outcome — `forwarded`, `rejected_validation` (the reading failed validation) or `failed_after_retries`.
 
-Counters reset when the gateway process restarts. A Prometheus server and dashboard are not included.
+Counters reset when the gateway process restarts. Prometheus and Grafana are not part of the default Compose file; [monitoring/README.md](monitoring/README.md) adds them as an overlay.
 
 ## Run the tests
 
@@ -283,6 +286,45 @@ docker compose start cloud
 
 Once its health endpoint responds, repeat the known-reading check above. New readings should be stored successfully. Failed readings are not queued or replayed.
 
+### Faulty sensor reading
+
+A failed sensor read can send `NaN`, which standard JSON encoders refuse to produce, so send it as a raw body:
+
+```bash
+curl -i -X POST http://localhost:8000/device-data \
+  -H 'Content-Type: application/json' \
+  -d '{"device_id":"broken-sensor","temperature":NaN}'
+```
+
+Expected result: HTTP `422`, with the rejected input echoed as the string `"nan"`. The gateway logs `Rejected reading from device 'broken-sensor': invalid temperature` and increments `gateway_delivery_outcome_total{outcome="rejected_validation"}`. The same body sent to the cloud's `POST /data` also returns `422`. `-127.0` and `85.0` are rejected the same way, as out of range.
+
+## Simulate a faulty sensor
+
+Instead of sending faulty readings by hand, let the simulated device produce them. Select the `ds18b20` model and give each fault a per-reading probability; Compose passes these through from the shell and defaults them to the original fault-free device.
+
+| Fault | Variable | What the device sends | Real cause |
+| --- | --- | --- | --- |
+| Disconnected sensor | `FAULT_DISCONNECT_RATE` | `-127.0` | Loose or broken wire; the value the DallasTemperature library returns when no sensor answers |
+| Power-on reset | `FAULT_POWER_ON_RESET_RATE` | `85.0` | The sensor's reset value, read back after a brown-out before a conversion ran |
+| Failed read | `FAULT_NAN_RATE` | `NaN` | Firmware printing a failed floating-point read |
+| Stuck sensor | `FAULT_STUCK_RATE` | The same valid value for 5–20 readings | A sensor that stops updating |
+
+```bash
+TEMPERATURE_MODEL=ds18b20 FAULT_DISCONNECT_RATE=0.05 FAULT_NAN_RATE=0.05 \
+  docker compose up --build -d
+```
+
+In PowerShell, set the variables first; they last only for that terminal session:
+
+```powershell
+$env:TEMPERATURE_MODEL="ds18b20"; $env:FAULT_DISCONNECT_RATE="0.05"; $env:FAULT_NAN_RATE="0.05"
+docker compose up --build -d
+```
+
+The device logs each rejected reading as `WARNING ... Gateway rejected reading ... status_code=422`; the cloud stores none of them. To watch the rejection rate over time, start the [monitoring overlay](monitoring/README.md) as well and query `rate(gateway_delivery_outcome_total[1m]) * 60` in Prometheus. A stuck value is a valid temperature, so it is stored and is not detected by the gateway or cloud.
+
+Each reading draws at most one fault, so the rates must add up to at most 1. `FAULT_STUCK_RATE` is the chance that a stuck period *starts*; because each one lasts 5–20 readings, even `0.05` leaves the sensor stuck for a large share of the time — use about `0.01`. Add `RANDOM_SEED` to the device environment for a reproducible fault sequence.
+
 ## Configuration
 
 Compose supplies these environment variables to the containers:
@@ -296,7 +338,11 @@ Compose supplies these environment variables to the containers:
 | Device | `REQUEST_TIMEOUT_SECONDS` | not set | `5.0` (must be greater than 0) |
 | Device | `TEMPERATURE_MIN` | not set | `15.0` |
 | Device | `TEMPERATURE_MAX` | not set | `30.0` (must be greater than or equal to `TEMPERATURE_MIN`) |
-| Device | `TEMPERATURE_MODEL` | not set | `uniform` (or `random-walk`, case-sensitive) |
+| Device | `TEMPERATURE_MODEL` | `uniform` (overridable from the environment) | `uniform` (or `random-walk` or `ds18b20`, case-sensitive) |
+| Device | `FAULT_DISCONNECT_RATE` | `0` (overridable from the environment) | `0` (0–1; chance a reading is `-127.0`) |
+| Device | `FAULT_POWER_ON_RESET_RATE` | `0` (overridable from the environment) | `0` (0–1; chance a reading is `85.0`) |
+| Device | `FAULT_NAN_RATE` | `0` (overridable from the environment) | `0` (0–1; chance a reading is `NaN`) |
+| Device | `FAULT_STUCK_RATE` | `0` (overridable from the environment) | `0` (0–1; chance a 5–20 reading stuck period starts; the four rates together at most 1) |
 | Device | `RANDOM_SEED` | not set | unset (an integer; makes runs reproducible) |
 | Device | `LOG_LEVEL` | not set | `INFO` (one of `CRITICAL`/`ERROR`/`WARNING`/`INFO`/`DEBUG`, case-insensitive) |
 | Gateway | `CLOUD_HEALTH_URL` | not set | derived from `CLOUD_URL` by swapping `/data` for `/health` |
@@ -314,7 +360,7 @@ Compose supplies these environment variables to the containers:
 | Gateway | `GATEWAY_CLOUD_BASE_URL` | `http://cloud:8001` | `http://localhost:8001` |
 | Gateway | `GATEWAY_ML_KEM_PINNED_EK_FINGERPRINT` | not set | unset (optional hex SHA-256 pin of the cloud key) |
 
-The current `docker-compose.yml` sets only `GATEWAY_URL` and `DEVICE_ID` for the device; the remaining device variables fall back to the defaults above unless set in the environment.
+The current `docker-compose.yml` sets `GATEWAY_URL` and `DEVICE_ID` for the device and passes `TEMPERATURE_MODEL` and the four `FAULT_*` rates through from the shell; the remaining device variables fall back to the defaults above unless added to the file.
 
 Edit the `environment` entries in `docker-compose.yml` to change the container configuration. Compose uses service names (`cloud` and `gateway`) for communication within its network; the host-side checks use `localhost`.
 
@@ -356,7 +402,7 @@ This stops and removes the project containers and network. Sensor data is not pe
 │   │   ├── sensor.py         # Temperature models and reading generation
 │   │   ├── gateway_client.py # HTTP delivery to the gateway
 │   │   └── runner.py         # Send loop and signal handling
-│   ├── tests/                # Unit tests (43 tests)
+│   ├── tests/                # Unit tests (78 tests)
 │   ├── Dockerfile
 │   ├── pytest.ini
 │   ├── requirements.txt
@@ -390,9 +436,10 @@ This stops and removes the project containers and network. Sensor data is not pe
 - **Storage:** readings still disappear on cloud restart. Retention is now bounded by `CLOUD_MAX_STORED_READINGS` (default 1000); past that, the oldest readings are silently evicted. There is still no database.
 - **Delivery:** the gateway now retries a transient cloud failure with backoff, bounded by `CLOUD_FORWARD_MAX_ATTEMPTS` and a total time budget. A 4xx rejection is never retried. This is **not** a durable queue: once the budget is exhausted the reading is still lost, and there is no duplicate detection.
 - **Device reporting:** the simulator now logs each delivery outcome and never reports a non-2xx response as success: a delivered reading logs at INFO, a non-2xx gateway response logs at WARNING, and a connection or timeout failure logs at ERROR. Failed readings are still discarded — see Delivery above; there is no retry or queue.
-- **Validation:** gateway and cloud now enforce the same device ID and temperature rules.
+- **Validation:** gateway and cloud now enforce the same device ID and temperature rules, and reject `NaN` and `Infinity` with `422`. Only the range is checked: a stuck sensor repeating a plausible value, or a slowly drifting one, is stored as valid. Rejected readings are counted by outcome but are not timed in `gateway_request_duration_seconds`.
 - **Readiness:** `/ready` on both services reflects the real dependency state, but Compose still has no `healthcheck:` entries, so startup ordering remains best-effort.
-- **Verification and operations:** unit suites for all three services, an integration suite and CI/CD workflows are included (see [Run the tests](#run-the-tests)), and a plaintext-vs-ML-KEM latency comparison has been measured in containers (see the [integration record](docs/validation/2026-09-15-integration.md)). The `CI` and `Docs check` workflows run on every pull request and on pushes to `develop` and `main`, and have run green on GitHub since 2026-09-15. The `Publish images` workflow succeeded on the push to `main` and on the `v2.0.0` tag; the published `2.0.0` images were pulled and run end to end on 2026-09-24 (see the [CI evaluation](docs/validation/2026-09-24-ci-evaluation.md)). They are built for `linux/amd64` only. No shared test environment is provisioned and no Prometheus instance has been run. Delivery, retry, validation, storage and duration metrics are wired; the handshake and encrypt/decrypt counters in the crypto packages still read zero.
+- **Device connection resets:** in a 20-minute run the device occasionally logged `RemoteDisconnected` for a valid reading (3 of about 220), each followed by a fresh connection to the gateway five seconds later. The suspected cause, unconfirmed, is the gateway's 5-second HTTP keep-alive timeout coinciding with the device's 5-second send interval. That reading is lost; see the [DS18B20 fault validation](docs/validation/2026-09-28-ds18b20-faults.md).
+- **Verification and operations:** unit suites for all three services, an integration suite and CI/CD workflows are included (see [Run the tests](#run-the-tests)), and a plaintext-vs-ML-KEM latency comparison has been measured in containers (see the [integration record](docs/validation/2026-09-15-integration.md)). The `CI` and `Docs check` workflows run on every pull request and on pushes to `develop` and `main`, and have run green on GitHub since 2026-09-15. The `Publish images` workflow succeeded on the push to `main` and on the `v2.0.0` tag; the published `2.0.0` images were pulled and run end to end on 2026-09-24 (see the [CI evaluation](docs/validation/2026-09-24-ci-evaluation.md)). They are built for `linux/amd64` only. No shared test environment is provisioned and no Prometheus instance has been run. Delivery, retry, validation, storage and duration metrics are wired. Since v2.1.0 the gateway and cloud handshake counters and the cloud decrypt-failure counter are incremented as well; the encrypt-failure counters and the gateway decrypt-failure counter are defined but nothing increments them.
 
 ## Planned next steps
 

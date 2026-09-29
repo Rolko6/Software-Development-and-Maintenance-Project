@@ -20,6 +20,10 @@ Ported here:
   d. test_recorded_traffic_carries_ml_kem_material
   e. test_the_ml_kem_secret_changes_the_session_key
   g1. test_failed_key_establishment_fails_closed (the "nothing sent" half)
+  g2. test_failed_key_establishment_fails_closed (the counter half). Since
+      v2.1.0, gateway/app/crypto/client.py increments
+      ``GATEWAY_HANDSHAKE_FAILED_TOTAL`` on every failed handshake attempt,
+      so the requirement can be asserted without a production change.
 
 Not ported. Each of these needs a decision from Stanley/Tiago, and a
 production change, before it can be tested:
@@ -33,9 +37,6 @@ production change, before it can be tested:
      has no length guard: an empty or short ML-KEM secret goes into HKDF
      without complaint. Adding a 32-byte guard changes production code in both
      wire copies.
-  g2. The counter half of test_failed_key_establishment_fails_closed.
-     ``GATEWAY_HANDSHAKE_FAILED_TOTAL`` is defined in gateway/app/metrics.py
-     but nothing increments it, so there is nothing to assert.
 
 Harness notes:
 
@@ -51,8 +52,10 @@ Harness notes:
 * gateway/app/cloud_client.py registers Prometheus collectors on import, and
   tests/reliability imports the gateway under another alias in the same
   process. To avoid a duplicate-timeseries error, cloud_client is loaded
-  against a no-op stand-in for ``.metrics``. Nothing here asserts on metrics
-  (g2 is not ported).
+  against a no-op stand-in for ``.metrics``. That stand-in only covers
+  cloud_client's retry and duration metrics; the handshake counters g2
+  asserts on live in the real ``_gateway_app.metrics`` that
+  crypto/client.py imports.
 * ``cloud_client._send_secure`` imports ``app.crypto`` absolutely, and that
   name does not exist under the test aliases. The fail-closed tests replace
   ``_send_secure`` with the real SecureCloudClient's ``send_secure`` on a
@@ -434,27 +437,68 @@ def _cloud_unreachable_during_handshake(monkeypatch, client):
     monkeypatch.setattr(client, "_http_get", refuse)
 
 
+def _counter_total(counter) -> float:
+    """Sum of a Prometheus counter's ``_total`` samples over all labels."""
+    return sum(
+        sample.value
+        for metric in counter.collect()
+        for sample in metric.samples
+        if sample.name.endswith("_total")
+    )
+
+
+def _failed_by_reason(reason: str) -> float:
+    return gateway_client_module.GATEWAY_HANDSHAKE_FAILED_TOTAL.labels(reason=reason)._value.get()
+
+
 @pytest.mark.parametrize(
-    "break_key_establishment",
-    [_break_mlkem, _cloud_unreachable_during_handshake],
+    ("break_key_establishment", "failure_reason"),
+    [(_break_mlkem, "other"), (_cloud_unreachable_during_handshake, "peer_unavailable")],
     ids=["ml-kem-key-loading-fails", "handshake-unreachable-with-retries"],
 )
 def test_failed_key_establishment_fails_closed(
-    break_key_establishment, gateway_cloud_client, recorded_client, recorder, cloud_app, monkeypatch
+    break_key_establishment,
+    failure_reason,
+    gateway_cloud_client,
+    recorded_client,
+    recorder,
+    cloud_app,
+    monkeypatch,
 ):
-    """Ports test_failed_key_establishment_fails_closed (the fail-closed half;
-    the metrics half is g2, not ported).
+    """Ports test_failed_key_establishment_fails_closed (g1, fail closed, and
+    g2, the failure is counted).
 
     When ML-KEM key establishment fails, gateway/app/cloud_client.py's
     send_to_cloud must raise. It must not fall back to a plaintext POST, on
     the first attempt or on any retry. The reading must not appear in
     anything that crossed the wire, and the cloud must store nothing.
+
+    The original asserts one failed establishment adds exactly one to the
+    failure counter. In the session design each retry is its own handshake
+    attempt, so the port asserts that every handshake the gateway started
+    was counted as failed, exactly once, under the reason the failure maps
+    to (gateway/app/crypto/client.py, _classify_handshake_error).
     """
     cloud_client, plaintext_posts = gateway_cloud_client
     break_key_establishment(monkeypatch, recorded_client)
 
+    started = gateway_client_module.GATEWAY_HANDSHAKE_STARTED_TOTAL
+    failed = gateway_client_module.GATEWAY_HANDSHAKE_FAILED_TOTAL
+    started_before = _counter_total(started)
+    failed_before = _counter_total(failed)
+    reason_before = _failed_by_reason(failure_reason)
+
     with pytest.raises(Exception):
         cloud_client.send_to_cloud(dict(READING))
+
+    attempts = _counter_total(started) - started_before
+    assert attempts >= 1, "no handshake was attempted"
+    assert _counter_total(failed) - failed_before == attempts, (
+        "not every failed handshake attempt was counted exactly once"
+    )
+    assert _failed_by_reason(failure_reason) - reason_before == attempts, (
+        f"handshake failures not counted under reason={failure_reason!r}"
+    )
 
     assert plaintext_posts.calls == [], "plaintext sent after key establishment failed"
     assert recorder.posts_to("/secure/data") == [], "data sent without a session"

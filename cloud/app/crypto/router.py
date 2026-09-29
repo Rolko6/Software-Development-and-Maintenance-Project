@@ -23,6 +23,7 @@ import binascii
 import json
 import logging
 import os
+import time
 from typing import Optional
 
 from cryptography.exceptions import InvalidTag
@@ -40,6 +41,13 @@ from .schemas import (
     SecureDataResponse,
 )
 from .sessions import SessionStore
+from ..metrics import (
+    CLOUD_CRYPTO_DECRYPT_FAILURES_TOTAL,
+    CLOUD_HANDSHAKE_DURATION_SECONDS,
+    CLOUD_HANDSHAKE_FAILED_TOTAL,
+    CLOUD_HANDSHAKE_STARTED_TOTAL,
+    CLOUD_HANDSHAKE_SUCCEEDED_TOTAL,
+)
 from ..models import SensorData
 from ..storage import save_sensor_data
 
@@ -100,7 +108,14 @@ def create_secure_router(
 
     @router.post("/handshake", response_model=HandshakeResponse)
     def do_handshake(body: HandshakeRequest) -> HandshakeResponse:
+        CLOUD_HANDSHAKE_STARTED_TOTAL.inc()
+        started_at = time.perf_counter()
+
         if body.key_id != key_manager.key_id:
+            CLOUD_HANDSHAKE_FAILED_TOTAL.labels(reason="other").inc()
+            CLOUD_HANDSHAKE_DURATION_SECONDS.labels(outcome="failure").observe(
+                time.perf_counter() - started_at
+            )
             raise HTTPException(
                 status_code=404,
                 detail="unknown key_id; fetch GET /secure/handshake again",
@@ -111,8 +126,16 @@ def create_secure_router(
         mac = _decode_b64(body.mac, "mac") if body.mac else None
 
         if len(client_nonce) != wire.CLIENT_NONCE_LEN:
+            CLOUD_HANDSHAKE_FAILED_TOTAL.labels(reason="decode_error").inc()
+            CLOUD_HANDSHAKE_DURATION_SECONDS.labels(outcome="failure").observe(
+                time.perf_counter() - started_at
+            )
             raise HTTPException(status_code=400, detail="invalid client_nonce length")
         if len(ciphertext) != wire.CIPHERTEXT_LEN:
+            CLOUD_HANDSHAKE_FAILED_TOTAL.labels(reason="decode_error").inc()
+            CLOUD_HANDSHAKE_DURATION_SECONDS.labels(outcome="failure").observe(
+                time.perf_counter() - started_at
+            )
             raise HTTPException(status_code=400, detail="invalid ciphertext length")
 
         psk = get_psk()
@@ -124,6 +147,10 @@ def create_secure_router(
                 psk, b"client", body.key_id.encode("utf-8"), client_nonce, fingerprint_bytes, ciphertext
             )
             if mac is None or not wire.constant_time_equal(expected, mac):
+                CLOUD_HANDSHAKE_FAILED_TOTAL.labels(reason="verification_failed").inc()
+                CLOUD_HANDSHAKE_DURATION_SECONDS.labels(outcome="failure").observe(
+                    time.perf_counter() - started_at
+                )
                 raise HTTPException(status_code=401, detail="handshake authentication failed")
 
         try:
@@ -132,6 +159,10 @@ def create_secure_router(
             # Wrong-length/malformed ciphertext. Content tampering does NOT
             # raise here (FIPS 203 implicit rejection) -- it surfaces later
             # as an AEAD failure on the first /secure/data call.
+            CLOUD_HANDSHAKE_FAILED_TOTAL.labels(reason="decode_error").inc()
+            CLOUD_HANDSHAKE_DURATION_SECONDS.labels(outcome="failure").observe(
+                time.perf_counter() - started_at
+            )
             raise HTTPException(
                 status_code=400, detail="ciphertext rejected by ML-KEM decapsulation"
             ) from exc
@@ -152,6 +183,10 @@ def create_secure_router(
             )
             server_mac_b64 = base64.b64encode(server_mac).decode("ascii")
 
+        CLOUD_HANDSHAKE_SUCCEEDED_TOTAL.inc()
+        CLOUD_HANDSHAKE_DURATION_SECONDS.labels(outcome="success").observe(
+            time.perf_counter() - started_at
+        )
         return HandshakeResponse(
             session_id=session.session_id,
             expires_at=session.expires_at,
@@ -182,6 +217,7 @@ def create_secure_router(
         try:
             plaintext = wire.aead_decrypt(session.key, nonce, ciphertext, aad)
         except InvalidTag as exc:
+            CLOUD_CRYPTO_DECRYPT_FAILURES_TOTAL.inc()
             raise HTTPException(status_code=400, detail="ciphertext authentication failed") from exc
 
         if not session_store.commit_counter(body.session_id, counter):

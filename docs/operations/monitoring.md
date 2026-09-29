@@ -46,9 +46,9 @@ volume.
 | --- | --- | --- | --- | --- |
 | `device_messages_total` | Counter | — | Validated device readings received (existing metric, unchanged) | `gateway/app/main.py`, `receive_device_data`, before forwarding |
 | `cloud_forward_failures_total` | Counter | — | Requests whose forwarding to the cloud ultimately failed — once per request, at the point retries (if any) are exhausted (existing metric; cadence preserved, see caveat below) | `gateway/app/cloud_client.py`, once per request when it gives up |
-| `gateway_request_duration_seconds` | Histogram | `outcome`, `security_mode` | Time to handle one `POST /device-data`, receipt to response, including any retries | `gateway/app/main.py`, `receive_device_data` and its validation-error handler |
+| `gateway_request_duration_seconds` | Histogram | `outcome`, `security_mode` | Time to handle one `POST /device-data`, receipt to response, including any retries. Readings rejected by validation are not timed | `gateway/app/main.py`, `receive_device_data` |
 | `gateway_cloud_request_duration_seconds` | Histogram | `outcome`, `security_mode` | Duration of one gateway→cloud HTTP attempt (per attempt, not per request) | `gateway/app/cloud_client.py`, around each attempt |
-| `gateway_delivery_outcome_total` | Counter | `outcome` | Requests by final delivery outcome | `gateway/app/main.py`, once per request |
+| `gateway_delivery_outcome_total` | Counter | `outcome` | Requests by final delivery outcome | `gateway/app/main.py`, once per request; `rejected_validation` in the `RequestValidationError` handler (reading failed gateway validation, including `NaN`) and when the cloud answers 4xx |
 | `gateway_cloud_retry_attempts_total` | Counter | — | Retry attempts issued (excludes each request's first attempt) | `gateway/app/cloud_client.py`, per retry |
 | `gateway_cloud_retries_exhausted_total` | Counter | — | Requests whose retry budget was exhausted with no success | `gateway/app/cloud_client.py`, when giving up |
 | `gateway_handshake_started_total` | Counter | — | ML-KEM handshakes initiated by the gateway | `gateway/app/crypto/*` |

@@ -2,6 +2,9 @@
 
 from unittest.mock import patch
 
+import pytest
+from prometheus_client import REGISTRY
+
 
 VALID_PAYLOAD = {"device_id": "sensor-1", "temperature": 21.5}
 
@@ -47,6 +50,33 @@ def test_validation_rejection_increments_neither_counter(client, metric_value):
     mock_send.assert_not_called()
     assert metric_value("device_messages_total") - messages_before == 0
     assert metric_value("cloud_forward_failures_total") - failures_before == 0
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        '{"device_id":"broken-sensor","temperature":-127.0}',
+        '{"device_id":"broken-sensor","temperature":85.0}',
+        '{"device_id":"broken-sensor","temperature":NaN}',
+    ],
+    ids=["ds18b20_disconnected", "ds18b20_power_on_reset", "failed_read_nan"],
+)
+def test_validation_rejection_is_counted_as_rejected_validation(client, body):
+    """Every reading the gateway rejects is visible in
+    gateway_delivery_outcome_total{outcome="rejected_validation"}, as
+    documented in app/metrics.py, so a faulty sensor shows up in monitoring."""
+    sample = 'gateway_delivery_outcome_total'
+    labels = {"outcome": "rejected_validation"}
+    before = REGISTRY.get_sample_value(sample, labels) or 0.0
+
+    response = client.post(
+        "/device-data",
+        content=body,
+        headers={"Content-Type": "application/json"}
+    )
+
+    assert response.status_code == 422
+    assert (REGISTRY.get_sample_value(sample, labels) or 0.0) - before == 1
 
 
 def test_metrics_endpoint_exposes_both_counter_names(client):

@@ -3,6 +3,8 @@
 # is integrated (see gateway/app/cloud_client.py for the matching comment on
 # the gateway-to-cloud leg).
 
+import json
+import math
 from dataclasses import dataclass
 from typing import Optional
 
@@ -25,11 +27,26 @@ class GatewayClient:
         self._session = session if session is not None else requests.Session()
 
     def send(self, reading: SensorReading) -> DeliveryResult:
+        payload = reading.to_payload()
+
+        if math.isfinite(payload["temperature"]):
+            body = {"json": payload}
+        else:
+            # requests refuses to encode NaN/Infinity and raises
+            # InvalidJSONError, which used to be reported as a network
+            # failure. Sensor firmware that prints the float sends the token
+            # anyway, so the simulated device does too and lets the gateway
+            # reject it.
+            body = {
+                "data": json.dumps(payload),
+                "headers": {"Content-Type": "application/json"}
+            }
+
         try:
             response = self._session.post(
                 self._url,
-                json=reading.to_payload(),
-                timeout=self._timeout
+                timeout=self._timeout,
+                **body
             )
         except requests.RequestException as error:
             return DeliveryResult(

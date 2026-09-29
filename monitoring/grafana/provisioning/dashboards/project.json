@@ -1,0 +1,382 @@
+{
+  "title": "Edge-Cloud Prototype",
+  "uid": "edge-cloud-v1",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "15s",
+  "time": { "from": "now-30m", "to": "now" },
+  "timepicker": {},
+  "panels": [
+
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Readings Received (total)",
+      "description": "Total sensor readings that have passed gateway validation since the gateway last restarted.",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "device_messages_total",
+          "legendFormat": "readings"
+        }
+      ]
+    },
+
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Forward Failures (total)",
+      "description": "Total readings the gateway failed to forward to the cloud after exhausting all retries.",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 5 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "cloud_forward_failures_total",
+          "legendFormat": "failures"
+        }
+      ]
+    },
+
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Readings in Memory",
+      "description": "Current number of readings held in the cloud's in-memory store. Evictions begin at the configured maximum (default 1000).",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "cloud_stored_readings",
+          "legendFormat": "stored"
+        }
+      ]
+    },
+
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Storage Evictions (total)",
+      "description": "Total readings dropped to enforce the bounded in-memory retention limit.",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "cloud_storage_evictions_total",
+          "legendFormat": "evictions"
+        }
+      ]
+    },
+
+    {
+      "id": 5,
+      "type": "row",
+      "title": "Throughput",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 4 }
+    },
+
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Reading Rate (per second)",
+      "description": "Rate of sensor readings arriving at the gateway, averaged over a 1-minute window.",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(device_messages_total[1m])",
+          "legendFormat": "readings/s"
+        }
+      ]
+    },
+
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Delivery Outcomes (per second)",
+      "description": "Rate of each delivery outcome: forwarded successfully, rejected by validation, or failed after retries.",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(gateway_delivery_outcome_total[1m])",
+          "legendFormat": "{{outcome}}"
+        }
+      ]
+    },
+
+    {
+      "id": 8,
+      "type": "row",
+      "title": "ML-KEM Handshakes",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 13 }
+    },
+
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Handshake Rate — Started vs Succeeded",
+      "description": "Rate of ML-KEM handshakes initiated by the gateway vs those that completed successfully. A persistent gap between the two lines indicates handshake failures.",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(gateway_handshake_started_total[5m])",
+          "legendFormat": "started"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(gateway_handshake_succeeded_total[5m])",
+          "legendFormat": "succeeded"
+        }
+      ]
+    },
+
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "Handshake Duration (p50 and p95)",
+      "description": "Median and 95th-percentile wall-clock time for one complete ML-KEM handshake on the gateway side.",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.50, rate(gateway_handshake_duration_seconds_bucket[5m]))",
+          "legendFormat": "p50"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.95, rate(gateway_handshake_duration_seconds_bucket[5m]))",
+          "legendFormat": "p95"
+        }
+      ]
+    },
+
+    {
+      "id": 11,
+      "type": "row",
+      "title": "Security Alarms — should stay at zero",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 22 }
+    },
+
+    {
+      "id": 12,
+      "type": "timeseries",
+      "title": "AEAD Decrypt Failures",
+      "description": "Cloud-side AEAD authentication failures. Any value above zero means a ciphertext failed authentication — indicates tampering, session mismatch, or a bug.",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 23 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "lineWidth": 2 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(cloud_crypto_decrypt_failures_total[5m])",
+          "legendFormat": "decrypt failures/s"
+        }
+      ]
+    },
+
+    {
+      "id": 13,
+      "type": "timeseries",
+      "title": "Handshake Auth Failures",
+      "description": "Handshakes rejected because the PSK MAC did not verify. Indicates a wrong ML_KEM_PSK configuration or an active machine-in-the-middle attempt.",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 23 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "lineWidth": 2 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(cloud_handshake_failed_total{reason=\"verification_failed\"}[5m])",
+          "legendFormat": "auth failures/s"
+        }
+      ]
+    },
+
+    {
+      "id": 14,
+      "type": "timeseries",
+      "title": "Forced Session Rekeys",
+      "description": "Gateway re-handshakes triggered by a 404/410 from the cloud — most likely a cloud process restart that wiped in-memory sessions.",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 23 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(gateway_session_rekeys_total{reason=\"forced\"}[5m])",
+          "legendFormat": "forced rekeys/s"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(gateway_session_rekeys_total{reason=\"expired\"}[5m])",
+          "legendFormat": "proactive rekeys/s"
+        }
+      ]
+    },
+
+    {
+      "id": 15,
+      "type": "row",
+      "title": "Latency Comparison — Plaintext vs ML-KEM",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 31 }
+    },
+
+    {
+      "id": 16,
+      "type": "timeseries",
+      "title": "Gateway Request Duration by Security Mode (p50)",
+      "description": "Median end-to-end time to handle one POST /device-data request, split by security mode. Shows the overhead ML-KEM adds over plaintext.",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.50, sum by (le, security_mode) (rate(gateway_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "p50 — {{security_mode}}"
+        }
+      ]
+    },
+
+    {
+      "id": 17,
+      "type": "timeseries",
+      "title": "Gateway Request Duration by Security Mode (p95)",
+      "description": "95th-percentile end-to-end request time split by security mode. A stable gap between modes shows the consistent overhead of ML-KEM key establishment.",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 32 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "histogram_quantile(0.95, sum by (le, security_mode) (rate(gateway_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "p95 — {{security_mode}}"
+        }
+      ]
+    }
+
+  ]
+}

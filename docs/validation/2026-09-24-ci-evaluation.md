@@ -94,6 +94,8 @@ The ported tests are in `tests/crypto/test_protected_path_session.py` because th
 2. Should `derive_session_key` reject a secret that is not exactly 32 bytes, in both `wire.py` copies, or is "there is no classical path" accepted as meeting requirement f?
 3. Must key-establishment failures increment `gateway_handshake_failed_total{reason}` before work package 3 is accepted, or are `cloud_forward_failures_total` and a log line enough?
 
+Update 2026-09-29: v2.1.0 made `gateway/app/crypto/client.py` increment `gateway_handshake_failed_total{reason}` on every failed handshake, which settles decision 3. When develop (v2.2.0) was merged into this branch, g2 was ported to `test_failed_key_establishment_fails_closed`. The table above records the state at v2.0.0.
+
 The source scan `test_no_quantum_vulnerable_key_agreement.py` was also fixed. Its allowlist now includes `cryptography`, counted only when its `mlkem` module is imported. Its pin test now checks, for gateway and cloud, that a service importing ML-KEM pins that library with `==` in its requirements; before, it returned early and asserted nothing. A new test checks that `gateway/app/crypto/client.py` and `cloud/app/crypto/keys.py` import `cryptography`'s `mlkem`.
 
 ## Required-suite coverage, before and after

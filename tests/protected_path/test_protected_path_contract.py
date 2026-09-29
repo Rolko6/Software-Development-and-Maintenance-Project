@@ -45,16 +45,15 @@ gateway/app/kem.py does not exist and this module still skips. It is kept as
 the statement of the requirements. Requirements a (parameter set), b (sizes),
 c (reading hidden in recorded traffic; the temperature and field-name parts),
 d (recorded traffic carries ML-KEM material), e (the ML-KEM secret changes the
-session key) and g1 (failed key establishment fails closed) are ported to
-tests/crypto/test_protected_path_session.py and run there. Three decisions
+session key), g1 (failed key establishment fails closed) and g2 (the failure is
+counted in GATEWAY_HANDSHAKE_FAILED_TOTAL, incremented since v2.1.0) are ported
+to tests/crypto/test_protected_path_session.py and run there. Two decisions
 remain open for Stanley/Tiago:
 
 * c: the device id travels in cleartext as routing and AEAD associated data.
   The port keeps this assertion as a strict xfail.
 * f (test_a_classical_secret_alone_is_not_accepted): wire.derive_session_key
   has no 32-byte length guard on the ML-KEM secret.
-* g2: nothing increments the handshake-failure counter
-  (GATEWAY_HANDSHAKE_FAILED_TOTAL in gateway/app/metrics.py).
 """
 
 import json
@@ -77,10 +76,9 @@ kem = pytest.importorskip(
     reason=(
         "gateway/app/kem.py does not exist: the implemented design is "
         "session-based in gateway/app/crypto. Requirements a, b, c (partly), "
-        "d, e and g1 are ported to tests/crypto/test_protected_path_session.py. "
+        "d, e, g1 and g2 are ported to tests/crypto/test_protected_path_session.py. "
         "Open decisions for Stanley/Tiago: device id in cleartext (c), "
-        "32-byte length guard in derive_session_key (f), handshake-failure "
-        "counter (g2)."
+        "32-byte length guard in derive_session_key (f)."
     ),
 )
 
