@@ -47,6 +47,7 @@ from ..metrics import (
     CLOUD_HANDSHAKE_FAILED_TOTAL,
     CLOUD_HANDSHAKE_STARTED_TOTAL,
     CLOUD_HANDSHAKE_SUCCEEDED_TOTAL,
+    CLOUD_SECURE_DATA_REJECTED_TOTAL,
 )
 from ..models import SensorData
 from ..storage import save_sensor_data
@@ -195,23 +196,30 @@ def create_secure_router(
             server_mac=server_mac_b64,
         )
 
+    def _reject(reason: str, status_code: int, detail: str) -> HTTPException:
+        CLOUD_SECURE_DATA_REJECTED_TOTAL.labels(reason=reason).inc()
+        return HTTPException(status_code=status_code, detail=detail)
+
     @router.post("/data", response_model=SecureDataResponse)
     def receive_secure_data(body: SecureDataRequest) -> SecureDataResponse:
-        nonce = _decode_b64(body.nonce, "nonce")
-        ciphertext = _decode_b64(body.ciphertext, "ciphertext")
+        try:
+            nonce = _decode_b64(body.nonce, "nonce")
+            ciphertext = _decode_b64(body.ciphertext, "ciphertext")
+        except HTTPException as exc:
+            raise _reject("malformed", exc.status_code, exc.detail) from exc
 
         if len(nonce) != wire.NONCE_LEN:
-            raise HTTPException(status_code=400, detail="invalid nonce length")
+            raise _reject("malformed", 400, "invalid nonce length")
 
         session, error = session_store.get(body.session_id)
         if error == "unknown":
-            raise HTTPException(status_code=404, detail="unknown session_id; re-handshake required")
+            raise _reject("unknown_session", 404, "unknown session_id; re-handshake required")
         if error == "expired":
-            raise HTTPException(status_code=410, detail="session expired; re-handshake required")
+            raise _reject("expired_session", 410, "session expired; re-handshake required")
 
         counter = wire.nonce_to_counter(nonce)
         if not session_store.check_counter(body.session_id, counter):
-            raise HTTPException(status_code=409, detail="replayed or out-of-order counter")
+            raise _reject("replay", 409, "replayed or out-of-order counter")
 
         aad = wire.build_aad(body.session_id, body.device_id, nonce)
         try:
@@ -222,24 +230,20 @@ def create_secure_router(
 
         if not session_store.commit_counter(body.session_id, counter):
             # Lost a race with a concurrent request for the same session.
-            raise HTTPException(status_code=409, detail="replayed or out-of-order counter")
+            raise _reject("replay", 409, "replayed or out-of-order counter")
 
         try:
             reading = json.loads(plaintext.decode("utf-8"))
             sensor_data = SensorData(**reading)
         except (json.JSONDecodeError, UnicodeDecodeError, ValidationError, TypeError) as exc:
-            raise HTTPException(
-                status_code=400, detail="decrypted payload failed validation"
-            ) from exc
+            raise _reject("invalid_payload", 400, "decrypted payload failed validation") from exc
 
         if sensor_data.device_id != body.device_id:
             # Defense in depth only: build_aad already binds device_id, so a
             # mismatch here would already have failed as InvalidTag above
             # unless the *original* sender itself encrypted inconsistent
             # values.
-            raise HTTPException(
-                status_code=400, detail="device_id mismatch between envelope and payload"
-            )
+            raise _reject("invalid_payload", 400, "device_id mismatch between envelope and payload")
 
         save_sensor_data(sensor_data.model_dump())
         return SecureDataResponse(status="stored")

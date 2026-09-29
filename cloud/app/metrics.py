@@ -52,9 +52,12 @@ receive/respond path):
 - ``CLOUD_CRYPTO_DECRYPT_FAILURES_TOTAL`` -- increment wherever the
   AEAD open call raises while unwrapping an inbound payload from the
   gateway (covers tampering and session-key mismatches).
-- ``CLOUD_CRYPTO_ENCRYPT_FAILURES_TOTAL`` -- increment wherever the
-  AEAD seal call raises while protecting an outbound response to the
-  gateway.
+- ``CLOUD_SECURE_DATA_REJECTED_TOTAL`` -- increment once for every other
+  ``POST /secure/data`` rejection, labelled with its ``reason``, so a
+  replay or a stale session is visible without reading logs. AEAD
+  failures are counted only by the decrypt counter above.
+- There is no cloud encrypt failure counter: the cloud does not encrypt
+  its responses to the gateway.
 - ``CLOUD_SECURITY_MODE`` -- call ``.state(mode)`` once at startup with
   the configured mode, and again every time the mode changes at
   runtime.
@@ -72,6 +75,10 @@ per-session label is used anywhere in this module:
   ``invalid_temperature``, ``other``
 - ``reason`` (handshake failure): ``timeout``, ``decode_error``,
   ``verification_failed``, ``other``
+- ``reason`` (secure data rejected): ``malformed`` (bad base64 or nonce
+  length, ``400``), ``unknown_session`` (``404``), ``expired_session``
+  (``410``), ``replay`` (repeated or lower counter, ``409``),
+  ``invalid_payload`` (decrypted reading fails validation, ``400``)
 """
 
 import os
@@ -189,10 +196,11 @@ CLOUD_CRYPTO_DECRYPT_FAILURES_TOTAL = Counter(
     "unwrapping a payload from the gateway.",
 )
 
-CLOUD_CRYPTO_ENCRYPT_FAILURES_TOTAL = Counter(
-    "cloud_crypto_encrypt_failures_total",
-    "Total AEAD encryption failures on the cloud when protecting an "
-    "outbound response to the gateway.",
+CLOUD_SECURE_DATA_REJECTED_TOTAL = Counter(
+    "cloud_secure_data_rejected_total",
+    "Total POST /secure/data requests rejected for a reason other than "
+    "AEAD authentication failure, by reason.",
+    labelnames=("reason",),
 )
 
 CLOUD_SECURITY_MODE = Enum(

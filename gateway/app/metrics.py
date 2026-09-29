@@ -74,12 +74,11 @@ wired into the handshake endpoint and the AEAD send/receive path):
   (expired and re-established, or forced). Do not increment this for
   the very first handshake with a peer -- that is only "started" /
   "succeeded".
-- ``GATEWAY_CRYPTO_ENCRYPT_FAILURES_TOTAL`` -- increment wherever the
-  AEAD seal call raises while protecting an outbound payload to the
-  cloud.
-- ``GATEWAY_CRYPTO_DECRYPT_FAILURES_TOTAL`` -- increment wherever the
-  AEAD open call raises while unwrapping a response from the cloud
-  (covers tampering and session-key mismatches).
+- There is no gateway encrypt/decrypt failure counter. AES-GCM sealing
+  with a valid 32-byte session key does not fail, and the gateway never
+  decrypts anything: cloud responses to ``/secure/data`` are plain JSON.
+  A design that authenticates those responses should add its counter
+  together with the code that can move it.
 - ``GATEWAY_SECURITY_MODE`` -- call ``.state(mode)`` once at startup with
   the configured mode, and again every time the mode changes at
   runtime.
@@ -243,18 +242,6 @@ GATEWAY_SESSION_REKEYS_TOTAL = Counter(
     "is replaced by a new handshake, by reason. Excludes the first "
     "handshake with a peer.",
     labelnames=("reason",),
-)
-
-GATEWAY_CRYPTO_ENCRYPT_FAILURES_TOTAL = Counter(
-    "gateway_crypto_encrypt_failures_total",
-    "Total AEAD encryption failures on the gateway when protecting an "
-    "outbound payload to the cloud.",
-)
-
-GATEWAY_CRYPTO_DECRYPT_FAILURES_TOTAL = Counter(
-    "gateway_crypto_decrypt_failures_total",
-    "Total AEAD decryption/authentication failures on the gateway when "
-    "unwrapping a response from the cloud.",
 )
 
 GATEWAY_SECURITY_MODE = Enum(

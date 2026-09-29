@@ -56,8 +56,6 @@ volume.
 | `gateway_handshake_failed_total` | Counter | `reason` | Failed handshakes, by reason | `gateway/app/crypto/*` |
 | `gateway_handshake_duration_seconds` | Histogram | `outcome` | Duration of one full handshake attempt | `gateway/app/crypto/*` |
 | `gateway_session_rekeys_total` | Counter | `reason` | Existing sessions replaced by a new handshake (excludes the first handshake with a peer) | `gateway/app/crypto/*` session manager |
-| `gateway_crypto_encrypt_failures_total` | Counter | — | AEAD seal failures protecting an outbound payload to the cloud | `gateway/app/crypto/*` (or `cloud_client.py`) |
-| `gateway_crypto_decrypt_failures_total` | Counter | — | AEAD open failures unwrapping a cloud response | `gateway/app/crypto/*` (or `cloud_client.py`) |
 | `gateway_security_mode` | Enum (gauge family) | implicit `gateway_security_mode` label = state | Active gateway crypto mode: `off` / `enabled` / `required` | gateway startup and on every mode change |
 | `gateway_build_info` | Info (gauge) | `version`, `commit`, `python_version` | Build/runtime metadata | Set once at import, in `metrics.py` itself |
 
@@ -97,7 +95,7 @@ failure): `timeout`, `peer_unavailable`, `decode_error`,
 | `cloud_handshake_failed_total` | Counter | `reason` | Failed handshakes, by reason | `cloud/app/crypto/*` |
 | `cloud_handshake_duration_seconds` | Histogram | `outcome` | Duration of one handshake request as processed by the cloud | `cloud/app/crypto/*` |
 | `cloud_crypto_decrypt_failures_total` | Counter | — | AEAD open failures unwrapping a gateway payload | `cloud/app/crypto/*` |
-| `cloud_crypto_encrypt_failures_total` | Counter | — | AEAD seal failures protecting a response to the gateway | `cloud/app/crypto/*` |
+| `cloud_secure_data_rejected_total` | Counter | `reason` | `POST /secure/data` requests rejected before storing, other than AEAD failures: `malformed` (400), `unknown_session` (404), `expired_session` (410), `replay` (409), `invalid_payload` (400 after decryption) | `cloud/app/crypto/router.py` |
 | `cloud_security_mode` | Enum (gauge family) | implicit `cloud_security_mode` label = state | Active cloud crypto mode: `off` / `enabled` / `required` | cloud startup and on every mode change |
 | `cloud_build_info` | Info (gauge) | `version`, `commit`, `python_version` | Build/runtime metadata | Set once at import, in `metrics.py` itself |
 
@@ -153,7 +151,7 @@ project, and not listed above.
 - **The specific cause of one failed request.** These are metrics, not
   per-request logs — use the existing application logging
   (`logger.exception` / `logger.info` calls in `main.py`) for that.
-- **Tampering distinguished from a bug.** `*_crypto_decrypt_failures_total`
+- **Tampering distinguished from a bug.** `cloud_crypto_decrypt_failures_total`
   counts both an authentication failure caused by an attacker and one
   caused by a session/key mismatch bug identically.
 - **Resource cost.** No CPU, memory, or process-level cost of the
@@ -184,7 +182,7 @@ path, or deployment target changes.
 | End-to-end latency (warning) | `histogram_quantile(0.95, sum(rate(gateway_request_duration_seconds_bucket[5m])) by (le)) > 0.25` for 5m | Observed loopback p95s are single-digit milliseconds; 250ms is ~2 orders of magnitude above that — generous enough to avoid noise, tight enough to catch real degradation (retry storms, GC pauses, resource starvation) before it is user-visible. |
 | Handshake failures (warning) | `sum(rate(gateway_handshake_failed_total[15m])) / sum(rate(gateway_handshake_started_total[15m])) > 0.1` | Occasional handshake failure (peer restart, transient network blip) is expected; >10% sustained is not. |
 | Handshake failures (critical) | same ratio `>= 1.0` for 5m | The secure link is completely down — in `required` mode this also means all delivery has stopped. |
-| Any AEAD failure | `rate(gateway_crypto_decrypt_failures_total[5m]) > 0` or the `cloud_crypto_decrypt_failures_total` / `*_encrypt_failures_total` equivalents | Never expected in normal operation with a healthy, current session; worth immediate attention (bug or tampering) even at low absolute counts, because there is no legitimate reason for authenticated decryption to fail. |
+| Any AEAD failure | `rate(cloud_crypto_decrypt_failures_total[5m]) > 0` | Never expected in normal operation with a healthy, current session; worth immediate attention (bug or tampering) even at low absolute counts, because there is no legitimate reason for authenticated decryption to fail. |
 | Storage evictions (info) | `rate(cloud_storage_evictions_total[15m]) > 0` | Expected behaviour of bounded retention, not a failure — but the operator should know old readings are being discarded, in case retention needs raising or real persistence is now warranted. |
 | Unexpected mode downgrade (warning) | `changes(gateway_security_mode{gateway_security_mode="off"}[1h]) > 0` while a prior scrape showed `enabled`/`required` at 1 | Should only happen from a deliberate configuration change; an unplanned downgrade to `off` may indicate misconfiguration or rollback. |
 | Target down | standard `up{job=~"gateway|cloud"} == 0` | A service that cannot be scraped cannot be monitored at all — treat as its own, independent, always-on alert. |

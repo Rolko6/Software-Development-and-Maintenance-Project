@@ -386,6 +386,13 @@ model" below.
   captured MAC-valid handshake stays MAC-valid when replayed verbatim,
   PSK or not. A server-chosen freshness token, rejected on reuse, would
   close this completely; not implemented here.
+- **The cloud's reply to `/secure/data` is not authenticated.** Only the
+  request is AEAD-protected; the reply `{"status": "stored"}` is plain
+  JSON. An active attacker between gateway and cloud can drop a reading
+  and answer `200` itself, and the gateway reports it as delivered. No
+  reading is disclosed or altered, but it is silently lost. Closing this
+  needs the cloud to authenticate its reply with the session key, bound
+  to the request's counter -- a wire-format change on both sides.
 - **A lost response can store a reading twice.** The reading is stored,
   the gateway sees a failure and may retry it under a new counter. Nonce
   uniqueness holds, but the cloud cannot tell the two copies apart: the

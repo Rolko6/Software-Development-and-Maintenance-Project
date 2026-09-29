@@ -24,7 +24,7 @@ for another few minutes. The comparison panel will then show both series.
 ## 2. No alerts configured
 
 The security alarm panels (AEAD decrypt failures, handshake auth failures, forced
-rekeys) are visual only. Grafana supports email and Slack alerting but nothing is
+rekeys, secure data rejections by reason) are visual only. Grafana supports email and Slack alerting but nothing is
 configured here. In a real deployment you would want an alert that fires immediately
 if `cloud_crypto_decrypt_failures_total` starts rising, since any non-zero value
 indicates either tampering or a session bug.

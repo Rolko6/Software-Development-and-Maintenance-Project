@@ -92,3 +92,33 @@ def test_send_to_cloud_raises_cloud_rejected_on_4xx_response_without_retrying():
     assert mock_post.call_count == 1
     assert exc_info.value.status_code == 422
     mock_sleep.assert_not_called()
+
+
+def _retry_count(metric_value):
+    return metric_value("gateway_cloud_retry_attempts_total")
+
+
+def test_retry_counter_ignores_a_request_that_succeeds_first_time(metric_value):
+    """gateway_cloud_retry_attempts_total counts retries only, not first attempts."""
+    ok = MagicMock(status_code=200)
+    ok.json.return_value = {"status": "stored"}
+    before = _retry_count(metric_value)
+
+    with patch("app.cloud_client.requests.post", return_value=ok):
+        send_to_cloud({"device_id": "sensor-1", "temperature": 21.5})
+
+    assert _retry_count(metric_value) - before == 0
+
+
+def test_retry_counter_counts_each_retry_once(metric_value):
+    """Every attempt fails: MAX_ATTEMPTS attempts are MAX_ATTEMPTS - 1 retries."""
+    before = _retry_count(metric_value)
+
+    with patch(
+        "app.cloud_client.requests.post",
+        side_effect=requests.exceptions.ConnectionError("boom"),
+    ), patch("app.cloud_client.time.sleep"):
+        with pytest.raises(cloud_client.CloudUnavailable):
+            send_to_cloud({"device_id": "sensor-1", "temperature": 21.5})
+
+    assert _retry_count(metric_value) - before == cloud_client.CLOUD_FORWARD_MAX_ATTEMPTS - 1

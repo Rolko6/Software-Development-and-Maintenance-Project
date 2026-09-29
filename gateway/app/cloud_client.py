@@ -133,7 +133,8 @@ def send_to_cloud(sensor_data: dict) -> dict:
 
         attempt_timeout = min(CLOUD_REQUEST_TIMEOUT_SECONDS, remaining)
 
-        GATEWAY_CLOUD_RETRY_ATTEMPTS_TOTAL.inc()
+        if attempt > 1:
+            GATEWAY_CLOUD_RETRY_ATTEMPTS_TOTAL.inc()
 
         attempt_started = time.perf_counter()
 

@@ -246,7 +246,7 @@
       "type": "timeseries",
       "title": "AEAD Decrypt Failures",
       "description": "Cloud-side AEAD authentication failures. Any value above zero means a ciphertext failed authentication — indicates tampering, session mismatch, or a bug.",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 23 },
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 23 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
@@ -275,7 +275,7 @@
       "type": "timeseries",
       "title": "Handshake Auth Failures",
       "description": "Handshakes rejected because the PSK MAC did not verify. Indicates a wrong ML_KEM_PSK configuration or an active machine-in-the-middle attempt.",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 23 },
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 23 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
@@ -303,8 +303,8 @@
       "id": 14,
       "type": "timeseries",
       "title": "Forced Session Rekeys",
-      "description": "Gateway re-handshakes triggered by a 404/410 from the cloud — most likely a cloud process restart that wiped in-memory sessions.",
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 23 },
+      "description": "Gateway re-handshakes triggered by a 404/409/410 from the cloud — most likely a cloud process restart that wiped in-memory sessions.",
+      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 23 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
@@ -322,6 +322,28 @@
           "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "rate(gateway_session_rekeys_total{reason=\"expired\"}[5m])",
           "legendFormat": "proactive rekeys/s"
+        }
+      ]
+    },
+
+    {
+      "id": 18,
+      "type": "timeseries",
+      "title": "Secure Data Rejections by Reason",
+      "description": "POST /secure/data requests the cloud rejected before storing, other than AEAD failures (left panel). A replay is a repeated or lower message counter; unknown/expired sessions usually follow a cloud restart or a long pause.",
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 23 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum by (reason) (rate(cloud_secure_data_rejected_total[5m]))",
+          "legendFormat": "{{reason}}"
         }
       ]
     },
