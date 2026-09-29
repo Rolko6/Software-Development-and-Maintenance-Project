@@ -1,79 +1,82 @@
 # Deployment: shared test environment
 
-Reproducible instructions for deploying this prototype (device, gateway,
-cloud) to a shared test environment — a machine or VM reachable by more
-than one team member, as opposed to a single contributor's laptop. This is
-part of Work Package 4 ("Automate build and deployment",
-[project plan](../project-plan.md)).
+How to deploy a released version of this prototype (device, gateway, cloud) to a shared test environment: a machine or VM that more than one team member can reach, as opposed to one contributor's laptop. This is part of work package 4 ("Automate build and deployment", [project plan](../project-plan.md)).
 
-**No shared environment has been provisioned yet, and no deployment
-evidence has been recorded.** The "Deployment evidence" section at the
-bottom is a fill-in table for whoever provisions one; do not treat any row
-in it as filled until a real deployment has actually happened and someone
-recorded the actual observed result.
+**No shared environment has been provisioned yet.** The only recorded run is the author's rehearsal on a laptop (see [Deployment evidence](#deployment-evidence)); the real measurement is a teammate following [Teammate deployment check](#teammate-deployment-check).
 
-For what the CI pipeline checks before code reaches this stage, see
-[ci.md](ci.md). For what is (and is not) observable once deployed, see
-[monitoring.md](monitoring.md). For the single-machine quick start this
-extends, see the [README](../../README.md).
+This guide describes release **v2.2.0**. For what CI checks before a release, see [ci.md](ci.md). For what can be observed once deployed, see [monitoring.md](monitoring.md). For the single-machine quick start this extends, see the [README](../../README.md).
 
 ## Prerequisites
 
-On the host that will run the shared environment:
+On the host:
 
-- Docker Engine with the Compose plugin (or Docker Desktop), installed and
-  running: `docker --version && docker compose version`.
-- `git`, to clone the repository.
-- `curl`, for the verification checks below.
-- Outbound internet access for the initial image build (pulling
-  `python:3.12-slim` and installing pip dependencies inside each image).
-- A user account with permission to run `docker` (in the `docker` group,
-  or root/sudo).
+- Docker Engine with the Compose plugin, or Docker Desktop, running: `docker --version && docker compose version`. The guide was checked with Docker 29.4.3 and Compose v5.1.3.
+- `git` and `curl`.
+- Outbound internet access for the first image build (`python:3.12-slim` and the pip dependencies of each image).
+- A user allowed to run `docker` (in the `docker` group, or root/sudo).
+- Free host ports `8000` and `8001`, or different ports chosen with an override (below).
 
-## Host, ports, and firewall expectations
+## What the stack contains
 
-`docker-compose.yml` publishes two host ports:
-
-| Port | Service | Purpose |
+| Service | Host port | Notes |
 | --- | --- | --- |
-| `8000` | gateway | `/health`, `/device-data`, `/metrics/`, interactive docs at `/docs` |
-| `8001` | cloud | `/health`, `/data`, interactive docs at `/docs` |
+| `gateway` | `8000` | `/health`, `/ready`, `/device-data`, `/metrics/`, `/docs` |
+| `cloud` | `8001` | `/health`, `/data`, `/secure/handshake`, `/secure/data`, `/docs` |
+| `device` | none | sends a reading to the gateway every 5 s over the internal Compose network |
 
-By default Compose binds published ports to all interfaces on the host
-(`0.0.0.0`), not just loopback. That is fine for a single contributor's
-laptop but matters on a shared host that other machines can reach. Both
-services communicate over plain HTTP with no authentication (see the
-README's "Known limitations") and are, as shipped, "intended for a
-controlled development environment." For a shared test environment:
+- **Security.** The gateway→cloud link uses ML-KEM-768 key establishment and AES-256-GCM (`*_ML_KEM_MODE=enabled` by default), authenticated by the pre-shared secret `ML_KEM_PSK`. The device→gateway hop is plain HTTP without authentication, and in `enabled` mode the cloud still accepts plaintext `POST /data` and serves `GET /data` without authentication. Treat both ports as unauthenticated.
+- **Volume.** `cloud-keys` holds the cloud's ML-KEM private key (`/keys/ml-kem-key.der`), so the key survives container recreation.
+- **Stored readings** live in the cloud process's memory, at most `CLOUD_MAX_STORED_READINGS` (1000 in Compose); the oldest are dropped. See [Data-loss caveat](#data-loss-caveat).
 
-- Restrict inbound access to `8000`/`8001` at the host firewall (or cloud
-  security group) to the team's known IP ranges or a VPN, rather than
-  opening them to the public internet.
-- If tighter binding is wanted (e.g. `127.0.0.1:8000:8000` plus an SSH
-  tunnel or reverse proxy for shared access), do this with a local,
-  untracked `docker-compose.override.yml` on the host rather than editing
-  the tracked `docker-compose.yml` — Compose merges override files
-  automatically, and this keeps the host-specific choice out of version
-  control.
-- No inbound port is needed for outbound-only traffic: the device
-  container only makes outbound calls to the gateway over the internal
-  Compose network and does not need a published port itself.
+## Configuration
 
-## Deploy
+Compose reads these from the shell environment or from a `.env` file next to `docker-compose.yml` (the repository has none; create it on the host and do not commit it):
 
-From a shell on the host, with the prerequisites above satisfied:
+| Variable | Default | Set it on a shared host? |
+| --- | --- | --- |
+| `ML_KEM_PSK` | `dev-only-insecure-psk-change-me` (committed placeholder) | **Yes, always.** Same value for gateway and cloud; generate one with `openssl rand -hex 32`. The placeholder is accepted without a warning. |
+| `CLOUD_ML_KEM_MODE` | `enabled` | `off`, `enabled` or `required`. `required` closes plaintext `POST /data`. |
+| `GATEWAY_ML_KEM_MODE` | `enabled` | `off`, `enabled` or `required` (the last two behave the same on the gateway). |
+| `TEMPERATURE_MODEL` | `uniform` | `uniform`, `random-walk` or `ds18b20`. |
+| `FAULT_DISCONNECT_RATE`, `FAULT_POWER_ON_RESET_RATE`, `FAULT_NAN_RATE`, `FAULT_STUCK_RATE` | `0` | Only for fault experiments; see the README's "Simulate a faulty sensor". |
+| `COMPOSE_PROJECT_NAME` | the directory name | **Yes, if the host has more than one checkout.** Two clones in directories with the same name share one project, and `up` in one replaces the other's containers. |
+
+Example `.env`:
 
 ```bash
-# 1. Clone
+ML_KEM_PSK=<output of openssl rand -hex 32>
+COMPOSE_PROJECT_NAME=sdmp-shared
+```
+
+### Ports and firewall
+
+Compose publishes `8000` and `8001` on all interfaces (`0.0.0.0`). On a shared host, restrict them at the firewall or security group to the team's addresses or a VPN, or bind them to loopback and reach them through an SSH tunnel.
+
+To change the binding, put a `docker-compose.override.yml` next to `docker-compose.yml` (Compose loads it automatically; keep it untracked). Compose **appends** list fields such as `ports` when it merges files, so the list must be tagged `!override`, or the original `0.0.0.0` binding stays and the port is published twice:
+
+```yaml
+services:
+  cloud:
+    ports: !override
+      - "127.0.0.1:8001:8001"
+  gateway:
+    ports: !override
+      - "127.0.0.1:8000:8000"
+```
+
+Check the result with `docker compose config | grep -A4 ports:` before starting.
+
+## Deploy a release
+
+```bash
+# 1. Clone and select the release
 git clone git@github.com:Rolko6/Software-Development-and-Maintenance-Project.git
 cd Software-Development-and-Maintenance-Project
+git checkout v2.2.0
+git describe --tags            # expect: v2.2.0
 
-# 2. Configure (optional — only if you need non-default values)
-# Compose's environment: entries for CLOUD_URL, GATEWAY_URL, and DEVICE_ID
-# are the current configuration surface (see the README's "Configuration"
-# table). There is no .env file in this repository to fill in; edit
-# docker-compose.yml directly if a value must change, or override at the
-# host level with docker-compose.override.yml as described above.
+# 2. Configure: create .env (and the override, if needed) as above
+docker compose config --quiet
 
 # 3. Build and start, detached
 docker compose up --build -d
@@ -82,136 +85,87 @@ docker compose up --build -d
 docker compose ps
 ```
 
-The first build takes a few minutes (base image pull plus `pip install`
-inside each of the three images). Compose has no configured health checks
-(a documented limitation — see the README), so `docker compose ps` will
-show containers as "running" as soon as the process starts, not once the
-application is actually ready to serve requests; use the checks below to
-confirm actual readiness.
+The first build takes a few minutes (148 s in the rehearsal, with some base-image layers cached). `docker compose ps` shows containers as running as soon as the process starts, because Compose has no health checks; use the checks below. The device's first reading may fail with `Connection refused` while the gateway starts; later readings succeed.
+
+### Using the published images instead
+
+`Publish images` pushes each release to GHCR as `ghcr.io/rolko6/software-development-and-maintenance-project-{cloud,gateway,device}:2.2.0`. The images are built for `linux/amd64` only: they run natively on x86-64 hosts and only under emulation (`--platform linux/amd64`) on arm64 hosts such as Apple Silicon. `docker-compose.yml` builds from source and has no `image:` entries, so using the published images needs an override that sets `image:` for each service. This path has not been rehearsed for 2.2.0; building from the tag is the documented route.
 
 ## Verify the deployment
 
-Replace `localhost` with the shared host's address if running these from
-another machine.
-
-**1. Health:**
+Replace `localhost` with the host's address when checking from another machine. Record the actual output, not only "passed".
 
 ```bash
-curl -fsS http://localhost:8000/health   # gateway
-curl -fsS http://localhost:8001/health   # cloud
-```
+# 1. Health and readiness
+curl -fsS http://localhost:8000/health        # {"status":"healthy"}
+curl -fsS http://localhost:8001/health        # {"status":"healthy"}
+curl -fsS http://localhost:8000/ready         # {"status":"ready","cloud":"reachable"}
 
-Both should return `{"status":"healthy"}`.
-
-**2. A known reading reaches the cloud** (the same check as the README's
-"Verify the data flow" → "Send a known reading through the gateway"):
-
-```bash
+# 2. A known reading reaches the cloud
 curl -fsS -X POST http://localhost:8000/device-data \
   -H 'Content-Type: application/json' \
   -d '{"device_id":"deploy-check-001","temperature":22.5}'
+# {"status":"forwarded","cloud_response":{"status":"stored"}}
+curl -fsS http://localhost:8001/data | grep -c deploy-check-001   # at least 1
+
+# 3. Metrics
+curl -fsS http://localhost:8000/metrics/ | grep -E '^(device_messages_total|cloud_forward_failures_total|gateway_delivery_outcome_total)'
+
+# 4. Readings use the protected path
+curl -fsS http://localhost:8001/secure/handshake | head -c 80; echo    # "algorithm":"ML-KEM-768"
+docker compose logs cloud | grep -oE '"(GET|POST) /[a-z/]*' | sort | uniq -c
+# POST /secure/data present; no plaintext POST /data unless you sent one
 ```
 
-Expect `{"status":"forwarded","cloud_response":{"status":"stored"}}`, then
-confirm it is retrievable:
-
-```bash
-curl -fsS http://localhost:8001/data | grep -c deploy-check-001
-```
-
-Expect a count of at least `1`.
-
-**3. Metrics are exposed:**
-
-```bash
-curl -fsS http://localhost:8000/metrics/ | grep -E 'device_messages_total|cloud_forward_failures_total'
-```
-
-Both counter names should appear. See [monitoring.md](monitoring.md) for
-what these counters do and do not tell you, and for scraping them with a
-real Prometheus instance rather than one-off `curl` checks.
-
-Record the actual output of these three checks — not just "passed" — as
-part of the deployment evidence below.
+See [monitoring.md](monitoring.md) for what the counters do and do not show, and the README's "Verify the secure channel" for switching the cloud to `required`.
 
 ## View logs
 
 ```bash
-docker compose logs -f            # all services, follow
-docker compose logs -f gateway    # one service
-docker compose logs --no-color --tail 200   # last 200 lines, no ANSI color (useful when pasting into an evidence record)
+docker compose logs -f                        # all services, follow
+docker compose logs -f gateway                # one service
+docker compose logs --no-color --tail 200     # for pasting into an evidence record
 ```
 
-`Ctrl+C` stops following; the containers keep running.
-
-## Roll back to the previous commit
-
-There is no persistent volume in this stack — the cloud service's
-readings live only in that process's memory (see "Data-loss caveat"
-below) — so a rollback has no data-migration step to worry about; it is
-purely a matter of checking out the previous code and rebuilding.
+## Roll back to the previous release
 
 ```bash
-# Find the commit currently running vs. the one before it
-git log --oneline -5
-
-# Roll back the working tree to the previous commit
-git checkout <previous-commit-sha>
-
-# Rebuild and restart from that commit
-docker compose down
+git checkout v2.1.0            # the previous release tag
+docker compose down            # keeps the cloud-keys volume
 docker compose up --build -d
-
-# Re-run the verification checks above before declaring the rollback done
+# re-run the verification checks
 ```
 
-To return to the latest commit afterwards: `git checkout main` (or
-whichever branch/ref was deployed), then `docker compose up --build -d`
-again.
+Stored readings are lost on every redeploy (see below). The `cloud-keys` volume is kept by `down` and reused by the older release. To return, `git checkout v2.2.0` and run `docker compose up --build -d` again.
 
 ## Tear down
 
 ```bash
-docker compose down       # stop and remove containers + network; images and any local cache remain
-docker compose down -v    # same, and also remove any anonymous/named volumes (this stack defines none, so -v currently changes nothing beyond the plain form)
+docker compose down        # removes containers and network; keeps images and the cloud-keys volume
+docker compose down -v     # also deletes the cloud-keys volume, i.e. the cloud's ML-KEM private key
 ```
 
-Stopping or removing the `cloud` container at any point — including via
-either form of `down`, or `docker compose restart cloud` — discards all
-stored readings immediately (see "Data-loss caveat").
+After `down -v` the cloud generates a new key pair on the next start. Gateways then re-handshake against the new key; a gateway configured with `GATEWAY_ML_KEM_PINNED_EK_FINGERPRINT` (not set in Compose) needs the new fingerprint.
 
 ## Data-loss caveat
 
-The cloud service stores readings in a process-local Python list (see
-`cloud/app/storage.py` and the README's "Known limitations" and
-"Storage"). There is no database and no volume backing it. Concretely:
+Readings are kept in a bounded in-memory `deque` in the cloud process (`cloud/app/storage.py`). There is no database. Restarting, rebuilding or recreating the `cloud` container empties it, and past `CLOUD_MAX_STORED_READINGS` the oldest readings are dropped without notice. If a reading must be kept for a report, capture the `curl` output at the time.
 
-- Restarting, rebuilding, or recreating the `cloud` container empties it.
-- The list has no retention limit or eviction; left running indefinitely,
-  memory usage grows without bound.
-- A rollback or redeploy on the shared environment will always start the
-  cloud service with zero stored readings, regardless of what was stored
-  before.
+## Teammate deployment check
 
-Do not treat this environment as a place to accumulate meaningful test
-data across deployments. If a specific reading must be preserved for a
-report or evidence record, capture the `curl` output at the time, not a
-promise to re-query it later.
+The deployment-reproducibility metric in issue #4 is measured by a teammate who did not write this guide, following it without help:
+
+1. Start a timer. Follow [Deploy a release](#deploy-a-release) and [Verify the deployment](#verify-the-deployment) exactly as written, on the shared host if one exists, otherwise on your own machine.
+2. Write down every step you had to guess, every command that failed, and every question you had to ask. These are the "undocumented steps".
+3. Stop the timer when all four verification checks pass, or after 60 minutes.
+4. Add a row to the table below and save the command output in a `docs/validation/` record.
 
 ## Deployment evidence
 
-Fill in one row per actual deployment to a shared environment. Do not
-pre-fill "expected" results — only record what was actually observed,
-per this repository's verification rule (AGENTS.md, "Verification": *"Match
-the completion claim to the checks performed"*).
+One row per actual deployment. Record only what was observed.
 
-| Date | Commit (`git rev-parse --short HEAD`) | Environment (host/provider) | Operator | Checks run | Result |
-| --- | --- | --- | --- | --- | --- |
-| _(none yet)_ | | | | | |
+| Date | Release / commit | Environment | Operator | Checks run | Time | Result |
+| --- | --- | --- | --- | --- | --- | --- |
+| 2026-09-29 | `v2.2.0` / `b0ca4ef` | Author's laptop (macOS arm64, Docker 29.4.3), ports 18000/18001, not a shared host | yyy-tom with Claude Code — **rehearsal, not the teammate metric** | health, ready, known-reading, metrics, secure-path, rollback to `v2.1.0`, teardown | ~3 min clone to verified | success; 9 documentation gaps found and fixed in this guide ([record](../validation/2026-09-29-deployment-rehearsal.md)) |
 
-Suggested "Checks run" shorthand: `health`, `known-reading`, `metrics`,
-`logs-reviewed`. Suggested "Result" values: `success`, `partial (describe)`,
-`failed (describe, link to logs if captured)`. Link supporting output
-(command transcripts, log excerpts) from a `docs/validation/` entry or an
-[AI evidence record](../ai/README.md) rather than pasting large logs
-directly into this table.
+Suggested "Result" values: `success`, `partial (describe)`, `failed (describe)`.
