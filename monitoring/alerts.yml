@@ -1,0 +1,93 @@
+# Prometheus alert rules for the edge-gateway / cloud prototype.
+#
+# Loaded by monitoring/prometheus.yml (rule_files). Firing alerts are shown
+# at http://localhost:9090/alerts; no Alertmanager is configured, so nothing
+# is sent anywhere. Thresholds are sized for one device sending a reading
+# every 5 seconds; see docs/operations/monitoring.md, "Alert rules".
+#
+# Check and unit-test with promtool (shipped in the Prometheus image):
+#
+#   docker run --rm --entrypoint promtool -v "$PWD/monitoring:/m:ro" \
+#     prom/prometheus:v2.54.1 test rules /m/alerts.test.yml
+
+groups:
+  - name: availability
+    rules:
+      - alert: ServiceDown
+        expr: up{job=~"gateway|cloud"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "{{ $labels.job }} cannot be scraped"
+          description: "Prometheus has failed to scrape {{ $labels.job }} for 1 minute. The service is down or unreachable."
+
+      - alert: NoReadingsStored
+        expr: sum(increase(cloud_readings_stored_total[5m])) == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "The cloud stored no readings for 7 minutes"
+          description: "The cloud is up but nothing reaches storage: the device, the gateway, or the gateway-to-cloud link has stopped delivering."
+
+  - name: delivery
+    rules:
+      - alert: DeliveryFailuresHigh
+        expr: |
+          sum(rate(gateway_delivery_outcome_total{outcome="failed_after_retries"}[5m]))
+            / sum(rate(gateway_delivery_outcome_total[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "More than 5% of readings fail after retries"
+          description: "The gateway gives up on {{ $value | humanizePercentage }} of readings. Retries are no longer absorbing the failures."
+
+      - alert: DeliveryFailuresCritical
+        expr: |
+          sum(rate(gateway_delivery_outcome_total{outcome="failed_after_retries"}[5m]))
+            / sum(rate(gateway_delivery_outcome_total[5m])) > 0.2
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "More than 20% of readings fail after retries"
+          description: "The gateway gives up on {{ $value | humanizePercentage }} of readings."
+
+  - name: ml-kem
+    rules:
+      - alert: HandshakesFailing
+        expr: |
+          sum(increase(gateway_handshake_failed_total[5m])) > 0
+            and sum(increase(gateway_handshake_succeeded_total[5m])) == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "No ML-KEM handshake has succeeded for 10 minutes"
+          description: "The gateway keeps trying and failing to establish a session, so no reading can be sent securely. Check the cloud, ML_KEM_PSK and the pinned fingerprint."
+
+      - alert: HandshakeAuthenticationFailures
+        expr: sum(increase(cloud_handshake_failed_total{reason="verification_failed"}[5m])) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "The cloud rejected a handshake with a wrong PSK MAC"
+          description: "A peer tried to open a session without the correct ML_KEM_PSK: a misconfigured gateway, or someone probing the handshake endpoint."
+
+      - alert: AeadDecryptFailures
+        expr: sum(increase(cloud_crypto_decrypt_failures_total[5m])) > 0
+        labels:
+          severity: critical
+        annotations:
+          summary: "A reading failed AES-GCM authentication"
+          description: "There is no legitimate cause for this in normal operation: the ciphertext or its associated data was altered, or client and cloud disagree on the key."
+
+      - alert: SecureDataReplays
+        expr: sum(increase(cloud_secure_data_rejected_total{reason="replay"}[5m])) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "The cloud rejected a replayed or out-of-order reading"
+          description: "A message counter was repeated or went backwards. The gateway never reuses a counter, so this points to a replay attempt or a gateway bug."

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Bring up the full Docker Compose stack and run the integration suite
-# against it. docker-compose.yml has no healthchecks (documented known
-# limitation), so this script polls the /health endpoints itself before
-# running any tests.
+# against it. docker-compose.yml's healthchecks already make `up -d` wait
+# for a healthy cloud and gateway; the polling below is kept as a check
+# from the host side, with its own timeout and error message.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"

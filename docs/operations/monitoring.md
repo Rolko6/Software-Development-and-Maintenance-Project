@@ -2,7 +2,7 @@
 
 Work Package 5 ("Monitor and evaluate"). Scope: every Prometheus metric
 exposed by the gateway and cloud services, how to scrape and query them,
-what they do and do not make observable, alerting suggestions, and the
+what they do and do not make observable, the alert rules, and the
 caveats that apply to all of it.
 
 Source of truth for names, types, help strings, and exact instrumentation
@@ -165,9 +165,48 @@ project, and not listed above.
   under concurrent traffic, because none of the harnesses in this
   repository generate any.
 
-## Alerting suggestions
+## Alert rules
 
-Thresholds below are starting points sized for this prototype's actual
+[`monitoring/alerts.yml`](../../monitoring/alerts.yml) is loaded by the
+Prometheus in the monitoring overlay. Firing alerts are listed at
+http://localhost:9090/alerts. No Alertmanager is configured, so an alert
+is visible there and in Prometheus's `ALERTS` series, but nobody is
+notified.
+
+| Alert | Severity | Fires when |
+| --- | --- | --- |
+| `ServiceDown` | critical | `up{job=~"gateway\|cloud"} == 0` for 1m |
+| `NoReadingsStored` | critical | the cloud is scraped but stored no reading in the last 5m, for 2m |
+| `DeliveryFailuresHigh` / `DeliveryFailuresCritical` | warning / critical | more than 5% / 20% of readings `failed_after_retries` over 5m, for 5m |
+| `HandshakesFailing` | critical | handshakes failed and none succeeded in 5m, for 5m |
+| `HandshakeAuthenticationFailures` | warning | the cloud rejected a handshake MAC (`verification_failed`) in the last 5m |
+| `AeadDecryptFailures` | critical | any `/secure/data` AES-GCM authentication failure in the last 5m |
+| `SecureDataReplays` | warning | any `/secure/data` rejection with `reason="replay"` in the last 5m |
+
+The rules have `promtool` unit tests in
+[`monitoring/alerts.test.yml`](../../monitoring/alerts.test.yml): a healthy
+system fires nothing, and each failure case fires its alert with the
+expected labels. Run them with the Prometheus image:
+
+```sh
+docker run --rm --entrypoint promtool -v "$PWD/monitoring:/m:ro" \
+  prom/prometheus:v2.54.1 test rules /m/alerts.test.yml
+```
+
+Things to know when reading them:
+
+- `NoReadingsStored` cannot fire while the cloud itself is down: its
+  counter is then missing, not zero. `ServiceDown` covers that case.
+- The delivery alerts use a 5-minute rate window plus a 5-minute `for`,
+  so they need a sustained problem, and a short outage can still make
+  them fire a few minutes after the service has recovered.
+- The security alerts have no `for`: one event in 5 minutes is enough,
+  because none of them has a legitimate cause in normal operation.
+
+## Further alert ideas
+
+Not implemented; the rules above cover outages and the ML-KEM security
+signals. Thresholds below are starting points sized for this prototype's actual
 traffic (one simulated device, one reading roughly every 5 seconds — see
 the device simulator under `device/app/`) and its measured loopback
 latencies (low single-digit milliseconds per the existing baseline

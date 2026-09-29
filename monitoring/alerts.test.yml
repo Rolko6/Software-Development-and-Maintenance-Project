@@ -1,0 +1,148 @@
+# promtool unit tests for monitoring/alerts.yml. Each case feeds synthetic
+# series and states which alerts must (and must not) be firing. Run:
+#
+#   docker run --rm --entrypoint promtool -v "$PWD/monitoring:/m:ro" \
+#     prom/prometheus:v2.54.1 test rules /m/alerts.test.yml
+
+rule_files:
+  - alerts.yml
+
+evaluation_interval: 15s
+
+tests:
+  # Healthy system: one reading every 5 s, all delivered, no security events.
+  - interval: 15s
+    input_series:
+      - series: 'up{job="gateway"}'
+        values: '1x60'
+      - series: 'up{job="cloud"}'
+        values: '1x60'
+      - series: 'cloud_readings_stored_total'
+        values: '0+3x60'
+      - series: 'gateway_delivery_outcome_total{outcome="forwarded"}'
+        values: '0+3x60'
+      - series: 'gateway_delivery_outcome_total{outcome="failed_after_retries"}'
+        values: '0x60'
+      - series: 'gateway_handshake_succeeded_total'
+        values: '1x60'
+      - series: 'gateway_handshake_failed_total{reason="timeout"}'
+        values: '0x60'
+      - series: 'cloud_handshake_failed_total{reason="verification_failed"}'
+        values: '0x60'
+      - series: 'cloud_crypto_decrypt_failures_total'
+        values: '0x60'
+      - series: 'cloud_secure_data_rejected_total{reason="replay"}'
+        values: '0x60'
+    alert_rule_test:
+      - {eval_time: 14m, alertname: ServiceDown, exp_alerts: []}
+      - {eval_time: 14m, alertname: NoReadingsStored, exp_alerts: []}
+      - {eval_time: 14m, alertname: DeliveryFailuresHigh, exp_alerts: []}
+      - {eval_time: 14m, alertname: HandshakesFailing, exp_alerts: []}
+      - {eval_time: 14m, alertname: HandshakeAuthenticationFailures, exp_alerts: []}
+      - {eval_time: 14m, alertname: AeadDecryptFailures, exp_alerts: []}
+      - {eval_time: 14m, alertname: SecureDataReplays, exp_alerts: []}
+
+  # The cloud stops answering scrapes after 2 minutes.
+  - interval: 15s
+    input_series:
+      - series: 'up{job="cloud"}'
+        values: '1x8 0x20'
+    alert_rule_test:
+      - eval_time: 2m30s
+        alertname: ServiceDown
+        exp_alerts: []
+      - eval_time: 3m30s
+        alertname: ServiceDown
+        exp_alerts:
+          - exp_labels: {severity: critical, job: cloud}
+            exp_annotations:
+              summary: "cloud cannot be scraped"
+              description: "Prometheus has failed to scrape cloud for 1 minute. The service is down or unreachable."
+
+  # Readings stop reaching storage after 5 minutes.
+  - interval: 15s
+    input_series:
+      - series: 'cloud_readings_stored_total'
+        values: '0+3x20 60x60'
+    alert_rule_test:
+      - eval_time: 8m
+        alertname: NoReadingsStored
+        exp_alerts: []
+      - eval_time: 13m
+        alertname: NoReadingsStored
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations:
+              summary: "The cloud stored no readings for 7 minutes"
+              description: "The cloud is up but nothing reaches storage: the device, the gateway, or the gateway-to-cloud link has stopped delivering."
+
+  # Half of all readings fail after retries: both delivery alerts fire.
+  - interval: 15s
+    input_series:
+      - series: 'gateway_delivery_outcome_total{outcome="forwarded"}'
+        values: '0+1x60'
+      - series: 'gateway_delivery_outcome_total{outcome="failed_after_retries"}'
+        values: '0+1x60'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: DeliveryFailuresHigh
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: "More than 5% of readings fail after retries"
+              description: "The gateway gives up on 50% of readings. Retries are no longer absorbing the failures."
+      - eval_time: 12m
+        alertname: DeliveryFailuresCritical
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations:
+              summary: "More than 20% of readings fail after retries"
+              description: "The gateway gives up on 50% of readings."
+
+  # Every handshake fails and none succeeds.
+  - interval: 15s
+    input_series:
+      - series: 'gateway_handshake_failed_total{reason="verification_failed"}'
+        values: '0+1x60'
+      - series: 'gateway_handshake_succeeded_total'
+        values: '1x60'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: HandshakesFailing
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations:
+              summary: "No ML-KEM handshake has succeeded for 10 minutes"
+              description: "The gateway keeps trying and failing to establish a session, so no reading can be sent securely. Check the cloud, ML_KEM_PSK and the pinned fingerprint."
+
+  # One of each security event: each alert fires right away.
+  - interval: 15s
+    input_series:
+      - series: 'cloud_handshake_failed_total{reason="verification_failed"}'
+        values: '0 0 1 1 1 1'
+      - series: 'cloud_crypto_decrypt_failures_total'
+        values: '0 0 1 1 1 1'
+      - series: 'cloud_secure_data_rejected_total{reason="replay"}'
+        values: '0 0 1 1 1 1'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: HandshakeAuthenticationFailures
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: "The cloud rejected a handshake with a wrong PSK MAC"
+              description: "A peer tried to open a session without the correct ML_KEM_PSK: a misconfigured gateway, or someone probing the handshake endpoint."
+      - eval_time: 1m
+        alertname: AeadDecryptFailures
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations:
+              summary: "A reading failed AES-GCM authentication"
+              description: "There is no legitimate cause for this in normal operation: the ciphertext or its associated data was altered, or client and cloud disagree on the key."
+      - eval_time: 1m
+        alertname: SecureDataReplays
+        exp_alerts:
+          - exp_labels: {severity: warning}
+            exp_annotations:
+              summary: "The cloud rejected a replayed or out-of-order reading"
+              description: "A message counter was repeated or went backwards. The gateway never reuses a counter, so this points to a replay attempt or a gateway bug."

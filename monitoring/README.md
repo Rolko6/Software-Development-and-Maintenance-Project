@@ -53,6 +53,7 @@ Paste this into the `services:` block of the project's `docker-compose.yml`
     image: prom/prometheus:v2.54.1
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
     ports:
       - "9090:9090"
     depends_on:
@@ -138,7 +139,7 @@ histogram_quantile(
 
 **Handshake failure rate** (share of initiated ML-KEM handshakes that
 failed — denominator is `_started_total`, matching
-[docs/operations/monitoring.md](../docs/operations/monitoring.md)'s alerting table; a handshake still
+[docs/operations/monitoring.md](../docs/operations/monitoring.md)'s alert tables; a handshake still
 in flight when the window is evaluated is counted as started but not
 yet as failed or succeeded, so this slightly underestimates the rate
 among *completed* attempts only):

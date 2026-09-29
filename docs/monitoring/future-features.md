@@ -21,13 +21,13 @@ for another few minutes. The comparison panel will then show both series.
 
 ---
 
-## 2. No alerts configured
+## 2. Alerts are not delivered anywhere
 
-The security alarm panels (AEAD decrypt failures, handshake auth failures, forced
-rekeys, secure data rejections by reason) are visual only. Grafana supports email and Slack alerting but nothing is
-configured here. In a real deployment you would want an alert that fires immediately
-if `cloud_crypto_decrypt_failures_total` starts rising, since any non-zero value
-indicates either tampering or a session bug.
+Prometheus evaluates the rules in `monitoring/alerts.yml` (service down, no readings
+stored, delivery failures, failing handshakes, and the security signals behind the
+alarm panels), and firing alerts are listed at http://localhost:9090/alerts. No
+Alertmanager is configured, so nobody is notified: someone has to look. A real
+deployment would add Alertmanager with an email or chat receiver.
 
 For a course project running locally this is acceptable — no one is monitoring the
 system overnight.

@@ -33,6 +33,11 @@ global:
   scrape_timeout: 10s
   evaluation_interval: 15s
 
+# Alert rules (monitoring/alerts.yml, mounted next to this file). Firing
+# alerts appear at http://localhost:9090/alerts; no Alertmanager is set up.
+rule_files:
+  - /etc/prometheus/alerts.yml
+
 scrape_configs:
   - job_name: gateway
     metrics_path: /metrics/
