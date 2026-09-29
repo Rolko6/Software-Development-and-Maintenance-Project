@@ -26,6 +26,9 @@
 | Understand how baseline and secured measurements are kept comparable | [Measurement method: 2026-09-15](validation/2026-09-15-measurement-method.md) |
 | See what has actually been checked for the device module restructuring | [Device modularization validation: 2026-09-15](validation/2026-09-15-device-modularization.md) |
 | See what has actually been checked for the automated tests and CI/CD | [Tests and CI/CD validation: 2026-09-15](validation/2026-09-15-tests-and-ci.md) |
+| Measure how quickly and accurately monitoring signals an outage or authentication failure (issue #4) | [Detection time and accuracy: 2026-09-29](validation/2026-09-29-detection-time.md) |
+| Measure recovery time after a cloud restart, and delivery, loss and duplication (issue #4) | [Recovery and delivery: 2026-09-29](validation/2026-09-29-recovery-and-delivery.md) |
+| Measure request latency for new and reused ML-KEM sessions (issue #4) | [Response latency: 2026-09-29](validation/2026-09-29-latency.md) |
 | See the faulty-sensor simulation, the NaN fixes and the open findings | [DS18B20 fault validation: 2026-09-28](validation/2026-09-28-ds18b20-faults.md) |
 
 Current operating behaviour belongs in the project README. Proposed work belongs in the plan. Decisions explain choices; prompt and validation records preserve evidence. Update the authoritative location and link to it rather than copying the same rules across files.
