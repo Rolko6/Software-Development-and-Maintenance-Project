@@ -159,6 +159,12 @@ To run all three service suites together, continuing past a failing suite and pr
 ./scripts/run-unit-tests.sh
 ```
 
+The root `tests/` directory holds four more suites that need no running stack: `tests/crypto` (ML-KEM conformance and the secure channel), `tests/reliability`, `tests/protected_path` and `tests/tooling`. Install `requirements-dev.txt` at the repository root (it includes the gateway and cloud runtime requirements) and run each suite in its own process, as CI does:
+
+```bash
+for suite in crypto reliability protected_path tooling; do python -m pytest "tests/$suite" -ra; done
+```
+
 For a full end-to-end run, use `./scripts/smoke-test.sh`. It builds the service images, starts the Docker Compose stack, runs the integration suite (`tests/integration/`) against the running containers, and always tears the stack down afterwards, including on failure. It needs host ports `8000` and `8001` free, the same as the Quick start above.
 
 The device suite covers configuration validation, the reading and its wire payload, both temperature models, the gateway client, and the send loop. Observed on 2026-09-15 with `cd device && ../.venv/bin/python -m pytest -q`: `43 passed`; see the [device modularization validation record](docs/validation/2026-09-15-device-modularization.md) for the full evidence.
@@ -169,7 +175,7 @@ Both scripts accept a `PYTHON` environment variable to select a specific interpr
 
 Two GitHub Actions workflows automate the checks above:
 
-- **CI** (`.github/workflows/ci.yml`) runs on pull requests and on pushes to `main` and `develop`. It runs each service's unit test suite, validates and builds the Docker Compose configuration, and runs a smoke test that brings up the full stack and runs the integration suite against it.
+- **CI** (`.github/workflows/ci.yml`) runs on pull requests and on pushes to `main` and `develop`. It runs each service's unit test suite, runs the four root suites under `tests/` (each in its own job, with a per-suite skip budget), validates and builds the Docker Compose configuration, and runs a smoke test that brings up the full stack and runs the integration suite against it.
 - **Publish images** (`.github/workflows/publish.yml`) runs on pushes to `main` and on version tags (`v*.*.*`). It builds the gateway, cloud, and device images and pushes them to the GitHub Container Registry (GHCR).
 
 Image publishing targets GHCR only; no deployment environment is configured yet.
@@ -433,7 +439,7 @@ This stops and removes the project containers and network. Sensor data is not pe
 - **Validation:** gateway and cloud now enforce the same device ID and temperature rules, and reject `NaN` and `Infinity` with `422`. Only the range is checked: a stuck sensor repeating a plausible value, or a slowly drifting one, is stored as valid. Rejected readings are counted by outcome but are not timed in `gateway_request_duration_seconds`.
 - **Readiness:** `/ready` on both services reflects the real dependency state, but Compose still has no `healthcheck:` entries, so startup ordering remains best-effort.
 - **Device connection resets:** in a 20-minute run the device occasionally logged `RemoteDisconnected` for a valid reading (3 of about 220), each followed by a fresh connection to the gateway five seconds later. The suspected cause, unconfirmed, is the gateway's 5-second HTTP keep-alive timeout coinciding with the device's 5-second send interval. That reading is lost; see the [DS18B20 fault validation](docs/validation/2026-09-28-ds18b20-faults.md).
-- **Verification and operations:** unit suites for all three services, an integration suite and CI/CD workflows are included (see [Run the tests](#run-the-tests)), and a plaintext-vs-ML-KEM latency comparison has been measured in containers (see the [integration record](docs/validation/2026-09-15-integration.md)). The `CI` and `Docs check` workflows have run green on GitHub for pull requests #1–#3; the `Publish images` workflow first runs on the `v2.0.0` release (see [P009](docs/ai/prompts/2026-09-24-yyy-tom.md#p009-merge-develop-into-main-and-release-v200) for its outcome). No shared test environment is provisioned and no Prometheus instance has been run. Delivery, retry, validation, storage and duration metrics are wired; the handshake and encrypt/decrypt counters in the crypto packages still read zero.
+- **Verification and operations:** unit suites for all three services, an integration suite and CI/CD workflows are included (see [Run the tests](#run-the-tests)), and a plaintext-vs-ML-KEM latency comparison has been measured in containers (see the [integration record](docs/validation/2026-09-15-integration.md)). The `CI` and `Docs check` workflows run on every pull request and on pushes to `develop` and `main`, and have run green on GitHub since 2026-09-15. The `Publish images` workflow succeeded on the push to `main` and on the `v2.0.0` tag; the published `2.0.0` images were pulled and run end to end on 2026-09-24 (see the [CI evaluation](docs/validation/2026-09-24-ci-evaluation.md)). They are built for `linux/amd64` only. No shared test environment is provisioned and no Prometheus instance has been run. Delivery, retry, validation, storage and duration metrics are wired. Since v2.1.0 the gateway and cloud handshake counters and the cloud decrypt-failure counter are incremented as well; the encrypt-failure counters and the gateway decrypt-failure counter are defined but nothing increments them.
 
 ## Planned next steps
 

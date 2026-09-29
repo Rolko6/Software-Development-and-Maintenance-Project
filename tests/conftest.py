@@ -4,9 +4,14 @@ Two layers live under `tests/`:
 
 * `tests/crypto/` checks the ML-KEM implementation against NIST FIPS 203.
   These tests must pass today. They never skip.
-* `tests/integration/` checks that the gateway's protected path actually uses
-  ML-KEM. That module does not exist yet (project plan work package 3), so
-  those tests skip with an explicit reason until it does.
+* `tests/protected_path/` checks that the services' key agreement is ML-KEM.
+  Its `test_protected_path_contract.py` targets a proposed sessionless
+  `app.kem` interface that was not built (work package 3 built the session
+  design in `gateway/app/crypto/`), so that module skips; its requirements
+  that fit the session design are ported to
+  `tests/crypto/test_protected_path_session.py`.
+
+CI runs each root suite in its own process; see docs/operations/ci.md.
 
 See docs/testing/ml-kem-verification.md for what each layer can and cannot
 establish, and for the residual risks no test here covers.
@@ -28,7 +33,7 @@ from support import implementations, load_vectors  # noqa: E402
 # imports itself as the top-level package `app`, so putting one of them on
 # sys.path for the whole session would shadow the others. The one module that
 # needs the gateway adds it itself; see
-# tests/integration/test_protected_path_contract.py.
+# tests/protected_path/test_protected_path_contract.py.
 
 
 @pytest.fixture(scope="session")

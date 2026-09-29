@@ -1,9 +1,11 @@
 # ML-KEM gateway-cloud secure channel: design
 
-Status: new, additive packages exist (`cloud/app/crypto/`,
-`gateway/app/crypto/`, `tests/crypto/`) and are verified standalone. They are
-**not yet wired into the running services** -- see "Integration steps for
-the main agent" at the end of this document for the exact patch. Library
+Status (updated 2026-09-24): `cloud/app/crypto/` and `gateway/app/crypto/`
+are wired into the running services and switched on in Compose (see the
+[README](../../README.md#verify-the-secure-channel)). This paragraph
+originally said they were not yet wired in; "Integration steps for the main
+agent" at the end of this document is kept as the record of how that was
+done. Library
 selection and alternatives are recorded in
 [docs/decisions/0002-ml-kem-key-establishment.md](../decisions/0002-ml-kem-key-establishment.md);
 this document is the design itself.

@@ -45,10 +45,13 @@ Key dates: peer-review submission Sun 11 Oct, presentations Thu 15 – Fri 16 Oc
 ### CI, deployment and reliability (remaining from other allocations)
 
 - [ ] **C1.** Merge draft PR #6 and confirm the `test-root` job passes on GitHub.
+  *Tom, 2026-09-29:* PR #6 merged with `develop` on branch `tom/ci-deploy-evaluation`; its per-suite `root-tests` job with skip/xfail budgets replaces `test-root`. Waiting for review and merge.
 - [ ] **C2.** Add security/static analysis to CI (for example `bandit`, `pip-audit`); lint currently runs only `ruff`.
-- [ ] **C3.** Deliberate-defect run: introduce a small documented set of defects in an isolated checkout, record which tests catch them and whether CI fails. S1 makes a good one once its regression test exists.
+- [x] **C3.** Deliberate-defect run: introduce a small documented set of defects in an isolated checkout, record which tests catch them and whether CI fails. S1 makes a good one once its regression test exists.
+  Done for v2.2.0 in [the CI-effectiveness record](../../validation/2026-09-29-ci-effectiveness.md): 11 of 13 detected by v2.2.0 CI, 12 of 13 after the C1 port; a test file that is no longer collected is still missed, and so is S1.
 - [ ] **C4.** Python version drift: root tests run locally on 3.14; containers and CI use 3.12.
 - [ ] **C5.** Provision the shared test environment and have a teammate redeploy from the docs (record time and undocumented steps).
+  *Tom, 2026-09-29:* [rehearsal](../../validation/2026-09-29-deployment-rehearsal.md) done and [deployment.md](../../operations/deployment.md) corrected for v2.2.0 (9 gaps). Still open: a shared environment and the teammate run (Francisca), using the guide's "Teammate deployment check".
 - [ ] **C6.** Reliability experiment: delivery / loss / duplication with gateway retries active (retries can create duplicates; S1 hides stored readings as failures), recovery time after a cloud restart, 2.0.0 vs 2.1.0 with one procedure.
 - [ ] **C7.** Release v2.1.0 (merge `develop` to `main`, tag, GitHub Release from `local/v2.1.0-release.md`).
 
@@ -85,3 +88,4 @@ Key dates: peer-review submission Sun 11 Oct, presentations Thu 15 – Fri 16 Oc
 ## Tom
 
 - Allocation (2.0.0 release, CI evaluation) is complete. Remaining CI follow-ups are listed under C1–C4.
+- Issue #4 metrics: "Test and CI effectiveness" measured (C3); "Deployment reproducibility" rehearsed and the guide fixed, teammate run pending (C5).
