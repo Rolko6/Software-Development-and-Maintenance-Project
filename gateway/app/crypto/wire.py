@@ -64,7 +64,15 @@ def derive_session_key(shared_secret: bytes, client_nonce: bytes, key_id: str) -
 
     info = protocol version + role + key_id: domain-separates this key from
     any other use of the same ML-KEM shared secret and from other cloud keys.
+
+    Raises ValueError unless shared_secret is exactly one ML-KEM-768 shared
+    secret, so an empty, truncated or non-ML-KEM secret can never become a
+    session key.
     """
+    if len(shared_secret) != SHARED_SECRET_LEN:
+        raise ValueError(
+            f"shared secret must be {SHARED_SECRET_LEN} bytes, got {len(shared_secret)}"
+        )
     hkdf = HKDF(
         algorithm=hashes.SHA256(),
         length=SESSION_KEY_LEN,

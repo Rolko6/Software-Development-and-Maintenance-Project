@@ -8,6 +8,7 @@ from .metrics import (
     GATEWAY_CLOUD_RETRIES_EXHAUSTED_TOTAL,
     GATEWAY_CLOUD_RETRY_ATTEMPTS_TOTAL
 )
+from .security_config import parse_mode
 
 
 CLOUD_URL = os.getenv(
@@ -93,12 +94,14 @@ class CloudUnavailable(Exception):
 
 # "off" keeps today's plaintext POST. "enabled"/"required" route every reading
 # through the ML-KEM secure channel with no plaintext fallback. Read once at
-# import, matching the other settings in this module.
+# import, matching the other settings in this module. An unknown value stops
+# the gateway from starting (see app/security_config.py); main.py checks
+# ML_KEM_PSK once logging is configured, so its warning is formatted.
 #
 # app.crypto is imported lazily inside _send_secure rather than at module level
 # so that a broken cryptography wheel cannot stop the gateway from starting in
 # "off" mode. See docs/security/ml-kem-integration.md, "Residual risks".
-ML_KEM_MODE = os.getenv("GATEWAY_ML_KEM_MODE", "off").strip().lower()
+ML_KEM_MODE = parse_mode(os.getenv("GATEWAY_ML_KEM_MODE"), "GATEWAY_ML_KEM_MODE")
 
 
 def _send_secure(sensor_data: dict) -> dict:
@@ -115,9 +118,7 @@ def _observe_attempt(started_at: float, outcome: str) -> None:
     """
     GATEWAY_CLOUD_REQUEST_DURATION_SECONDS.labels(
         outcome=outcome,
-        security_mode=ML_KEM_MODE if ML_KEM_MODE in (
-            "off", "enabled", "required"
-        ) else "off"
+        security_mode=ML_KEM_MODE
     ).observe(time.perf_counter() - started_at)
 
 

@@ -88,9 +88,21 @@ default**, and the gap that leaves is stated plainly rather than hidden:
 
 Operators should set `ML_KEM_PSK` (and, for defense in depth, pin the
 fingerprint with a persisted cloud key) for any deployment where an active
-network attacker is in the threat model. Neither is required by the code;
-the mode switch (below) only controls whether the channel exists at all,
-not whether it is authenticated.
+network attacker is in the threat model.
+
+**Startup checks** (`app/security_config.py`, identical in both services):
+
+- An unknown `CLOUD_ML_KEM_MODE` / `GATEWAY_ML_KEM_MODE` value (for example
+  `enabeld`) stops the service at startup instead of silently selecting a
+  different mode.
+- In `required` mode the service refuses to start when `ML_KEM_PSK` is
+  unset, is the development placeholder committed in `docker-compose.yml`
+  (`dev-only-insecure-psk-change-me`), or is shorter than 32 bytes. A mode
+  that closes the plaintext path should not run with an authentication key
+  that anyone can read in the repository.
+- In `enabled` mode the same problems are logged as a warning at startup
+  and the service continues, so the local Compose setup keeps working.
+- The pinned fingerprint stays optional in every mode.
 
 ## Message protection
 
@@ -99,7 +111,9 @@ not whether it is authenticated.
   handshake attempt); `info = "mlkem-gw-cloud-v1|session|" + key_id`. A
   single `derive()` call produces a 32-byte key -- HKDF objects in this
   library can only be used once, so a fresh `HKDF` instance is constructed
-  per derivation (see `wire.py::derive_session_key`).
+  per derivation (see `wire.py::derive_session_key`). The input must be
+  exactly one 32-byte ML-KEM-768 shared secret; anything else raises
+  `ValueError`, so an empty or truncated secret can never become a key.
 - **AEAD:** AES-256-GCM (`cryptography.hazmat.primitives.ciphers.aead.AESGCM`).
 - **Nonce strategy:** the nonce is the big-endian 12-byte encoding of a
   per-session message counter, starting at 0. This is safe from reuse
@@ -207,6 +221,7 @@ not whether it is authenticated.
 
 | Failure | Cloud HTTP status | Gateway behaviour |
 | --- | --- | --- |
+| Unknown `*_ML_KEM_MODE` value, or `required` mode with an unset, placeholder or too-short `ML_KEM_PSK` | *(service does not start)* | The process exits at startup with `InsecureConfigurationError` naming the variable; in `enabled` mode the PSK problems are only logged as a warning |
 | `CLOUD_ML_KEM_MODE=off` (secure endpoints disabled) | `403` on any `/secure/*` route | Raised as `requests.exceptions.HTTPError`; propagates like any other `send_to_cloud` failure -> gateway's existing handler returns `502` |
 | Malformed handshake/data request body (missing/wrong-typed field) | `422` (FastAPI/pydantic) | Same as above -> `502` |
 | Malformed base64, or wrong-length `client_nonce`/`ciphertext`/`nonce` | `400` | Same as above -> `502` |

@@ -18,7 +18,8 @@ services:
       # authenticate the peer, so without this the handshake is open to an
       # active machine-in-the-middle. The default below is a visible
       # placeholder for local development only -- override it with
-      # `ML_KEM_PSK=... docker compose up` anywhere that matters.
+      # `ML_KEM_PSK=... docker compose up` anywhere that matters. In
+      # "required" mode the services refuse to start with this placeholder.
       ML_KEM_PSK: ${ML_KEM_PSK:-dev-only-insecure-psk-change-me}
 
       # Persist the cloud's ML-KEM private key so it survives container

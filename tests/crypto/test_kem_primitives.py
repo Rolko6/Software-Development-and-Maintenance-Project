@@ -3,6 +3,7 @@ primitives in wire.py, exercised against the actual code the services ship
 (cloud/app/crypto/keys.py and */crypto/wire.py) rather than a separate
 throwaway script."""
 
+import pytest
 from cryptography.exceptions import InvalidTag
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
@@ -80,6 +81,15 @@ def test_hkdf_derive_differs_for_different_salts():
     key_a = cloud_wire_module.derive_session_key(shared_secret, b"a" * 16, "k1")
     key_b = cloud_wire_module.derive_session_key(shared_secret, b"b" * 16, "k1")
     assert key_a != key_b
+
+
+@pytest.mark.parametrize("wire", [cloud_wire_module, gateway_wire_module], ids=["cloud", "gateway"])
+@pytest.mark.parametrize("length", [0, 16, 31, 33, 64])
+def test_hkdf_derive_refuses_a_secret_that_is_not_one_ml_kem_secret(wire, length):
+    """A missing, truncated or classical-sized secret must not become a
+    session key."""
+    with pytest.raises(ValueError, match="32 bytes"):
+        wire.derive_session_key(b"x" * length, b"y" * 16, "cloud-mlkem768-1")
 
 
 def test_aead_roundtrip_and_tamper_detection():

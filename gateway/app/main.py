@@ -23,6 +23,7 @@ from app.metrics import (
     GATEWAY_REQUEST_DURATION_SECONDS,
     GATEWAY_SECURITY_MODE
 )
+from app.security_config import check_psk
 
 
 logging.basicConfig(
@@ -30,6 +31,10 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+
+# After basicConfig, so a PSK warning is logged with its level like the rest.
+# In "required" mode an unusable ML_KEM_PSK stops the gateway here.
+check_psk(ML_KEM_MODE, "GATEWAY_ML_KEM_MODE")
 
 
 app = FastAPI(
@@ -46,10 +51,9 @@ app.mount(
 
 
 # Without this the enum defaults to "off" and would misreport the running
-# configuration -- a metric that lies is worse than no metric.
-SECURITY_MODE = ML_KEM_MODE if ML_KEM_MODE in (
-    "off", "enabled", "required"
-) else "off"
+# configuration -- a metric that lies is worse than no metric. ML_KEM_MODE is
+# already validated, so it is always one of the enum's states.
+SECURITY_MODE = ML_KEM_MODE
 
 GATEWAY_SECURITY_MODE.state(SECURITY_MODE)
 

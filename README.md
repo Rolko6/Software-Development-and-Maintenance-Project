@@ -198,9 +198,12 @@ docker compose logs cloud | grep -oE '"(GET|POST) /[a-z/]*' | sort | uniq -c | s
 you sent one yourself.
 
 To prove the legacy path can be closed, switch the cloud to `required` and restart just that
-service:
+service. `required` refuses to start with the placeholder `ML_KEM_PSK`, so first give both
+services the same real secret:
 
 ```bash
+export ML_KEM_PSK=$(openssl rand -hex 32)
+docker compose up -d
 CLOUD_ML_KEM_MODE=required docker compose up -d --no-deps cloud
 curl -i -X POST http://localhost:8001/data \
   -H 'Content-Type: application/json' \
@@ -220,6 +223,9 @@ all in `off` mode, so a broken dependency cannot stop them from starting.
 
 **Set `ML_KEM_PSK` to a real shared secret before using this anywhere that matters.** Without it
 the handshake is unauthenticated; the value in `docker-compose.yml` is a visible placeholder.
+In `required` mode a service refuses to start when `ML_KEM_PSK` is unset, is that placeholder,
+or is shorter than 32 bytes; in `enabled` mode it logs a warning instead. An unknown mode value
+stops the service in every case.
 Full design, threat model and residual risks: [ML-KEM integration](docs/security/ml-kem-integration.md).
 
 ## API endpoints
@@ -346,9 +352,9 @@ Compose supplies these environment variables to the containers:
 | Gateway | `CLOUD_FORWARD_BACKOFF_SECONDS` | not set | `0.2` (doubles per attempt) |
 | Gateway | `CLOUD_FORWARD_TOTAL_BUDGET_SECONDS` | not set | `4` (ceiling across all attempts) |
 | Cloud | `CLOUD_MAX_STORED_READINGS` | `1000` | `1000` (oldest readings are evicted past this) |
-| Cloud | `CLOUD_ML_KEM_MODE` | `enabled` (overridable from the environment) | `off` (`off` / `enabled` / `required`) |
-| Gateway | `GATEWAY_ML_KEM_MODE` | `enabled` (overridable from the environment) | `off` (`off` / `enabled` / `required`) |
-| Both | `ML_KEM_PSK` | `dev-only-insecure-psk-change-me` | unset (unset means the handshake is **not** authenticated) |
+| Cloud | `CLOUD_ML_KEM_MODE` | `enabled` (overridable from the environment) | `off` (`off` / `enabled` / `required`; any other value stops the service) |
+| Gateway | `GATEWAY_ML_KEM_MODE` | `enabled` (overridable from the environment) | `off` (`off` / `enabled` / `required`; any other value stops the service) |
+| Both | `ML_KEM_PSK` | `dev-only-insecure-psk-change-me` | unset (unset means the handshake is **not** authenticated; `required` mode needs at least 32 bytes that are not the placeholder) |
 | Cloud | `CLOUD_ML_KEM_KEY_PATH` | `/keys/ml-kem-key.der` | unset (a fresh key pair each start) |
 | Cloud | `CLOUD_ML_KEM_SESSION_TTL_SECONDS` | `300` | `300` |
 | Gateway | `GATEWAY_CLOUD_BASE_URL` | `http://cloud:8001` | `http://localhost:8001` |

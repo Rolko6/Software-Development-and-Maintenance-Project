@@ -1,6 +1,5 @@
 import logging
 import math
-import os
 import time
 
 from fastapi import Depends, FastAPI
@@ -20,6 +19,7 @@ from app.metrics import (
     CLOUD_SECURITY_MODE,
     metrics_app
 )
+from app.security_config import load_mode
 
 
 logging.basicConfig(
@@ -41,15 +41,16 @@ app = FastAPI(
 # then crash this service at startup even with the feature switched off, which
 # would make "off" useless as a rollback state. Importing only when the
 # feature is on keeps the legacy plaintext path reachable no matter what.
-ML_KEM_MODE = os.getenv("CLOUD_ML_KEM_MODE", "off").strip().lower()
+# An unknown value, or an unusable ML_KEM_PSK in "required" mode, stops the
+# cloud from starting (see app/security_config.py).
+ML_KEM_MODE = load_mode("CLOUD_ML_KEM_MODE")
 
 app.mount("/metrics", metrics_app)
 
 # Without this the enum defaults to "off" and would misreport the running
-# configuration -- a metric that lies is worse than no metric.
-SECURITY_MODE = ML_KEM_MODE if ML_KEM_MODE in (
-    "off", "enabled", "required"
-) else "off"
+# configuration -- a metric that lies is worse than no metric. ML_KEM_MODE is
+# already validated, so it is always one of the enum's states.
+SECURITY_MODE = ML_KEM_MODE
 
 CLOUD_SECURITY_MODE.state(SECURITY_MODE)
 
