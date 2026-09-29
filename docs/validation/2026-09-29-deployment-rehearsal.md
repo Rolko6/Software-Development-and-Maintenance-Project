@@ -62,5 +62,6 @@ All nine are corrected in [deployment.md](../operations/deployment.md) on this b
 
 - Same person who fixed the guide; no shared host; ports and project name changed because of the other running stack.
 - Build time depends on network and cache: the 148 s build pulled `python:3.12-slim` layers that were partly cached on this machine.
+- After the rollback, health and a stored reading were checked, but not that v2.1.0 code was the version serving requests.
 - The published GHCR images were inspected, not run, for 2.2.0 (the 2.0.0 images were run end to end on 2026-09-24).
 - Human review of this record: not recorded.

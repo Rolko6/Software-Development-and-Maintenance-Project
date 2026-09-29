@@ -136,7 +136,7 @@ docker compose up --build -d
 # re-run the verification checks
 ```
 
-Stored readings are lost on every redeploy (see below). The `cloud-keys` volume is kept by `down` and reused by the older release. To return, `git checkout v2.2.0` and run `docker compose up --build -d` again.
+Stored readings are lost on every redeploy (see below). `down` keeps the `cloud-keys` volume (seen in the rehearsal). The older release mounts the same volume, and `cloud/app/crypto/keys.py` reloads a key it finds at `CLOUD_ML_KEM_KEY_PATH`, so it should keep the same key; the rehearsal did not check this. To return, `git checkout v2.2.0` and run `docker compose up --build -d` again.
 
 ## Tear down
 
