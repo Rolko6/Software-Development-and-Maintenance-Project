@@ -1,0 +1,5 @@
+-r gateway/requirements.txt
+-r cloud/requirements.txt
+-r device/requirements.txt
+pytest==8.3.4
+httpx==0.28.1
