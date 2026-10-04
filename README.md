@@ -160,6 +160,7 @@ were found, and what's still open — see `documentation/phases/`:
 | v1.2.0 | CI/CD pipeline (GitHub Actions + GHCR publish) | [v1.2.0.md](documentation/phases/v1.2.0.md) |
 | v1.3.0 | Realistic DS18B20 device simulation (errors, drift, disconnects) | [v1.3.0.md](documentation/phases/v1.3.0.md) |
 | v2.0.0 | ML-KEM integration (gateway↔cloud encryption) | [v2.0.0.md](documentation/phases/v2.0.0.md) |
+| v3.0.0 | Operations — meaningful metrics (cloud + sensor-fault tracking) | [v3.0.0.md](documentation/phases/v3.0.0.md) |
 
 For exact code changes per version, see the commit history (`git log`) or
 the corresponding GitHub release/tag. `documentation/template.md` is the

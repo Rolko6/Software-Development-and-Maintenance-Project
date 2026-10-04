@@ -7,7 +7,8 @@ from app.models import SensorData
 from app.cloud_client import send_to_cloud
 from app.metrics import (
     DEVICE_MESSAGES_TOTAL,
-    CLOUD_FORWARD_FAILURES_TOTAL
+    CLOUD_FORWARD_FAILURES_TOTAL,
+    SENSOR_FAULT_READINGS_TOTAL
 )
 
 
@@ -16,6 +17,13 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+
+
+# Known DS18B20 error sentinels (see documentation/phases/v1.3.0.md).
+SENSOR_FAULT_SENTINELS = {
+    85.0: "power_on_reset",
+    -127.0: "crc_failure",
+}
 
 
 app = FastAPI(
@@ -42,6 +50,10 @@ def health():
 def receive_device_data(data: SensorData):
 
     DEVICE_MESSAGES_TOTAL.inc()
+
+    fault_type = SENSOR_FAULT_SENTINELS.get(data.temperature)
+    if fault_type is not None:
+        SENSOR_FAULT_READINGS_TOTAL.labels(type=fault_type).inc()
 
     logger.info(
         "Received data from device %s",

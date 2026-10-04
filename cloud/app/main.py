@@ -4,9 +4,15 @@ import logging
 import time
 
 from fastapi import FastAPI, HTTPException
+from prometheus_client import make_asgi_app
 
 from app.crypto import decapsulate, decrypt_payload
 from app.keys import PRIVATE_KEY
+from app.metrics import (
+    LEGACY_DATA_RECEIVED_TOTAL,
+    SECURE_DATA_RECEIVED_TOTAL,
+    SECURE_DATA_REJECTED_TOTAL,
+)
 from app.models import SecureEnvelope, SensorData
 from app.storage import (
     save_sensor_data,
@@ -31,6 +37,14 @@ app = FastAPI(
 )
 
 
+metrics_app = make_asgi_app()
+
+app.mount(
+    "/metrics",
+    metrics_app
+)
+
+
 @app.get("/health")
 def health():
     return {
@@ -48,6 +62,8 @@ def receive_data(data: SensorData):
         "— consider migrating to /data/secure",
         data.device_id
     )
+
+    LEGACY_DATA_RECEIVED_TOTAL.inc()
 
     save_sensor_data(
         data.model_dump()
@@ -70,11 +86,13 @@ def receive_secure_data(envelope: SecureEnvelope):
         payload = json.loads(plaintext)
     except Exception as error:
         logger.warning("Rejected /data/secure request: decryption failed (%s)", error)
+        SECURE_DATA_REJECTED_TOTAL.labels(reason="decryption_failed").inc()
         raise HTTPException(status_code=400, detail="Decryption failed") from error
 
     timestamp = payload.get("timestamp")
     if timestamp is None or abs(time.time() - timestamp) > REPLAY_WINDOW_SECONDS:
         logger.warning("Rejected /data/secure request: timestamp outside acceptance window")
+        SECURE_DATA_REJECTED_TOTAL.labels(reason="stale_timestamp").inc()
         raise HTTPException(status_code=401, detail="Request expired or missing timestamp")
 
     data = SensorData(device_id=payload["device_id"], temperature=payload["temperature"])
@@ -83,6 +101,8 @@ def receive_secure_data(envelope: SecureEnvelope):
         "Received data on secure endpoint from device %s",
         data.device_id
     )
+
+    SECURE_DATA_RECEIVED_TOTAL.inc()
 
     save_sensor_data(
         data.model_dump()
