@@ -2,4 +2,5 @@ fastapi==0.115.6
 uvicorn[standard]==0.32.1
 requests==2.32.3
 prometheus-client==0.21.1
-cryptography==50.0.1
+kyber-py==1.2.0
+cryptography==50.0.2

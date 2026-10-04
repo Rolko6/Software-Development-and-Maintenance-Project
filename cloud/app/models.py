@@ -1,20 +1,14 @@
-from pydantic import BaseModel, Field
-
-
-# Kept consistent with gateway/app/models.py so the cloud never accepts a
-# device ID or temperature the gateway would reject. See that file for the
-# reasoning behind these bounds.
-MIN_TEMPERATURE_C = -40.0
-MAX_TEMPERATURE_C = 60.0
+from pydantic import BaseModel
 
 
 class SensorData(BaseModel):
-    device_id: str = Field(
-        min_length=1,
-        max_length=100
-    )
+    device_id: str
+    temperature: float
 
-    temperature: float = Field(
-        ge=MIN_TEMPERATURE_C,
-        le=MAX_TEMPERATURE_C
-    )
+
+class SecureEnvelope(BaseModel):
+    """ML-KEM-encapsulated + AES-GCM-encrypted request body for /data/secure.
+    All three fields are base64-encoded bytes."""
+    kem_ciphertext: str
+    nonce: str
+    ciphertext: str

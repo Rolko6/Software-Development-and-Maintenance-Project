@@ -1,27 +1,19 @@
-import pytest
-from fastapi.testclient import TestClient
+import base64
+import os
+import sys
 
-import app.storage
-from app.main import app as fastapi_app
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import pytest
+from kyber_py.ml_kem.default_parameters import ML_KEM_768
+
+# app.keys reads CLOUD_ML_KEM_PRIVATE_KEY at import time, so it must be set
+# before anything imports app.main. Tests get the matching public key via
+# the cloud_public_key fixture below to build valid encrypted requests.
+_test_public_key, _test_private_key = ML_KEM_768.keygen()
+os.environ["CLOUD_ML_KEM_PRIVATE_KEY"] = base64.b64encode(_test_private_key).decode()
 
 
 @pytest.fixture(scope="session")
-def client():
-    """A TestClient shared by all cloud tests; the app has no startup state to reset."""
-    return TestClient(fastapi_app)
-
-
-@pytest.fixture(autouse=True)
-def clear_stored_data():
-    """Clear the module-level stored_data list before and after every test.
-
-    stored_data lives for the whole process (see app/storage.py), so without
-    this, readings saved by one test would leak into the next. We clear the
-    list in place (stored_data.clear()) rather than rebinding the name,
-    because get_all_data() returns the same list object it was given at
-    import time -- reassigning app.storage.stored_data = [] here would leave
-    that returned reference pointing at the old, now-orphaned list.
-    """
-    app.storage.stored_data.clear()
-    yield
-    app.storage.stored_data.clear()
+def cloud_public_key():
+    return _test_public_key
