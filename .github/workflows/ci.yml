@@ -43,9 +43,7 @@ jobs:
 
   publish:
     needs: [test-device, test-gateway, test-cloud, build]
-    # TEMPORARY: also allow this feature branch so the publish step can be verified
-    # before it becomes main. Revert to main-only once confirmed working.
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/roland/simplify-v1.0.0')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
