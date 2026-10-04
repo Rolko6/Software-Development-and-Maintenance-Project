@@ -9,7 +9,7 @@ This project is part of the Software Development, Maintenance & Operations cours
 
 The project focuses on modernizing a simulated legacy edge-cloud system.
 The original system consists of a legacy device, an edge gateway, and a
-cloud service. During the project, the system is gradually improved through
+cloud service. During the project the system is gradually improved through
 testing, monitoring, CI/CD, deployment, and the integration of ML-KEM for
 post-quantum key establishment.
 
