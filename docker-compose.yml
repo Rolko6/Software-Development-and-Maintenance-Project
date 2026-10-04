@@ -22,6 +22,10 @@ services:
     environment:
       GATEWAY_URL: http://gateway:8000/device-data
       DEVICE_ID: legacy-sensor-001
+      # DS18B20 fault-injection rates (0.0-1.0), simulating real sensor failure modes.
+      ERROR_RATE: "0.01"
+      DISCONNECT_RATE: "0.02"
+      STUCK_START_RATE: "0.03"
 
     depends_on:
       - gateway
