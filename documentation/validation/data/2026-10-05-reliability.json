@@ -1,8 +1,8 @@
 {
-  "project": "reliability-eval-b40d60d3857b",
-  "generated_at": "2026-10-05T21:01:28.493996+00:00",
-  "source_commit": "9f4ecee7b1520661857f29c6c7fcda787862647d",
-  "working_tree_dirty": true,
+  "project": "reliability-eval-80eda5951565",
+  "generated_at": "2026-10-05T21:10:34.424236+00:00",
+  "source_commit": "d5be7ca83c588a18e1ea0696ecaa5fbdc4dffff9",
+  "working_tree_dirty": false,
   "checks": {
     "scrape_targets_healthy": true,
     "dashboard_panels": 12,
@@ -17,17 +17,17 @@
     },
     "sensor_status_stuck_recovery_and_silence": true,
     "prometheus_history_survives_recreation": true,
-    "outage_notification_seconds": 151.38,
+    "outage_notification_seconds": 157.6,
     "recovery_notification": true,
     "notifications_survive_recreation": true
   },
   "urls": {
-    "gateway": "http://127.0.0.1:60982",
-    "cloud": "http://127.0.0.1:60983",
-    "prometheus": "http://127.0.0.1:60984",
-    "grafana": "http://127.0.0.1:60985",
-    "alertmanager": "http://127.0.0.1:60986",
-    "alert-inbox": "http://127.0.0.1:60987"
+    "gateway": "http://127.0.0.1:61944",
+    "cloud": "http://127.0.0.1:61945",
+    "prometheus": "http://127.0.0.1:61946",
+    "grafana": "http://127.0.0.1:61947",
+    "alertmanager": "http://127.0.0.1:61948",
+    "alert-inbox": "http://127.0.0.1:61949"
   },
   "outcome": "passed",
   "cleanup": "passed"

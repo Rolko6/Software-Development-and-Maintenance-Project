@@ -49,8 +49,8 @@ traffic. It observed:
 - Session-created containers/networks/volumes removed; existing deployments untouched.
 
 The initial run completed before the final review corrections and is preserved
-in the Git history; the final run will be recorded below against the committed
-implementation. The script now also checks the disconnected gauge/failure counter
+in commit `d5be7ca`. The final evidence replaces the working record with a run
+against that committed implementation; all checks passed. The script now also checks the disconnected gauge/failure counter
 at a real scrape and enforces a two-minute minimum outage hold-down. It forces
 secured cloud policy and known Grafana test credentials independent of ambient
 shell settings.
@@ -82,3 +82,22 @@ not a claim inferred from configuration.
 The historical documentation checker is executed as a session-only `/tmp` copy
 from `ci/root-suites`, checking current Markdown links/anchors/fences/whitespace
 and the standalone Claude import. Exact outcomes are appended at handoff.
+
+## Final committed-source run and PR
+
+The final isolated run used source `d5be7ca83c588a18e1ea0696ecaa5fbdc4dffff9` with a clean
+working tree at invocation. Outcome and session cleanup both passed. The actual
+cloud outage notification arrived after 157.6 seconds, exceeding the configured
+two-minute hold-down; resolved notification arrived after recovery and remained
+after inbox recreation. The disconnected gauge and read-failure counter were
+observed at a real scrape before normal-reading recovery. All exact readings,
+history, dashboard provisioning and post-outage secure delivery checks passed.
+
+All twelve dashboard PromQL expressions also passed the pinned promtool parser
+with the Grafana interval variable replaced by five minutes. Final documentation
+validation passed for 97 Markdown files and 734 local links; compilation, config
+and whitespace checks passed. [PR #18](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/18)
+is open, non-draft, on `codex/reliability-monitoring` targeting `develop`.
+GitHub CI service tests/builds pass where completed; some jobs were still queued
+at the final evidence update. Local completed checks are distinct from queued
+remote jobs. No merge was performed.
