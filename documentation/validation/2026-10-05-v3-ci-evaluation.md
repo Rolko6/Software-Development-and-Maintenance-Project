@@ -29,13 +29,13 @@ For an already running isolated stack, run a single scenario:
 python scripts/evaluation/measure_v3.py latency --gateway-url http://127.0.0.1:8000 --cloud-url http://127.0.0.1:8001 --samples 30 --json-out /tmp/v3-latency.json
 ```
 
-Available scenarios are `latency`, `delivery`, `outage-delivery`, `recovery`, and `detection`. Interruption scenarios also require `--project <your-isolated-project>`, `-f <compose-file>` if needed, and `--allow-interruption`. Before stopping a service the tool verifies that both URL ports belong to the named local Compose project. Detection faults are `cloud-outage`, `gateway-outage`, `sensor-sentinel`, and `invalid-envelope`.
+Available scenarios are `latency`, `delivery`, `outage-delivery`, `recovery`, and `detection`. Interruption scenarios also require `--project <your-isolated-project>`, `-f <compose-file>` if needed, and `--allow-interruption`. Before stopping a service the tool verifies that both URL ports belong to the named local Compose project, requiring explicit `127.0.0.1` URLs and matching Docker address/port bindings. Detection faults are `cloud-outage`, `gateway-outage`, `sensor-sentinel`, and `invalid-envelope`.
 
 ## Interpret the evidence
 
 - Latency includes gateway validation, per-reading encapsulation/encryption, forwarding, cloud processing and the HTTP response. Metric scrapes occur outside the timed interval. It does not isolate cryptographic CPU cost or compare a nonexistent reusable-session mode. Unexpected/missing counters and counter resets fail measurement.
 - Delivery during an outage stops cloud after the first third of sends and restarts it after the second third. A pre-stop snapshot separates never-observed failed deliveries from acknowledged records lost across restart. Duplicate counts apply separately to each snapshot. Snapshot union is not proof of all transient storage events.
-- Recovery starts at restart-command invocation. Sends start after that command completes, so the result includes command duration and polling/sending resolution; it is not a precise downtime measurement. Marker retention is reported, not assumed.
+- Recovery starts at restart-command invocation. Sends start after that command completes, so the result includes command duration and polling/sending resolution; it is not a precise downtime measurement. Marker retention is reported, not assumed. A recovery timeout retains attempted-reading records and a structured non-recovery result.
 - Detection timing uses direct host polling, including fault-command/request duration. It does not deploy a Prometheus alert, measure production detection accuracy or establish sensor-disconnect/stuck detection. The short no-fault baseline only checks the isolated run for unexpected counter changes.
 - Small CI samples verify the harness and contracts; they are not performance claims. CI uploads its raw JSON. Historical v2 reports are still evidence of their named versions, not fresh v3 measurements. Independent teammate deployment and cross-release comparison remain separate course deliverables.
 
@@ -49,7 +49,7 @@ Current verification results and raw evidence are recorded in [the shared prompt
 
 [Raw results](data/2026-10-05-v3-evaluation.json) record the successful isolated run, including its dirty working-tree status during development. Application code matches v3 main; the new measurement code was under test.
 
-- 76 tests passed: device 7, gateway 20, cloud 24, tooling 25.
+- 79 tests passed: device 7, gateway 20, cloud 24, tooling 28.
 - Six normal delivery readings were acknowledged and stored, with no loss or duplicates. During the controlled outage, two of six were rejected, and two previously stored readings were lost across cloud restart; these are separate loss causes.
 - Recovery to a newly stored reading took about 0.94 seconds under the definition above. All four injected detection cases were observed and the restored stack delivered three further readings through secure ingestion.
 - Isolated project cleanup passed and the two pre-existing unrelated containers remained running. These six-sample checks validate the tools; they are not benchmark comparisons or teammate deployment acceptance.

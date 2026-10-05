@@ -148,8 +148,8 @@ class Stack:
         """Ensure URL ports belong to this project before stopping any container."""
         for service, url in [("gateway", self.gateway), ("cloud", self.cloud)]:
             parsed = urlparse(url)
-            if parsed.scheme != "http" or parsed.hostname not in ("127.0.0.1", "localhost"):
-                raise MeasurementError("interruption only supports local HTTP URLs")
+            if parsed.scheme != "http" or parsed.hostname != "127.0.0.1":
+                raise MeasurementError("interruption requires HTTP URLs with explicit 127.0.0.1 hosts")
             ids = subprocess.check_output(self.compose("ps", "-q", service), text=True).split()
             if len(ids) != 1:
                 raise MeasurementError(f"expected one running {service} in project {self.project}")
@@ -158,8 +158,9 @@ class Stack:
                 raise MeasurementError("container project label mismatch")
             port = "8000/tcp" if service == "gateway" else "8001/tcp"
             bindings = info["NetworkSettings"]["Ports"].get(port) or []
-            if str(parsed.port or 80) not in {b["HostPort"] for b in bindings}:
-                raise MeasurementError(f"{service} URL does not match project port bindings")
+            if not any(b["HostPort"] == str(parsed.port or 80) and
+                       b.get("HostIp") in ("127.0.0.1", "0.0.0.0") for b in bindings):
+                raise MeasurementError(f"{service} URL does not match project address/port bindings")
 
     def control(self, action: str, service: str) -> None:
         subprocess.run(self.compose(action, service), check=True, capture_output=True, timeout=60)
@@ -233,7 +234,10 @@ def recovery(stack: Stack, ceiling: float = 30) -> dict:
                         "marker_retained": bool(stored[marker]), "operator_intervention_needed": False,
                         "timing": "restart command issued to first observed stored new reading; sends begin after command completes"}
         time.sleep(0.1)
-    raise MeasurementError("cloud did not recover within the observation ceiling")
+    return {"scenario": "recovery", "recovery_seconds": None,
+            "restart_command_seconds": command_seconds, "records": records,
+            "operator_intervention_needed": True,
+            "error": "cloud did not recover within the observation ceiling"}
 
 
 def detection(stack: Stack, kind: str, ceiling: float = 10, poll: float = 0.1) -> dict:
@@ -325,7 +329,7 @@ def main(argv=None) -> int:
         else:
             result = detection(stack, args.fault)
         output["result"] = result
-        code = int(bool(result.get("summary", {}).get("failures")))
+        code = int(bool(result.get("error") or result.get("summary", {}).get("failures")))
     except (MeasurementError, requests.exceptions.RequestException, subprocess.SubprocessError, ValueError) as error:
         output["error"] = str(error)
         code = 1

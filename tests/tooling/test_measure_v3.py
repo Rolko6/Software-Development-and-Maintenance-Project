@@ -105,3 +105,41 @@ def test_wrong_compose_port_cannot_be_stopped(monkeypatch):
 def test_well_formed_metrics_without_v3_receipt_counter_are_rejected():
     with pytest.raises(m.MeasurementError, match="required v3 counters absent"):
         m.metric_values("# TYPE other_total counter\nother_total 3\n", ("secure_data_received_total",))
+
+
+@pytest.mark.parametrize("bound_address", ["192.168.1.10", "::1"])
+def test_other_bound_address_cannot_match_loopback_url(monkeypatch, bound_address):
+    import json
+
+    def inspect(cmd, **kwargs):
+        if cmd[0] == "docker" and cmd[1] == "inspect":
+            return json.dumps([{"Config": {"Labels": {"com.docker.compose.project": "test"}},
+                                "NetworkSettings": {"Ports": {"8000/tcp": [{"HostIp": bound_address,
+                                                                          "HostPort": "1234"}]}}}])
+        return "container"
+
+    monkeypatch.setattr(m.subprocess, "check_output", inspect)
+    with pytest.raises(m.MeasurementError, match="address/port"):
+        m.Stack("http://127.0.0.1:1234", "http://127.0.0.1:5678", project="test").verify_control_target()
+
+
+def test_recovery_timeout_keeps_failed_attempt_evidence(monkeypatch):
+    class FakeStack:
+        def send(self, name):
+            return {"device_id": name, "status": 502 if name.endswith("-0") else 200}
+
+        def stored(self):
+            class Markers(Counter):
+                def __missing__(self, key):
+                    return 1
+            return Markers()
+
+        def control(self, *args):
+            pass
+
+    ticks = iter([0, 1, 2, 3])
+    monkeypatch.setattr(m.time, "monotonic", lambda: next(ticks))
+    monkeypatch.setattr(m.time, "sleep", lambda _: None)
+    result = m.recovery(FakeStack(), ceiling=3)
+    assert result["operator_intervention_needed"] is True and result["recovery_seconds"] is None
+    assert len(result["records"]) == 1 and result["records"][0]["status"] == 502

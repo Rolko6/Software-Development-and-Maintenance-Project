@@ -83,6 +83,7 @@ def run(stack: Stack, count: int, output: dict) -> None:
             "outage returned an unexpected failure")
 
     results.append(recovery(stack))
+    require(not results[-1]["operator_intervention_needed"], "cloud did not recover within ceiling")
     for fault in ["sensor-sentinel", "invalid-envelope", "cloud-outage", "gateway-outage"]:
         results.append(detection(stack, fault))
 
