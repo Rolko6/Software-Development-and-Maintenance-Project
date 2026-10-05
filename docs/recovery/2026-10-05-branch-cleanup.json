@@ -1,0 +1,362 @@
+{
+  "recorded": "2026-10-05",
+  "repo": "Rolko6/Software-Development-and-Maintenance-Project",
+  "before": [
+    {
+      "name": "add-claude-github-actions-1790067039896",
+      "commit": {
+        "sha": "acece0f11a5707e3e4f9b382cdbcb80c083f66e8",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/acece0f11a5707e3e4f9b382cdbcb80c083f66e8"
+      },
+      "protected": false
+    },
+    {
+      "name": "ci/root-suites",
+      "commit": {
+        "sha": "b297b28fd7ed31177babdebe7a7dcbc3481fbd90",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/b297b28fd7ed31177babdebe7a7dcbc3481fbd90"
+      },
+      "protected": false
+    },
+    {
+      "name": "codex/restore-project-documentation",
+      "commit": {
+        "sha": "9c0f78cb0f09e0dccbb2ed9442bcc5f7003def5d",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/9c0f78cb0f09e0dccbb2ed9442bcc5f7003def5d"
+      },
+      "protected": false
+    },
+    {
+      "name": "develop",
+      "commit": {
+        "sha": "0f309bd144e33835adf6888533d62f672a300f63",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/0f309bd144e33835adf6888533d62f672a300f63"
+      },
+      "protected": false
+    },
+    {
+      "name": "docs/p008-outcome",
+      "commit": {
+        "sha": "172ef46901d7a1e5d75c2df5ac2fbb7b8c116bfb",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/172ef46901d7a1e5d75c2df5ac2fbb7b8c116bfb"
+      },
+      "protected": false
+    },
+    {
+      "name": "feat/ds18b20-device",
+      "commit": {
+        "sha": "e5ea58ea52e37b0ee7e5e535a57ef24221897471",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/e5ea58ea52e37b0ee7e5e535a57ef24221897471"
+      },
+      "protected": false
+    },
+    {
+      "name": "feat/project-plan-work-packages",
+      "commit": {
+        "sha": "18ed20613d5ebdaf4ba6730f4560d8c12d34514a",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/18ed20613d5ebdaf4ba6730f4560d8c12d34514a"
+      },
+      "protected": false
+    },
+    {
+      "name": "feat/secure-channel-hardening",
+      "commit": {
+        "sha": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/4f2b22d761ca7d7bbb631732c6189790b7aabe99"
+      },
+      "protected": false
+    },
+    {
+      "name": "fix/check-docs-exit-code",
+      "commit": {
+        "sha": "a4e738543904095b9b8878f794dfea486bc0e4c0",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/a4e738543904095b9b8878f794dfea486bc0e4c0"
+      },
+      "protected": false
+    },
+    {
+      "name": "main",
+      "commit": {
+        "sha": "0529036664a83d498c5484674a61c6d7cd124ac5",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/0529036664a83d498c5484674a61c6d7cd124ac5"
+      },
+      "protected": false
+    },
+    {
+      "name": "release/1.0.0",
+      "commit": {
+        "sha": "00c14d599b58590c45acb30ad66a7f2b6aa17380",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/00c14d599b58590c45acb30ad66a7f2b6aa17380"
+      },
+      "protected": false
+    },
+    {
+      "name": "release/2.0.0",
+      "commit": {
+        "sha": "9bb782a8b07a4ec76315f9cd78eda987b0ea42db",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/9bb782a8b07a4ec76315f9cd78eda987b0ea42db"
+      },
+      "protected": false
+    },
+    {
+      "name": "release/3.0.0",
+      "commit": {
+        "sha": "0529036664a83d498c5484674a61c6d7cd124ac5",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/0529036664a83d498c5484674a61c6d7cd124ac5"
+      },
+      "protected": false
+    },
+    {
+      "name": "roland/simplify-v1.0.0",
+      "commit": {
+        "sha": "4bc901053d758e27cb025b4e7d19484e8220392f",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/4bc901053d758e27cb025b4e7d19484e8220392f"
+      },
+      "protected": false
+    },
+    {
+      "name": "test-ci-pr",
+      "commit": {
+        "sha": "6b4b7970ac41f4f58d18a92dd723bcb9262ebb5e",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/6b4b7970ac41f4f58d18a92dd723bcb9262ebb5e"
+      },
+      "protected": false
+    },
+    {
+      "name": "tom/ci-deploy-evaluation",
+      "commit": {
+        "sha": "82599b23ba46c71811f405c50310acb859862ed8",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/82599b23ba46c71811f405c50310acb859862ed8"
+      },
+      "protected": false
+    },
+    {
+      "name": "tom/issue4-remaining-metrics",
+      "commit": {
+        "sha": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/0d9f085a2895910871e1dadf10d9ef07ba88a8c0"
+      },
+      "protected": false
+    }
+  ],
+  "after": [
+    {
+      "name": "archive/v3-rewrite-source",
+      "commit": {
+        "sha": "4bc901053d758e27cb025b4e7d19484e8220392f",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/4bc901053d758e27cb025b4e7d19484e8220392f"
+      },
+      "protected": false
+    },
+    {
+      "name": "ci/root-suites",
+      "commit": {
+        "sha": "b297b28fd7ed31177babdebe7a7dcbc3481fbd90",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/b297b28fd7ed31177babdebe7a7dcbc3481fbd90"
+      },
+      "protected": false
+    },
+    {
+      "name": "codex/restore-project-documentation",
+      "commit": {
+        "sha": "9c0f78cb0f09e0dccbb2ed9442bcc5f7003def5d",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/9c0f78cb0f09e0dccbb2ed9442bcc5f7003def5d"
+      },
+      "protected": false
+    },
+    {
+      "name": "develop",
+      "commit": {
+        "sha": "0f309bd144e33835adf6888533d62f672a300f63",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/0f309bd144e33835adf6888533d62f672a300f63"
+      },
+      "protected": false
+    },
+    {
+      "name": "legacy/claude-review-workflow",
+      "commit": {
+        "sha": "acece0f11a5707e3e4f9b382cdbcb80c083f66e8",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/acece0f11a5707e3e4f9b382cdbcb80c083f66e8"
+      },
+      "protected": false
+    },
+    {
+      "name": "legacy/security-hardening-v2",
+      "commit": {
+        "sha": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/4f2b22d761ca7d7bbb631732c6189790b7aabe99"
+      },
+      "protected": false
+    },
+    {
+      "name": "main",
+      "commit": {
+        "sha": "0529036664a83d498c5484674a61c6d7cd124ac5",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/0529036664a83d498c5484674a61c6d7cd124ac5"
+      },
+      "protected": false
+    },
+    {
+      "name": "release/1.0.0",
+      "commit": {
+        "sha": "00c14d599b58590c45acb30ad66a7f2b6aa17380",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/00c14d599b58590c45acb30ad66a7f2b6aa17380"
+      },
+      "protected": false
+    },
+    {
+      "name": "release/2.0.0",
+      "commit": {
+        "sha": "9bb782a8b07a4ec76315f9cd78eda987b0ea42db",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/9bb782a8b07a4ec76315f9cd78eda987b0ea42db"
+      },
+      "protected": false
+    },
+    {
+      "name": "release/3.0.0",
+      "commit": {
+        "sha": "0529036664a83d498c5484674a61c6d7cd124ac5",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/0529036664a83d498c5484674a61c6d7cd124ac5"
+      },
+      "protected": false
+    },
+    {
+      "name": "tom/ci-deploy-evaluation",
+      "commit": {
+        "sha": "82599b23ba46c71811f405c50310acb859862ed8",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/82599b23ba46c71811f405c50310acb859862ed8"
+      },
+      "protected": false
+    },
+    {
+      "name": "tom/issue4-remaining-metrics",
+      "commit": {
+        "sha": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
+        "url": "https://api.github.com/repos/Rolko6/Software-Development-and-Maintenance-Project/commits/0d9f085a2895910871e1dadf10d9ef07ba88a8c0"
+      },
+      "protected": false
+    }
+  ],
+  "changes": [
+    {
+      "old_name": "docs/p008-outcome",
+      "action": "remove merged branch",
+      "new_name": null,
+      "sha": "172ef46901d7a1e5d75c2df5ac2fbb7b8c116bfb",
+      "archive_tag": "archive/2026-10-05/docs/p008-outcome"
+    },
+    {
+      "old_name": "feat/ds18b20-device",
+      "action": "remove merged branch",
+      "new_name": null,
+      "sha": "e5ea58ea52e37b0ee7e5e535a57ef24221897471",
+      "archive_tag": "archive/2026-10-05/feat/ds18b20-device"
+    },
+    {
+      "old_name": "feat/project-plan-work-packages",
+      "action": "remove merged branch",
+      "new_name": null,
+      "sha": "18ed20613d5ebdaf4ba6730f4560d8c12d34514a",
+      "archive_tag": "archive/2026-10-05/feat/project-plan-work-packages"
+    },
+    {
+      "old_name": "fix/check-docs-exit-code",
+      "action": "remove merged branch",
+      "new_name": null,
+      "sha": "a4e738543904095b9b8878f794dfea486bc0e4c0",
+      "archive_tag": "archive/2026-10-05/fix/check-docs-exit-code"
+    },
+    {
+      "old_name": "test-ci-pr",
+      "action": "remove merged branch",
+      "new_name": null,
+      "sha": "6b4b7970ac41f4f58d18a92dd723bcb9262ebb5e",
+      "archive_tag": "archive/2026-10-05/test-ci-pr"
+    },
+    {
+      "old_name": "add-claude-github-actions-1790067039896",
+      "action": "rename retained history",
+      "new_name": "legacy/claude-review-workflow",
+      "sha": "acece0f11a5707e3e4f9b382cdbcb80c083f66e8",
+      "archive_tag": "archive/2026-10-05/add-claude-github-actions-1790067039896"
+    },
+    {
+      "old_name": "feat/secure-channel-hardening",
+      "action": "rename retained history",
+      "new_name": "legacy/security-hardening-v2",
+      "sha": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
+      "archive_tag": "archive/2026-10-05/feat/secure-channel-hardening"
+    },
+    {
+      "old_name": "roland/simplify-v1.0.0",
+      "action": "rename retained history",
+      "new_name": "archive/v3-rewrite-source",
+      "sha": "4bc901053d758e27cb025b4e7d19484e8220392f",
+      "archive_tag": "archive/2026-10-05/roland/simplify-v1.0.0"
+    }
+  ],
+  "open_prs": [
+    {
+      "baseRefName": "main",
+      "headRefName": "codex/restore-project-documentation",
+      "number": 16,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/16"
+    },
+    {
+      "baseRefName": "develop",
+      "headRefName": "tom/issue4-remaining-metrics",
+      "number": 14,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/14"
+    },
+    {
+      "baseRefName": "develop",
+      "headRefName": "tom/ci-deploy-evaluation",
+      "number": 13,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/13"
+    },
+    {
+      "baseRefName": "develop",
+      "headRefName": "ci/root-suites",
+      "number": 6,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/6"
+    }
+  ],
+  "verified_open_prs": [
+    {
+      "baseRefName": "main",
+      "headRefName": "codex/restore-project-documentation",
+      "number": 16,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/16"
+    },
+    {
+      "baseRefName": "develop",
+      "headRefName": "tom/issue4-remaining-metrics",
+      "number": 14,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/14"
+    },
+    {
+      "baseRefName": "develop",
+      "headRefName": "tom/ci-deploy-evaluation",
+      "number": 13,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/13"
+    },
+    {
+      "baseRefName": "develop",
+      "headRefName": "ci/root-suites",
+      "number": 6,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/6"
+    }
+  ],
+  "kept_names": [
+    "ci/root-suites",
+    "codex/restore-project-documentation",
+    "develop",
+    "main",
+    "release/1.0.0",
+    "release/2.0.0",
+    "release/3.0.0",
+    "tom/ci-deploy-evaluation",
+    "tom/issue4-remaining-metrics"
+  ],
+  "local_backup": ".trash/2026-10-05__git-branch-cleanup.bundle"
+}
