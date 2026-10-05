@@ -43,7 +43,7 @@ Available scenarios are `latency`, `delivery`, `outage-delivery`, `recovery`, an
 
 PR #6 head: `b297b28`; PR #13 head: `82599b2`; PR #14 head: `0d9f085`. The JUnit helper and its nine original regression tests come from #13 (which contains #6); two no-passes checks are added. The evaluation tool carries forward #14's measurement methods and reporting concepts, rewritten for current routes/counters. Old session/PSK/mode assertions, wire-file equality and old skip allowances do not apply to v3 and are not copied.
 
-Current verification results and raw evidence are recorded in [the shared prompt record in PR #16](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/blob/codex/restore-project-documentation/docs/ai/prompts/2026-10-05-yyy-tom.md#p020-carry-historical-ci-and-measurement-changes-into-active-v3). The implementation does not change application endpoints, encryption parameters, storage, dependencies, human phase documents or the existing main-only publication condition.
+Current verification results and raw evidence are recorded in [the shared prompt record in PR #16](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/blob/e88fba461aa292a3f619f00d3ca838bae25e5711/docs/ai/prompts/2026-10-05-yyy-tom.md#p020-carry-historical-ci-and-measurement-changes-into-active-v3). The implementation does not change application endpoints, encryption parameters, storage, dependencies, human phase documents or the existing main-only publication condition.
 
 ## Observed local check — 2026-10-05
 
