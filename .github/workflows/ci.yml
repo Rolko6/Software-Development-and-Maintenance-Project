@@ -4,7 +4,24 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile all current Python sources
+        run: python -m compileall -q -f cloud gateway device scripts tests .github/scripts
+
   test-device:
     runs-on: ubuntu-latest
     steps:
@@ -13,7 +30,24 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
-      - run: python -m pytest device/tests -v
+      - name: Check v3 dependencies import
+        run: python -c "import fastapi, requests, prometheus_client; from kyber_py.ml_kem.default_parameters import ML_KEM_768; from cryptography.hazmat.primitives.ciphers.aead import AESGCM"
+      - name: Run device tests
+        run: python -m pytest device/tests -v --junitxml=device-report.xml
+      - name: Summarize results and enforce skip budgets
+        if: always()
+        run: |
+          set -o pipefail
+          python .github/scripts/junit_summary.py --title "device tests" \
+            --max-skipped 0 --max-xfailed 0 device-report.xml | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-device
+          path: device-report.xml
+          if-no-files-found: error
+          retention-days: 14
 
   test-gateway:
     runs-on: ubuntu-latest
@@ -23,7 +57,24 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
-      - run: python -m pytest gateway/tests -v
+      - name: Check v3 dependencies import
+        run: python -c "import fastapi, requests, prometheus_client; from kyber_py.ml_kem.default_parameters import ML_KEM_768; from cryptography.hazmat.primitives.ciphers.aead import AESGCM"
+      - name: Run gateway tests
+        run: python -m pytest gateway/tests -v --junitxml=gateway-report.xml
+      - name: Summarize results and enforce skip budgets
+        if: always()
+        run: |
+          set -o pipefail
+          python .github/scripts/junit_summary.py --title "gateway tests" \
+            --max-skipped 0 --max-xfailed 0 gateway-report.xml | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-gateway
+          path: gateway-report.xml
+          if-no-files-found: error
+          retention-days: 14
 
   test-cloud:
     runs-on: ubuntu-latest
@@ -33,16 +84,79 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
-      - run: python -m pytest cloud/tests -v
+      - name: Check v3 dependencies import
+        run: python -c "import fastapi, requests, prometheus_client; from kyber_py.ml_kem.default_parameters import ML_KEM_768; from cryptography.hazmat.primitives.ciphers.aead import AESGCM"
+      - name: Run cloud tests
+        run: python -m pytest cloud/tests -v --junitxml=cloud-report.xml
+      - name: Summarize results and enforce skip budgets
+        if: always()
+        run: |
+          set -o pipefail
+          python .github/scripts/junit_summary.py --title "cloud tests" \
+            --max-skipped 0 --max-xfailed 0 cloud-report.xml | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-cloud
+          path: cloud-report.xml
+          if-no-files-found: error
+          retention-days: 14
+
+  test-tooling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - name: Run tooling regression tests
+        run: python -m pytest tests/tooling -v --junitxml=tooling-report.xml
+      - name: Summarize results and enforce skip budgets
+        if: always()
+        run: |
+          set -o pipefail
+          python .github/scripts/junit_summary.py --title "tooling tests" \
+            --max-skipped 0 --max-xfailed 0 tooling-report.xml | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-tooling
+          path: tooling-report.xml
+          if-no-files-found: error
+          retention-days: 14
+
+  smoke:
+    needs: [static-checks, test-device, test-gateway, test-cloud, test-tooling, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - name: Exercise encrypted delivery and v3 measurement scenarios
+        run: python scripts/evaluation/run_isolated.py --samples 6 --json-out v3-evaluation.json
+      - name: Upload raw measurement evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v3-evaluation
+          path: v3-evaluation.json
+          if-no-files-found: error
+          retention-days: 14
 
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: docker compose config --quiet
       - run: docker compose build
 
   publish:
-    needs: [test-device, test-gateway, test-cloud, build]
+    needs: [test-device, test-gateway, test-cloud, test-tooling, build, smoke]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:

@@ -117,6 +117,7 @@ python -m pytest gateway/tests
 python -m pytest cloud/tests
 ```
 CI runs all of this automatically on every push — see `.github/workflows/ci.yml`.
+For the CI checks and reproducible v3 measurements, see the [validation guide](documentation/validation/2026-10-05-v3-ci-evaluation.md).
 
 **8. Stop everything**
 ```powershell
