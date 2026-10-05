@@ -12,6 +12,7 @@ AI assistants start with [AGENTS.md](../AGENTS.md); [CLAUDE.md](../CLAUDE.md) im
 | Distinguish old release tags from the reworked phase sequence | [Version map and recovery record](recovery/2026-10-05-documentation-recovery.md#version-map) |
 | Current branch names and cleanup recovery | [Branch cleanup](recovery/2026-10-05-branch-cleanup.md), [develop aligned with v3](recovery/2026-10-05-develop-sync.md) |
 | Compare open historical PRs before deciding to merge | [PR #6 / #13 / #14 comparison](recovery/2026-10-05-pr-6-13-14-comparison.md) |
+| Carry historical CI and measurement work into active v3 | [Replacement PR #17](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/17) |
 | Source revisions and recovery provenance | [Recovery manifest](recovery/2026-10-05-manifest.json) |
 | Proposed security and storage follow-up | [Current proposals](current-follow-ups.md) |
 
