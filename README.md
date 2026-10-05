@@ -49,8 +49,9 @@ operational suitability.
 
 Device→gateway stays plaintext HTTP (that was never in scope for encryption).
 Gateway→cloud is encrypted end-to-end with ML-KEM-768 key establishment and
-AES-256-GCM. The old plaintext `/data` endpoint still exists on the cloud for
-backward compatibility, but every use of it is logged as a warning.
+AES-256-GCM. Direct plaintext cloud `POST /data` is disabled by default. Explicit compatibility
+mode retains it with warning logs; the device continues using the gateway unchanged.
+Readings are committed to SQLite on a named volume before the cloud acknowledges them.
 
 ## Getting Started (clone → run → verify)
 
@@ -138,15 +139,25 @@ docker compose down
 
 **Not covered (known, documented limitations):**
 - Device→gateway traffic is plaintext — out of scope for this project
-- The legacy `/data` endpoint on the cloud still accepts unencrypted
-  requests from anyone who reaches it; the only protection is an audit-trail
-  warning log, not a technical control
+- Explicit `CLOUD_ALLOW_LEGACY_INGESTION=true` reopens plaintext cloud ingestion
+  for migration; it is disabled by default
 - The 30-second replay window is a bounded mitigation, not a complete one —
   a captured request can still be replayed within that window
 - No authentication/authorization on any endpoint (anyone who can reach the
   service can post data under any `device_id`)
 
 Full reasoning behind each of these is in `documentation/phases/v2.0.0.md`.
+
+## Reliability and optional monitoring
+
+Readings survive cloud restarts and container recreation on the `cloud-data`
+volume. Device disconnect reports, repeated-value suspicions and silence have
+separate gateway metrics. An optional Compose overlay provides 30-day Prometheus
+history, a provisioned Grafana dashboard, alerts and a persistent local inbox.
+See the [runbook](documentation/operations/reliability-monitoring.md) for setup,
+configuration and reproducible checks, and the
+[implementation phase](documentation/phases/reliability-follow-ups.md) for scope
+and evidence. Existing phase documents below retain their historical results.
 
 ## Version History / Documentation
 

@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import platform
 import socket
@@ -84,6 +85,7 @@ def run(stack: Stack, count: int, output: dict) -> None:
 
     results.append(recovery(stack))
     require(not results[-1]["operator_intervention_needed"], "cloud did not recover within ceiling")
+    require(results[-1]["marker_retained"], "committed reading disappeared across cloud restart")
     for fault in ["sensor-sentinel", "invalid-envelope", "cloud-outage", "gateway-outage"]:
         results.append(detection(stack, fault))
 
@@ -109,7 +111,8 @@ def main(argv=None) -> int:
     with tempfile.TemporaryDirectory(prefix="v3-evaluation-") as directory:
         config = json.loads(subprocess.check_output(
             ["docker", "compose", "-p", project, "-f", str(ROOT / "docker-compose.yml"),
-             "config", "--format", "json"], cwd=ROOT, text=True))
+             "config", "--format", "json"], cwd=ROOT,
+            env=dict(os.environ, CLOUD_ALLOW_LEGACY_INGESTION="false"), text=True))
         config["services"] = {s: config["services"][s] for s in ["gateway", "cloud"]}
         # Select free loopback ports once. A Docker-assigned port (published=0)
         # can change on stop/start, invalidating the measurement's endpoint.
@@ -142,7 +145,8 @@ def main(argv=None) -> int:
             code = 1
         finally:
             # Keep results even if cleanup fails; never print resolved config/key material.
-            cleanup = subprocess.run(compose + ["down", "--remove-orphans"], capture_output=True, text=True)
+            # All volumes belong to this invocation and contain session-only test data.
+            cleanup = subprocess.run(compose + ["down", "--volumes", "--remove-orphans"], capture_output=True, text=True)
             output["cleanup"] = "passed" if cleanup.returncode == 0 else "failed"
             if cleanup.returncode:
                 output["cleanup_error"] = cleanup.stderr
