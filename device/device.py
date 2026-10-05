@@ -1,6 +1,7 @@
 import os
 import random
 import time
+from urllib.parse import urlsplit, urlunsplit
 
 import requests
 
@@ -8,6 +9,20 @@ import requests
 GATEWAY_URL = os.getenv(
     "GATEWAY_URL",
     "http://localhost:8000/device-data"
+)
+
+
+def _derive_status_url(gateway_url):
+    parsed = urlsplit(gateway_url)
+    reading_path = parsed.path.rstrip("/")
+    parent_path = reading_path.rsplit("/", 1)[0]
+    status_path = f"{parent_path}/device-status"
+    return urlunsplit((parsed.scheme, parsed.netloc, status_path, "", ""))
+
+
+DEVICE_STATUS_URL = os.getenv(
+    "DEVICE_STATUS_URL",
+    _derive_status_url(GATEWAY_URL)
 )
 
 
@@ -61,8 +76,7 @@ def read_sensor():
 
 
 def generate_sensor_data():
-    """Returns a device payload, or None if the sensor is disconnected
-    this cycle (nothing to send)."""
+    """Return a reading payload, or None for send_data() to report status."""
     temperature = read_sensor()
 
     if temperature is None:
@@ -78,7 +92,23 @@ def send_data():
     data = generate_sensor_data()
 
     if data is None:
-        print("Sensor read failed (disconnected) — skipping this cycle")
+        status = {
+            "device_id": DEVICE_ID,
+            "status": "disconnected"
+        }
+
+        try:
+            response = requests.post(
+                DEVICE_STATUS_URL,
+                json=status,
+                timeout=5
+            )
+            print(
+                f"Sensor read failed (disconnected) | "
+                f"Status response: {response.status_code}"
+            )
+        except requests.RequestException as error:
+            print(f"Failed to send device status: {error}")
         return
 
     try:

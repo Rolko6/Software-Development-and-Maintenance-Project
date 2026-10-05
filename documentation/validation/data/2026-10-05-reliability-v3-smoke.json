@@ -1,0 +1,367 @@
+{
+  "generated_at": "2026-10-05T21:05:16.066857+00:00",
+  "project": "v3-eval-e3877dc746de",
+  "source_commit": "9f4ecee7b1520661857f29c6c7fcda787862647d",
+  "working_tree_dirty": true,
+  "environment": {
+    "python": "3.13.12",
+    "platform": "macOS-15.7.5-arm64-arm-64bit-Mach-O"
+  },
+  "samples_per_batch": 6,
+  "checks": [
+    {
+      "invalid_reading_status": 422
+    }
+  ],
+  "results": [
+    {
+      "scenario": "latency",
+      "records": [
+        {
+          "device_id": "v3-latency-2f44612eb34743cea76983f529693b34-0",
+          "status": 200,
+          "error": null,
+          "latency_ms": 24.993458064273,
+          "sent_at": "2026-10-05T21:05:18.712781+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        },
+        {
+          "device_id": "v3-latency-2f44612eb34743cea76983f529693b34-1",
+          "status": 200,
+          "error": null,
+          "latency_ms": 15.614083036780357,
+          "sent_at": "2026-10-05T21:05:18.734049+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        },
+        {
+          "device_id": "v3-latency-2f44612eb34743cea76983f529693b34-2",
+          "status": 200,
+          "error": null,
+          "latency_ms": 15.564666828140616,
+          "sent_at": "2026-10-05T21:05:18.756253+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        },
+        {
+          "device_id": "v3-latency-2f44612eb34743cea76983f529693b34-3",
+          "status": 200,
+          "error": null,
+          "latency_ms": 16.14904194138944,
+          "sent_at": "2026-10-05T21:05:18.778535+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        },
+        {
+          "device_id": "v3-latency-2f44612eb34743cea76983f529693b34-4",
+          "status": 200,
+          "error": null,
+          "latency_ms": 15.453417086973786,
+          "sent_at": "2026-10-05T21:05:18.800407+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        },
+        {
+          "device_id": "v3-latency-2f44612eb34743cea76983f529693b34-5",
+          "status": 200,
+          "error": null,
+          "latency_ms": 15.079958131536841,
+          "sent_at": "2026-10-05T21:05:18.820341+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        }
+      ],
+      "summary": {
+        "successful": 6,
+        "failures": {},
+        "median_ms": 15.589374932460487,
+        "p95_ms": 24.993458064273,
+        "min_ms": 15.079958131536841,
+        "max_ms": 24.993458064273
+      },
+      "timing": "gateway request-to-response; metric scrapes excluded; fresh HTTP connection",
+      "security_model": "per-reading encapsulation, no reusable sessions"
+    },
+    {
+      "scenario": "delivery",
+      "records": [
+        {
+          "device_id": "v3-delivery-8ac0a6d56906465b91baf3ac9a0efa61-0",
+          "status": 200,
+          "error": null,
+          "latency_ms": 14.964457834139466,
+          "sent_at": "2026-10-05T21:05:18.838845+00:00"
+        },
+        {
+          "device_id": "v3-delivery-8ac0a6d56906465b91baf3ac9a0efa61-1",
+          "status": 200,
+          "error": null,
+          "latency_ms": 14.960375148802996,
+          "sent_at": "2026-10-05T21:05:18.853933+00:00"
+        },
+        {
+          "device_id": "v3-delivery-8ac0a6d56906465b91baf3ac9a0efa61-2",
+          "status": 200,
+          "error": null,
+          "latency_ms": 15.501792076975107,
+          "sent_at": "2026-10-05T21:05:18.869530+00:00"
+        },
+        {
+          "device_id": "v3-delivery-8ac0a6d56906465b91baf3ac9a0efa61-3",
+          "status": 200,
+          "error": null,
+          "latency_ms": 15.371500048786402,
+          "sent_at": "2026-10-05T21:05:18.885004+00:00"
+        },
+        {
+          "device_id": "v3-delivery-8ac0a6d56906465b91baf3ac9a0efa61-4",
+          "status": 200,
+          "error": null,
+          "latency_ms": 15.091791050508618,
+          "sent_at": "2026-10-05T21:05:18.900184+00:00"
+        },
+        {
+          "device_id": "v3-delivery-8ac0a6d56906465b91baf3ac9a0efa61-5",
+          "status": 200,
+          "error": null,
+          "latency_ms": 15.146207995712757,
+          "sent_at": "2026-10-05T21:05:18.915515+00:00"
+        }
+      ],
+      "summary": {
+        "sent": 6,
+        "acknowledged": 6,
+        "not_acknowledged": 0,
+        "stored_final_unique": 6,
+        "stored_observed_unique": 6,
+        "missing_final": 0,
+        "never_observed": 0,
+        "lost_across_restart": 0,
+        "duplicate_records_final": 0,
+        "duplicate_records_before_stop": 0,
+        "acknowledged_never_observed": 0,
+        "failed_but_observed": 0
+      },
+      "outage": {},
+      "observation_seconds": 0.2,
+      "outage_definition": null
+    },
+    {
+      "scenario": "outage-delivery",
+      "records": [
+        {
+          "device_id": "v3-delivery-a7e1f47a7a4d43289345ec7f73505955-0",
+          "status": 200,
+          "error": null,
+          "latency_ms": 18.621375085785985,
+          "sent_at": "2026-10-05T21:05:19.144944+00:00"
+        },
+        {
+          "device_id": "v3-delivery-a7e1f47a7a4d43289345ec7f73505955-1",
+          "status": 200,
+          "error": null,
+          "latency_ms": 16.05149987153709,
+          "sent_at": "2026-10-05T21:05:19.161096+00:00"
+        },
+        {
+          "device_id": "v3-delivery-a7e1f47a7a4d43289345ec7f73505955-2",
+          "status": 502,
+          "error": null,
+          "latency_ms": 15.209208941087127,
+          "sent_at": "2026-10-05T21:05:19.673183+00:00"
+        },
+        {
+          "device_id": "v3-delivery-a7e1f47a7a4d43289345ec7f73505955-3",
+          "status": 502,
+          "error": null,
+          "latency_ms": 12.89825001731515,
+          "sent_at": "2026-10-05T21:05:19.686190+00:00"
+        },
+        {
+          "device_id": "v3-delivery-a7e1f47a7a4d43289345ec7f73505955-4",
+          "status": 200,
+          "error": null,
+          "latency_ms": 23.358457954600453,
+          "sent_at": "2026-10-05T21:05:20.344526+00:00"
+        },
+        {
+          "device_id": "v3-delivery-a7e1f47a7a4d43289345ec7f73505955-5",
+          "status": 200,
+          "error": null,
+          "latency_ms": 20.41879203170538,
+          "sent_at": "2026-10-05T21:05:20.365106+00:00"
+        }
+      ],
+      "summary": {
+        "sent": 6,
+        "acknowledged": 4,
+        "not_acknowledged": 2,
+        "stored_final_unique": 4,
+        "stored_observed_unique": 4,
+        "missing_final": 2,
+        "never_observed": 2,
+        "lost_across_restart": 0,
+        "duplicate_records_final": 0,
+        "duplicate_records_before_stop": 0,
+        "acknowledged_never_observed": 0,
+        "failed_but_observed": 0
+      },
+      "outage": {
+        "stop_issued_at": "2026-10-05T21:05:19.165692+00:00",
+        "start_issued_at": "2026-10-05T21:05:19.686259+00:00"
+      },
+      "observation_seconds": 0.2,
+      "outage_definition": "stop after first third; restart after second third"
+    },
+    {
+      "scenario": "recovery",
+      "recovery_seconds": 1.1180725409649312,
+      "restart_command_seconds": 0.7408196658361703,
+      "records": [
+        {
+          "device_id": "v3-recovery-cfb2af1fbd5949e4855212dffc681462-0",
+          "status": 502,
+          "error": null,
+          "latency_ms": 11.049000080674887,
+          "sent_at": "2026-10-05T21:05:21.356118+00:00"
+        },
+        {
+          "device_id": "v3-recovery-cfb2af1fbd5949e4855212dffc681462-1",
+          "status": 502,
+          "error": null,
+          "latency_ms": 9.889540961012244,
+          "sent_at": "2026-10-05T21:05:21.468647+00:00"
+        },
+        {
+          "device_id": "v3-recovery-cfb2af1fbd5949e4855212dffc681462-2",
+          "status": 502,
+          "error": null,
+          "latency_ms": 10.112249990925193,
+          "sent_at": "2026-10-05T21:05:21.583822+00:00"
+        },
+        {
+          "device_id": "v3-recovery-cfb2af1fbd5949e4855212dffc681462-3",
+          "status": 200,
+          "error": null,
+          "latency_ms": 27.662458131089807,
+          "sent_at": "2026-10-05T21:05:21.715596+00:00"
+        }
+      ],
+      "marker_retained": true,
+      "operator_intervention_needed": false,
+      "timing": "restart command issued to first observed stored new reading; sends begin after command completes"
+    },
+    {
+      "scenario": "detection",
+      "fault": "sensor-sentinel",
+      "detection_seconds": 0.022115624975413084,
+      "signal": "sensor_fault_readings_total",
+      "counter_increase": 1.0,
+      "injection_response": {
+        "device_id": "v3-sentinel-2a324e34341c46069c6f69dd64ddc7ae",
+        "status": 200,
+        "error": null,
+        "latency_ms": 18.0655000731349,
+        "sent_at": "2026-10-05T21:05:21.743667+00:00"
+      },
+      "poll_seconds": 0.1,
+      "timing": "injection initiated to first direct poll observation; includes command/request time",
+      "alerting": "direct API/metrics polling; no Prometheus alert deployment"
+    },
+    {
+      "scenario": "detection",
+      "fault": "invalid-envelope",
+      "detection_seconds": 0.00499074999243021,
+      "signal": "secure_data_rejected_total",
+      "counter_increase": 1.0,
+      "injection_response": {
+        "status": 400
+      },
+      "poll_seconds": 0.1,
+      "timing": "injection initiated to first direct poll observation; includes command/request time",
+      "alerting": "direct API/metrics polling; no Prometheus alert deployment"
+    },
+    {
+      "scenario": "detection",
+      "fault": "cloud-outage",
+      "detection_seconds": 0.5160405000206083,
+      "signal": "cloud_forward_failures_total",
+      "counter_increase": 1.0,
+      "injection_response": {
+        "device_id": "v3-detection-07c903eb029c4d2787a3fdee03cac0b6",
+        "status": 502,
+        "error": null,
+        "latency_ms": 16.696417005732656,
+        "sent_at": "2026-10-05T21:05:22.272072+00:00"
+      },
+      "poll_seconds": 0.1,
+      "timing": "injection initiated to first direct poll observation; includes command/request time",
+      "alerting": "direct API/metrics polling; no Prometheus alert deployment"
+    },
+    {
+      "scenario": "detection",
+      "fault": "gateway-outage",
+      "detection_seconds": 0.4736303749959916,
+      "signal": "health_poll",
+      "counter_increase": null,
+      "injection_response": null,
+      "poll_seconds": 0.1,
+      "timing": "injection initiated to first direct poll observation; includes command/request time",
+      "alerting": "direct API/metrics polling; no Prometheus alert deployment"
+    },
+    {
+      "scenario": "latency",
+      "records": [
+        {
+          "device_id": "v3-latency-916a4e96560e4bc885e171b0fb7f686a-0",
+          "status": 200,
+          "error": null,
+          "latency_ms": 19.086709013208747,
+          "sent_at": "2026-10-05T21:05:23.772058+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        },
+        {
+          "device_id": "v3-latency-916a4e96560e4bc885e171b0fb7f686a-1",
+          "status": 200,
+          "error": null,
+          "latency_ms": 15.121667180210352,
+          "sent_at": "2026-10-05T21:05:23.794041+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        },
+        {
+          "device_id": "v3-latency-916a4e96560e4bc885e171b0fb7f686a-2",
+          "status": 200,
+          "error": null,
+          "latency_ms": 14.609042089432478,
+          "sent_at": "2026-10-05T21:05:23.815123+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        }
+      ],
+      "summary": {
+        "successful": 3,
+        "failures": {},
+        "median_ms": 15.121667180210352,
+        "p95_ms": 19.086709013208747,
+        "min_ms": 14.609042089432478,
+        "max_ms": 19.086709013208747
+      },
+      "timing": "gateway request-to-response; metric scrapes excluded; fresh HTTP connection",
+      "security_model": "per-reading encapsulation, no reusable sessions"
+    }
+  ],
+  "urls": {
+    "gateway": "http://127.0.0.1:61328",
+    "cloud": "http://127.0.0.1:61329"
+  },
+  "baseline": {
+    "seconds": 0.25,
+    "fault_counter_increases": 0,
+    "limit": "short direct-poll observation, not an alert false-positive rate study"
+  },
+  "outcome": "passed",
+  "cleanup": "passed"
+}

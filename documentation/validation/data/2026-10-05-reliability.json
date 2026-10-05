@@ -1,0 +1,34 @@
+{
+  "project": "reliability-eval-b40d60d3857b",
+  "generated_at": "2026-10-05T21:01:28.493996+00:00",
+  "source_commit": "9f4ecee7b1520661857f29c6c7fcda787862647d",
+  "working_tree_dirty": true,
+  "checks": {
+    "scrape_targets_healthy": true,
+    "dashboard_panels": 12,
+    "plaintext_default_status": 403,
+    "secure_reading_survives_restart_and_recreation": {
+      "device_id": "persistence-marker",
+      "temperature": 21.75
+    },
+    "explicit_legacy_reading_survives_recreation": {
+      "device_id": "explicit-legacy-marker",
+      "temperature": 19.25
+    },
+    "sensor_status_stuck_recovery_and_silence": true,
+    "prometheus_history_survives_recreation": true,
+    "outage_notification_seconds": 151.38,
+    "recovery_notification": true,
+    "notifications_survive_recreation": true
+  },
+  "urls": {
+    "gateway": "http://127.0.0.1:60982",
+    "cloud": "http://127.0.0.1:60983",
+    "prometheus": "http://127.0.0.1:60984",
+    "grafana": "http://127.0.0.1:60985",
+    "alertmanager": "http://127.0.0.1:60986",
+    "alert-inbox": "http://127.0.0.1:60987"
+  },
+  "outcome": "passed",
+  "cleanup": "passed"
+}

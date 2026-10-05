@@ -1,0 +1,62 @@
+groups:
+  - name: edge-cloud
+    rules:
+      - alert: ServiceUnavailable
+        expr: up{job=~"gateway|cloud"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "{{ $labels.job }} is unavailable"
+      - alert: CloudDeliveryFailures
+        expr: rate(cloud_forward_failures_total{job="gateway"}[5m]) / clamp_min(rate(cloud_forward_attempts_total{job="gateway"}[5m]), 0.001) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Cloud forwarding failure ratio exceeds 5 percent
+      - alert: SecureRequestRejected
+        expr: sum by (reason) (increase(secure_data_rejected_total{job="cloud"}[5m])) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "Secure requests rejected: {{ $labels.reason }}"
+      - alert: LegacyIngestionUsed
+        expr: increase(legacy_data_received_total{job="cloud"}[5m]) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: Plaintext ingestion was explicitly enabled and used
+      - alert: PlaintextIngestionBlocked
+        expr: increase(legacy_data_rejected_total{job="cloud"}[5m]) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: Direct plaintext cloud ingestion was blocked
+      - alert: SensorFaultRate
+        expr: sum by (job, instance) (rate(sensor_fault_readings_total{job="gateway"}[5m])) / clamp_min(rate(device_messages_total{job="gateway"}[5m]), 0.001) > 0.2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Sensor sentinel fault rate exceeds 20 percent
+      - alert: SensorDisconnected
+        expr: sensor_disconnected_devices{job="gateway"} > 0
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: One or more devices report a disconnected sensor
+      - alert: SensorStuckSuspected
+        expr: (sensor_suspected_stuck_devices{job="gateway"} > 0) or on(job, instance) (increase(sensor_stuck_episodes_total{job="gateway"}[5m]) > 0)
+        labels:
+          severity: warning
+        annotations:
+          summary: One or more sensors repeatedly report the same temperature
+      - alert: DeviceSilent
+        expr: sensor_silent_devices{job="gateway"} > 0
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: One or more previously observed devices stopped reporting
