@@ -55,3 +55,5 @@ Current verification results and raw evidence are recorded in [the shared prompt
 - Isolated project cleanup passed and the two pre-existing unrelated containers remained running. These six-sample checks validate the tools; they are not benchmark comparisons or teammate deployment acceptance.
 
 The old cryptography-implementation ACVP/vector suite is not transferred unchanged to v3's different `kyber-py` implementation. V3's existing primitive/tampering tests remain, with the two additional protected-path requirements above. Further implementation-assurance work needs matching vectors and an explicit verification scope.
+
+After review, the standalone interruption guard was tightened to match the Docker binding address as well as port, and recovery timeouts were changed to preserve attempted readings. Tooling regressions passed (28 tests), and a [three-sample rerun from clean commit e975a9f](data/2026-10-05-v3-guard-rerun.json) passed every live scenario and cleanup. The earlier six-sample evidence is retained rather than overwritten.

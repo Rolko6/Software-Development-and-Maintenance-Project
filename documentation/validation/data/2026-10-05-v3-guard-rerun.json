@@ -1,0 +1,291 @@
+{
+  "generated_at": "2026-10-05T20:17:33.029697+00:00",
+  "project": "v3-eval-271ee52e7144",
+  "source_commit": "e975a9f57d1e2029bdb5687aeea784bffee5e0ee",
+  "working_tree_dirty": false,
+  "environment": {
+    "python": "3.12.13",
+    "platform": "macOS-15.7.5-arm64-arm-64bit"
+  },
+  "samples_per_batch": 3,
+  "checks": [
+    {
+      "invalid_reading_status": 422
+    }
+  ],
+  "results": [
+    {
+      "scenario": "latency",
+      "records": [
+        {
+          "device_id": "v3-latency-222d7bce519b48b0b6512549f1aac195-0",
+          "status": 200,
+          "error": null,
+          "latency_ms": 19.230917096138,
+          "sent_at": "2026-10-05T20:17:35.940636+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        },
+        {
+          "device_id": "v3-latency-222d7bce519b48b0b6512549f1aac195-1",
+          "status": 200,
+          "error": null,
+          "latency_ms": 13.47937504760921,
+          "sent_at": "2026-10-05T20:17:35.960913+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        },
+        {
+          "device_id": "v3-latency-222d7bce519b48b0b6512549f1aac195-2",
+          "status": 200,
+          "error": null,
+          "latency_ms": 14.078167034313083,
+          "sent_at": "2026-10-05T20:17:35.981458+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        }
+      ],
+      "summary": {
+        "successful": 3,
+        "failures": {},
+        "median_ms": 14.078167034313083,
+        "p95_ms": 19.230917096138,
+        "min_ms": 13.47937504760921,
+        "max_ms": 19.230917096138
+      },
+      "timing": "gateway request-to-response; metric scrapes excluded; fresh HTTP connection",
+      "security_model": "per-reading encapsulation, no reusable sessions"
+    },
+    {
+      "scenario": "delivery",
+      "records": [
+        {
+          "device_id": "v3-delivery-141363ae585b4c48bbed6610edbbfbc8-0",
+          "status": 200,
+          "error": null,
+          "latency_ms": 13.844250002875924,
+          "sent_at": "2026-10-05T20:17:36.002896+00:00"
+        },
+        {
+          "device_id": "v3-delivery-141363ae585b4c48bbed6610edbbfbc8-1",
+          "status": 200,
+          "error": null,
+          "latency_ms": 14.15145886130631,
+          "sent_at": "2026-10-05T20:17:36.017170+00:00"
+        },
+        {
+          "device_id": "v3-delivery-141363ae585b4c48bbed6610edbbfbc8-2",
+          "status": 200,
+          "error": null,
+          "latency_ms": 15.482666902244091,
+          "sent_at": "2026-10-05T20:17:36.032743+00:00"
+        }
+      ],
+      "summary": {
+        "sent": 3,
+        "acknowledged": 3,
+        "not_acknowledged": 0,
+        "stored_final_unique": 3,
+        "stored_observed_unique": 3,
+        "missing_final": 0,
+        "never_observed": 0,
+        "lost_across_restart": 0,
+        "duplicate_records_final": 0,
+        "duplicate_records_before_stop": 0,
+        "acknowledged_never_observed": 0,
+        "failed_but_observed": 0
+      },
+      "outage": {},
+      "observation_seconds": 0.2,
+      "outage_definition": null
+    },
+    {
+      "scenario": "outage-delivery",
+      "records": [
+        {
+          "device_id": "v3-delivery-cd8dc052589c4a259e991b1c31514ea5-0",
+          "status": 200,
+          "error": null,
+          "latency_ms": 21.70683303847909,
+          "sent_at": "2026-10-05T20:17:36.265087+00:00"
+        },
+        {
+          "device_id": "v3-delivery-cd8dc052589c4a259e991b1c31514ea5-1",
+          "status": 502,
+          "error": null,
+          "latency_ms": 1147.5492080207914,
+          "sent_at": "2026-10-05T20:17:37.922409+00:00"
+        },
+        {
+          "device_id": "v3-delivery-cd8dc052589c4a259e991b1c31514ea5-2",
+          "status": 200,
+          "error": null,
+          "latency_ms": 17.481334041804075,
+          "sent_at": "2026-10-05T20:17:38.480759+00:00"
+        }
+      ],
+      "summary": {
+        "sent": 3,
+        "acknowledged": 2,
+        "not_acknowledged": 1,
+        "stored_final_unique": 1,
+        "stored_observed_unique": 2,
+        "missing_final": 2,
+        "never_observed": 1,
+        "lost_across_restart": 1,
+        "duplicate_records_final": 0,
+        "duplicate_records_before_stop": 0,
+        "acknowledged_never_observed": 0,
+        "failed_but_observed": 0
+      },
+      "outage": {
+        "stop_issued_at": "2026-10-05T20:17:36.269027+00:00",
+        "start_issued_at": "2026-10-05T20:17:37.922527+00:00"
+      },
+      "observation_seconds": 0.2,
+      "outage_definition": "stop after first third; restart after second third"
+    },
+    {
+      "scenario": "recovery",
+      "recovery_seconds": 0.7498182498384267,
+      "restart_command_seconds": 0.4968067919835448,
+      "records": [
+        {
+          "device_id": "v3-recovery-3dc3dc4508774b10bb8c71971e185b67-0",
+          "status": 502,
+          "error": null,
+          "latency_ms": 9.677167050540447,
+          "sent_at": "2026-10-05T20:17:39.216984+00:00"
+        },
+        {
+          "device_id": "v3-recovery-3dc3dc4508774b10bb8c71971e185b67-1",
+          "status": 502,
+          "error": null,
+          "latency_ms": 9.046416031196713,
+          "sent_at": "2026-10-05T20:17:39.331137+00:00"
+        },
+        {
+          "device_id": "v3-recovery-3dc3dc4508774b10bb8c71971e185b67-2",
+          "status": 200,
+          "error": null,
+          "latency_ms": 23.30387500114739,
+          "sent_at": "2026-10-05T20:17:39.457210+00:00"
+        }
+      ],
+      "marker_retained": false,
+      "operator_intervention_needed": false,
+      "timing": "restart command issued to first observed stored new reading; sends begin after command completes"
+    },
+    {
+      "scenario": "detection",
+      "fault": "sensor-sentinel",
+      "detection_seconds": 0.016744124935939908,
+      "signal": "sensor_fault_readings_total",
+      "counter_increase": 1.0,
+      "injection_response": {
+        "device_id": "v3-sentinel-ce18ad6bf63f45b19709743385749fea",
+        "status": 200,
+        "error": null,
+        "latency_ms": 13.556665973737836,
+        "sent_at": "2026-10-05T20:17:39.478953+00:00"
+      },
+      "poll_seconds": 0.1,
+      "timing": "injection initiated to first direct poll observation; includes command/request time",
+      "alerting": "direct API/metrics polling; no Prometheus alert deployment"
+    },
+    {
+      "scenario": "detection",
+      "fault": "invalid-envelope",
+      "detection_seconds": 0.0060527080204337835,
+      "signal": "secure_data_rejected_total",
+      "counter_increase": 1.0,
+      "injection_response": {
+        "status": 400
+      },
+      "poll_seconds": 0.1,
+      "timing": "injection initiated to first direct poll observation; includes command/request time",
+      "alerting": "direct API/metrics polling; no Prometheus alert deployment"
+    },
+    {
+      "scenario": "detection",
+      "fault": "cloud-outage",
+      "detection_seconds": 0.5119934589602053,
+      "signal": "cloud_forward_failures_total",
+      "counter_increase": 1.0,
+      "injection_response": {
+        "device_id": "v3-detection-af131304788d44dc8373dec52a8da7c7",
+        "status": 502,
+        "error": null,
+        "latency_ms": 12.192041845992208,
+        "sent_at": "2026-10-05T20:17:40.002686+00:00"
+      },
+      "poll_seconds": 0.1,
+      "timing": "injection initiated to first direct poll observation; includes command/request time",
+      "alerting": "direct API/metrics polling; no Prometheus alert deployment"
+    },
+    {
+      "scenario": "detection",
+      "fault": "gateway-outage",
+      "detection_seconds": 0.5376498748082668,
+      "signal": "health_poll",
+      "counter_increase": null,
+      "injection_response": null,
+      "poll_seconds": 0.1,
+      "timing": "injection initiated to first direct poll observation; includes command/request time",
+      "alerting": "direct API/metrics polling; no Prometheus alert deployment"
+    },
+    {
+      "scenario": "latency",
+      "records": [
+        {
+          "device_id": "v3-latency-8f82ba816ed74341a9aa58cc7dd16659-0",
+          "status": 200,
+          "error": null,
+          "latency_ms": 19.941291073337197,
+          "sent_at": "2026-10-05T20:17:41.601545+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        },
+        {
+          "device_id": "v3-latency-8f82ba816ed74341a9aa58cc7dd16659-1",
+          "status": 200,
+          "error": null,
+          "latency_ms": 16.593666980043054,
+          "sent_at": "2026-10-05T20:17:41.626675+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        },
+        {
+          "device_id": "v3-latency-8f82ba816ed74341a9aa58cc7dd16659-2",
+          "status": 200,
+          "error": null,
+          "latency_ms": 13.738916954025626,
+          "sent_at": "2026-10-05T20:17:41.647897+00:00",
+          "secure_receipts": 1.0,
+          "path": "mlkem_per_reading"
+        }
+      ],
+      "summary": {
+        "successful": 3,
+        "failures": {},
+        "median_ms": 16.593666980043054,
+        "p95_ms": 19.941291073337197,
+        "min_ms": 13.738916954025626,
+        "max_ms": 19.941291073337197
+      },
+      "timing": "gateway request-to-response; metric scrapes excluded; fresh HTTP connection",
+      "security_model": "per-reading encapsulation, no reusable sessions"
+    }
+  ],
+  "urls": {
+    "gateway": "http://127.0.0.1:56211",
+    "cloud": "http://127.0.0.1:56212"
+  },
+  "baseline": {
+    "seconds": 0.25,
+    "fault_counter_increases": 0,
+    "limit": "short direct-poll observation, not an alert false-positive rate study"
+  },
+  "outcome": "passed",
+  "cleanup": "passed"
+}
