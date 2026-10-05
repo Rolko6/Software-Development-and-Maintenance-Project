@@ -1,0 +1,199 @@
+{
+  "date": "2026-10-05",
+  "repository": "Rolko6/Software-Development-and-Maintenance-Project",
+  "old_develop": "0f309bd144e33835adf6888533d62f672a300f63",
+  "target_main": "0529036664a83d498c5484674a61c6d7cd124ac5",
+  "legacy_base": "legacy/develop-v2",
+  "before_branches": [
+    {
+      "name": "archive/v3-rewrite-source",
+      "sha": "4bc901053d758e27cb025b4e7d19484e8220392f"
+    },
+    {
+      "name": "ci/root-suites",
+      "sha": "b297b28fd7ed31177babdebe7a7dcbc3481fbd90"
+    },
+    {
+      "name": "codex/restore-project-documentation",
+      "sha": "3a99d52b9d21052816b0a4edfe4c2e673f4840b9"
+    },
+    {
+      "name": "develop",
+      "sha": "0f309bd144e33835adf6888533d62f672a300f63"
+    },
+    {
+      "name": "legacy/claude-review-workflow",
+      "sha": "acece0f11a5707e3e4f9b382cdbcb80c083f66e8"
+    },
+    {
+      "name": "legacy/security-hardening-v2",
+      "sha": "4f2b22d761ca7d7bbb631732c6189790b7aabe99"
+    },
+    {
+      "name": "main",
+      "sha": "0529036664a83d498c5484674a61c6d7cd124ac5"
+    },
+    {
+      "name": "release/1.0.0",
+      "sha": "00c14d599b58590c45acb30ad66a7f2b6aa17380"
+    },
+    {
+      "name": "release/2.0.0",
+      "sha": "9bb782a8b07a4ec76315f9cd78eda987b0ea42db"
+    },
+    {
+      "name": "release/3.0.0",
+      "sha": "0529036664a83d498c5484674a61c6d7cd124ac5"
+    },
+    {
+      "name": "tom/ci-deploy-evaluation",
+      "sha": "82599b23ba46c71811f405c50310acb859862ed8"
+    },
+    {
+      "name": "tom/issue4-remaining-metrics",
+      "sha": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0"
+    }
+  ],
+  "before_open_prs": [
+    {
+      "baseRefName": "main",
+      "headRefName": "codex/restore-project-documentation",
+      "headRefOid": "3a99d52b9d21052816b0a4edfe4c2e673f4840b9",
+      "isDraft": true,
+      "number": 16,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/16"
+    },
+    {
+      "baseRefName": "develop",
+      "headRefName": "tom/issue4-remaining-metrics",
+      "headRefOid": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
+      "isDraft": true,
+      "number": 14,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/14"
+    },
+    {
+      "baseRefName": "develop",
+      "headRefName": "tom/ci-deploy-evaluation",
+      "headRefOid": "82599b23ba46c71811f405c50310acb859862ed8",
+      "isDraft": true,
+      "number": 13,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/13"
+    },
+    {
+      "baseRefName": "develop",
+      "headRefName": "ci/root-suites",
+      "headRefOid": "b297b28fd7ed31177babdebe7a7dcbc3481fbd90",
+      "isDraft": true,
+      "number": 6,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/6"
+    }
+  ],
+  "original_checkout_head": "b297b28fd7ed31177babdebe7a7dcbc3481fbd90",
+  "original_dirty_file_hashes": {
+    "docs/ai/prompts/2026-10-05-yyy-tom.md": "df1208a18cee2d5dfb22477d2b0cef14b2460ede30f9a8b77f85d3337c1ff2e6",
+    "docs/security/plaintext-ingestion-bypass.md": "80605745606e55076f0fdab38120753ae424bccbe21342aaff0b5e5576a6db26"
+  },
+  "local_develop_before": "24bbe31c6e05a68d5bea0d80a9089a13f8d35766",
+  "after_branches": [
+    {
+      "name": "archive/v3-rewrite-source",
+      "sha": "4bc901053d758e27cb025b4e7d19484e8220392f"
+    },
+    {
+      "name": "ci/root-suites",
+      "sha": "b297b28fd7ed31177babdebe7a7dcbc3481fbd90"
+    },
+    {
+      "name": "codex/restore-project-documentation",
+      "sha": "3a99d52b9d21052816b0a4edfe4c2e673f4840b9"
+    },
+    {
+      "name": "develop",
+      "sha": "0529036664a83d498c5484674a61c6d7cd124ac5"
+    },
+    {
+      "name": "legacy/claude-review-workflow",
+      "sha": "acece0f11a5707e3e4f9b382cdbcb80c083f66e8"
+    },
+    {
+      "name": "legacy/develop-v2",
+      "sha": "0f309bd144e33835adf6888533d62f672a300f63"
+    },
+    {
+      "name": "legacy/security-hardening-v2",
+      "sha": "4f2b22d761ca7d7bbb631732c6189790b7aabe99"
+    },
+    {
+      "name": "main",
+      "sha": "0529036664a83d498c5484674a61c6d7cd124ac5"
+    },
+    {
+      "name": "release/1.0.0",
+      "sha": "00c14d599b58590c45acb30ad66a7f2b6aa17380"
+    },
+    {
+      "name": "release/2.0.0",
+      "sha": "9bb782a8b07a4ec76315f9cd78eda987b0ea42db"
+    },
+    {
+      "name": "release/3.0.0",
+      "sha": "0529036664a83d498c5484674a61c6d7cd124ac5"
+    },
+    {
+      "name": "tom/ci-deploy-evaluation",
+      "sha": "82599b23ba46c71811f405c50310acb859862ed8"
+    },
+    {
+      "name": "tom/issue4-remaining-metrics",
+      "sha": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0"
+    }
+  ],
+  "after_open_prs": [
+    {
+      "baseRefName": "main",
+      "headRefName": "codex/restore-project-documentation",
+      "headRefOid": "3a99d52b9d21052816b0a4edfe4c2e673f4840b9",
+      "isDraft": true,
+      "number": 16,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/16"
+    },
+    {
+      "baseRefName": "legacy/develop-v2",
+      "headRefName": "tom/issue4-remaining-metrics",
+      "headRefOid": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
+      "isDraft": true,
+      "number": 14,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/14"
+    },
+    {
+      "baseRefName": "legacy/develop-v2",
+      "headRefName": "tom/ci-deploy-evaluation",
+      "headRefOid": "82599b23ba46c71811f405c50310acb859862ed8",
+      "isDraft": true,
+      "number": 13,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/13"
+    },
+    {
+      "baseRefName": "legacy/develop-v2",
+      "headRefName": "ci/root-suites",
+      "headRefOid": "b297b28fd7ed31177babdebe7a7dcbc3481fbd90",
+      "isDraft": true,
+      "number": 6,
+      "url": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/pull/6"
+    }
+  ],
+  "verification": {
+    "ancestry_verified": true,
+    "normal_fast_forward_push": true,
+    "other_remote_tips_unchanged": true,
+    "original_checkout_dirty_files_unchanged": true,
+    "open_pr_heads_and_states_unchanged": true,
+    "local_develop_matches_remote": true,
+    "ci": {
+      "run_id": 37248568981,
+      "conclusion": "success",
+      "tests_and_build": "passed",
+      "publish": "skipped (main-only condition)"
+    }
+  }
+}

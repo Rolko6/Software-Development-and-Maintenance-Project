@@ -10,7 +10,8 @@ AI assistants start with [AGENTS.md](../AGENTS.md); [CLAUDE.md](../CLAUDE.md) im
 | Today's work, including the decision to preserve the human documentation | [2026-10-05 — yyy-tom](ai/prompts/2026-10-05-yyy-tom.md) |
 | Earlier prompts, decisions, measurements and operating guides | [Historical archive](archive/README.md) |
 | Distinguish old release tags from the reworked phase sequence | [Version map and recovery record](recovery/2026-10-05-documentation-recovery.md#version-map) |
-| Current branch names and cleanup recovery | [Branch cleanup](recovery/2026-10-05-branch-cleanup.md) |
+| Current branch names and cleanup recovery | [Branch cleanup](recovery/2026-10-05-branch-cleanup.md), [develop aligned with v3](recovery/2026-10-05-develop-sync.md) |
+| Compare open historical PRs before deciding to merge | [PR #6 / #13 / #14 comparison](recovery/2026-10-05-pr-6-13-14-comparison.md) |
 | Source revisions and recovery provenance | [Recovery manifest](recovery/2026-10-05-manifest.json) |
 | Proposed security and storage follow-up | [Current proposals](current-follow-ups.md) |
 

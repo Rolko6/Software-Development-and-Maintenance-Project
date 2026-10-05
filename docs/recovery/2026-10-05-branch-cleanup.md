@@ -58,3 +58,7 @@ These are recovery instructions, not commands executed during cleanup.
 - Verified locally: original checkout HEAD and all pre-existing file hashes unchanged before the prompt log was extended. Human phase documents, application code and workflows remain unchanged relative to v3 main.
 - Complete before/after evidence: [branch manifest](2026-10-05-branch-cleanup.json). Prompt and final documentation checks: [P017](../ai/prompts/2026-10-05-yyy-tom.md#p017-rename-historical-branches-and-clear-merged-branches-before-pr-16).
 - Sources: Context7 official [Git push](https://git-scm.com/docs/git-push), [Git branch](https://git-scm.com/docs/git-branch), and [GitHub branch rename API](https://docs.github.com/en/rest/branches/branches#rename-a-branch). Git 2.39.5 (Apple Git-154), GitHub CLI 2.92.0.
+
+## Subsequent develop update
+
+After this cleanup snapshot, the user asked to update develop. It was fast-forwarded to v3 main, with its old tip preserved as `legacy/develop-v2` and PRs #6/#13/#14 retargeted there. See the [develop synchronization record](2026-10-05-develop-sync.md) for the current state; the tables above record the earlier cleanup outcome.
