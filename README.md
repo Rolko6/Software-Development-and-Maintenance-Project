@@ -147,12 +147,6 @@ docker compose down
 
 Full reasoning behind each of these is in `documentation/phases/v2.0.0.md`.
 
-## Project documents and AI records
-
-Use the [documentation index](docs/README.md) to find the prompt logs, recovered validation evidence, course brief and version comparison. AI assistants must follow [AGENTS.md](AGENTS.md); [CLAUDE.md](CLAUDE.md) imports the same rules. Record significant work using the [AI evidence guide](docs/ai/README.md).
-
-The v3 rewrite replaced the earlier implementation and documentation layout. The old tagged releases and the rewritten phase documents reuse some version labels with different meanings; see the [version map](docs/recovery/2026-10-05-documentation-recovery.md#version-map). Current v3 code is available on `main` and `release/3.0.0`; no `v3.0.0` tag or GitHub Release was present at recovery time.
-
 ## Version History / Documentation
 
 Each development phase has its own documentation file covering what was
@@ -168,5 +162,8 @@ were found, and what's still open — see `documentation/phases/`:
 | v2.0.0 | ML-KEM integration (gateway↔cloud encryption) | [v2.0.0.md](documentation/phases/v2.0.0.md) |
 | v3.0.0 | Operations — meaningful metrics (cloud + sensor-fault tracking) | [v3.0.0.md](documentation/phases/v3.0.0.md) |
 
-For exact changes in this rewritten phase sequence, see its [source branch](https://github.com/Rolko6/Software-Development-and-Maintenance-Project/tree/4bc901053d758e27cb025b4e7d19484e8220392f). The earlier Git tags refer to the older implementation; match the revision using the version map before comparing results. `documentation/template.md` is the
+For exact code changes per version, see the commit history (`git log`) or
+the corresponding GitHub release/tag. `documentation/template.md` is the
 blank template every phase doc is built from.
+
+AI assistants: read [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md). Detailed prompt records and historical evidence are indexed in [docs/README.md](docs/README.md).

@@ -12,7 +12,7 @@ P013 proposes SQLite for a single-cloud course deployment, with the database dir
 
 The v3 cloud still accepts plaintext `POST /data` with a warning and increments `legacy_data_received_total`; its protected endpoint is `POST /data/secure`. This bypass exists even while the gateway encrypts its forwarded readings.
 
-The [recovered finding](security/plaintext-ingestion-bypass.md) applies to the earlier mode-based implementation, where `CLOUD_ML_KEM_MODE=required` can reject plaintext. V3 does not have that mode gate. Its fix therefore needs to reject or disable direct plaintext ingestion in the secured deployment, rather than copy the old environment-variable instructions. The legacy device can continue posting to the gateway. Verify rejection without storing a reading and continued delivery through the encrypted gateway path. Migration requirements and endpoint authentication need an explicit decision before implementation.
+The [recovered finding](archive/pre-v3/docs/security/plaintext-ingestion-bypass.md) applies to the earlier mode-based implementation, where `CLOUD_ML_KEM_MODE=required` can reject plaintext. V3 does not have that mode gate. Its fix therefore needs to reject or disable direct plaintext ingestion in the secured deployment, rather than copy the old environment-variable instructions. The legacy device can continue posting to the gateway. Verify rejection without storing a reading and continued delivery through the encrypted gateway path. Migration requirements and endpoint authentication need an explicit decision before implementation.
 
 ## Re-evaluate earlier security and operations work against v3
 

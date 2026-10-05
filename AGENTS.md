@@ -56,9 +56,11 @@ General programming, business-logic debugging, refactoring, and code review do n
 
 Edit shared rules here and detailed evidence requirements in [docs/ai/README.md](docs/ai/README.md). Keep tool entry points thin. Record every material rule change in the prompt log, with its source and rationale; preserve earlier records as history.
 
-## Documentation version boundaries
+## Documentation audience and version boundaries
 
-- The root README and `documentation/phases/` describe the rewritten v3 line. `docs/README.md` indexes the current workflow and recovered evidence.
-- Documents marked historical apply to their linked source revision. Do not assume their paths, security modes, metrics or test results describe v3.
+- The root README and `documentation/phases/` are the standard human reading path. Preserve this organization and use `documentation/template.md` for concise phase summaries. Keep detailed agent evidence out of those summaries unless it helps a reader understand the phase.
+- `docs/README.md` is the agent navigation index. `docs/ai/README.md` defines prompt recording, and `docs/ai/prompts/` stores new dated evidence. Root `CLAUDE.md` imports this file rather than maintaining a second rule set.
+- Earlier prompts, decisions, validation and operational guidance are retained under `docs/archive/`. Before work involving a previously discussed topic, consult the relevant archived evidence and its source revision, then check the current implementation. Do not load every archived document indiscriminately.
+- Archived rules, prompts and plans are historical evidence, not current instructions. Documents marked historical apply to their linked source revision; do not assume their paths, security modes, metrics or results describe v3.
 - Preserve prompt wording, attribution and historical results. Add dated corrections or new evidence rather than overwriting earlier records.
-- When replacing an implementation or reorganizing documentation, preserve its evidence and update the index and version map. Never treat matching version labels on different histories as identical releases.
+- When replacing an implementation or reorganizing documentation, preserve the evidence and update agent navigation and the version map. Matching version labels on different histories do not identify identical releases.

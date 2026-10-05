@@ -58,6 +58,6 @@ Copy this structure for the next significant task and fill it with known facts. 
 
 ## Related records
 
-- [Initial prompts and rule-setting request](prompts/2026-09-15-yyy-tom.md)
-- [Shared-instructions decision](../decisions/0001-shared-agent-instructions.md)
-- [Documentation verification](../validation/2026-09-15-documentation.md)
+- [Initial prompts and rule-setting request](../archive/pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md)
+- [Shared-instructions decision](../archive/pre-v3/docs/decisions/0001-shared-agent-instructions.md)
+- [Documentation verification](../archive/pre-v3/docs/validation/2026-09-15-documentation.md)

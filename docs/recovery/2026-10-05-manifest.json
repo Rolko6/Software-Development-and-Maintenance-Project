@@ -4308,7 +4308,7 @@
       "blob": "d9ab53d9111e94bc2f68bc68c714c64d3e09319b",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": ".github/pull_request_template.md"
+      "destination": "docs/archive/pre-v3/.github/pull_request_template.md"
     },
     "AGENTS.md": {
       "blob": "bddffb5b507c2ff66ad80842262a87a9c035497f",
@@ -4326,7 +4326,7 @@
       "blob": "d86a5758483de10f6cbcb80a020474ecbe1b9920",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/history/pre-v3-documentation-index.md"
+      "destination": "docs/archive/history/pre-v3-documentation-index.md"
     },
     "docs/ai/README.md": {
       "blob": "3c34ad612949f465aacb60225a655fcd8df8babc",
@@ -4338,439 +4338,439 @@
       "blob": "b64145c99a6dad8d67b7d336ccbbbc7be5e706e0",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/ai/notes/ai-docs-guide.md"
+      "destination": "docs/archive/pre-v3/docs/ai/notes/ai-docs-guide.md"
     },
     "docs/ai/notes/pending-tasks.md": {
       "blob": "621234b6aac811e7a171fb0eeb1d365f32bd5af4",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/ai/notes/pending-tasks.md"
+      "destination": "docs/archive/pre-v3/docs/ai/notes/pending-tasks.md"
     },
     "docs/ai/prompts/2026-09-15-yyy-tom.md": {
       "blob": "d404113efa9a7d898fb3610d1b48d1c19024ec01",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/ai/prompts/2026-09-15-yyy-tom.md"
+      "destination": "docs/archive/pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
     },
     "docs/ai/prompts/2026-09-24-yyy-tom.md": {
       "blob": "e531a283a904fab4af456b2fee78bea7b0a81afa",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation",
-      "destination": "docs/ai/prompts/2026-09-24-yyy-tom.md"
+      "destination": "docs/archive/pre-v3/docs/ai/prompts/2026-09-24-yyy-tom.md"
     },
     "docs/ai/prompts/2026-09-26-Rolko6.md": {
       "blob": "fdd01ca9d0f8cf84c81c7343b0fbd8355e56259e",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/ai/prompts/2026-09-26-Rolko6.md"
+      "destination": "docs/archive/pre-v3/docs/ai/prompts/2026-09-26-Rolko6.md"
     },
     "docs/ai/prompts/2026-09-28-Rolko6.md": {
       "blob": "a94f8cb07dbfe5a3220da340d915e129a59dabb8",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/ai/prompts/2026-09-28-Rolko6.md"
+      "destination": "docs/archive/pre-v3/docs/ai/prompts/2026-09-28-Rolko6.md"
     },
     "docs/ai/prompts/2026-09-29-Rolko6.md": {
       "blob": "fc08cb61059f91b13ce3e075ee62c97ffebb4d57",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/ai/prompts/2026-09-29-Rolko6.md"
+      "destination": "docs/archive/pre-v3/docs/ai/prompts/2026-09-29-Rolko6.md"
     },
     "docs/ai/prompts/v1.0.0.md": {
       "blob": "1204e95ffba6491ba15391f9a5b0823c1fc8b9c9",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/ai/prompts/v1.0.0.md"
+      "destination": "docs/archive/pre-v3/docs/ai/prompts/v1.0.0.md"
     },
     "docs/ai/prompts/v2.0.0.md": {
       "blob": "eaabdd256525d6fcb73bd3cd40120ff924b2897a",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/ai/prompts/v2.0.0.md"
+      "destination": "docs/archive/pre-v3/docs/ai/prompts/v2.0.0.md"
     },
     "docs/ai/prompts/v2.1.0.md": {
       "blob": "86f65513d0b98a9073615b133330d184f1a12bdd",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/ai/prompts/v2.1.0.md"
+      "destination": "docs/archive/pre-v3/docs/ai/prompts/v2.1.0.md"
     },
     "docs/ai/prompts/v2.2.0.md": {
       "blob": "d3e121c30619bab3c1dc6ff7374be0f9902bf4ec",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/ai/prompts/v2.2.0.md"
+      "destination": "docs/archive/pre-v3/docs/ai/prompts/v2.2.0.md"
     },
     "docs/decisions/0001-shared-agent-instructions.md": {
       "blob": "3ed05920e418887a9e129f4c9de01751a9a7b62d",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/decisions/0001-shared-agent-instructions.md"
+      "destination": "docs/archive/pre-v3/docs/decisions/0001-shared-agent-instructions.md"
     },
     "docs/decisions/0002-ml-kem-key-establishment.md": {
       "blob": "89fbdc934ae846dd4901a2e858f95cba0265b186",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/decisions/0002-ml-kem-key-establishment.md"
+      "destination": "docs/archive/pre-v3/docs/decisions/0002-ml-kem-key-establishment.md"
     },
     "docs/monitoring/future-features.md": {
       "blob": "bbe031492ec86dcaae567be9158a1a2efe57b693",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/monitoring/future-features.md"
+      "destination": "docs/archive/pre-v3/docs/monitoring/future-features.md"
     },
     "docs/operations/ci.md": {
       "blob": "69cb59bfb8a255f3e182048cfef04f2d824c5bc5",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation",
-      "destination": "docs/operations/ci.md"
+      "destination": "docs/archive/pre-v3/docs/operations/ci.md"
     },
     "docs/operations/deployment.md": {
       "blob": "498264bf88ef2c564b6fc6ae7ff5adba62ef949b",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation",
-      "destination": "docs/operations/deployment.md"
+      "destination": "docs/archive/pre-v3/docs/operations/deployment.md"
     },
     "docs/operations/monitoring.md": {
       "blob": "af976169ea1aeafeef0a812738f476e607121dce",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/operations/monitoring.md"
+      "destination": "docs/archive/pre-v3/docs/operations/monitoring.md"
     },
     "docs/project-description.pdf": {
       "blob": "e771360ab07bf0eb175e399b10323add1d066053",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/project-description.pdf"
+      "destination": "docs/archive/pre-v3/docs/project-description.pdf"
     },
     "docs/project-plan.md": {
       "blob": "25ca2273bf3ac864a786d4c4762e5810f0f0f27b",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/project-plan.md"
+      "destination": "docs/archive/pre-v3/docs/project-plan.md"
     },
     "docs/security/ml-kem-integration.md": {
       "blob": "46360a21f11101133780904063c9ac1f9065c7a7",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/security/ml-kem-integration.md"
+      "destination": "docs/archive/pre-v3/docs/security/ml-kem-integration.md"
     },
     "docs/testing/ml-kem-verification.md": {
       "blob": "6905ad9756740f85beb9b648dcad05cbe9780559",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation",
-      "destination": "docs/testing/ml-kem-verification.md"
+      "destination": "docs/archive/pre-v3/docs/testing/ml-kem-verification.md"
     },
     "docs/validation/2026-09-15-baseline.md": {
       "blob": "94116444c8dcce37a1374893682ec66c6fc1cbf3",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/validation/2026-09-15-baseline.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-15-baseline.md"
     },
     "docs/validation/2026-09-15-device-modularization.md": {
       "blob": "f9ff78c0cd2193f043770f53595a6424a453f0d6",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/validation/2026-09-15-device-modularization.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-15-device-modularization.md"
     },
     "docs/validation/2026-09-15-documentation.md": {
       "blob": "cd59338c32757f1dd609c6ad6b728cf2a6c82381",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/validation/2026-09-15-documentation.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-15-documentation.md"
     },
     "docs/validation/2026-09-15-integration.md": {
       "blob": "081aa6a69290ebfe2bee466e2249159222e0a893",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/validation/2026-09-15-integration.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-15-integration.md"
     },
     "docs/validation/2026-09-15-measurement-method.md": {
       "blob": "d45863ce1048577cbade052d5a0a34deae88598f",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/validation/2026-09-15-measurement-method.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-15-measurement-method.md"
     },
     "docs/validation/2026-09-15-ml-kem-tests.md": {
       "blob": "e58ccaeddd313b10afb4717ebb32f3b83c1d638f",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/validation/2026-09-15-ml-kem-tests.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-15-ml-kem-tests.md"
     },
     "docs/validation/2026-09-15-reliability.md": {
       "blob": "88b604d58922df334eb4f3e65c35d3396c242cc0",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/validation/2026-09-15-reliability.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-15-reliability.md"
     },
     "docs/validation/2026-09-15-tests-and-ci.md": {
       "blob": "c5ca0908d451e9375995b2f28bb472fac1f52ed9",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/validation/2026-09-15-tests-and-ci.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-15-tests-and-ci.md"
     },
     "docs/validation/2026-09-28-ds18b20-faults.md": {
       "blob": "785e5a3d29ea749b083dabdc30d1dab5e405a3f7",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/validation/2026-09-28-ds18b20-faults.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-28-ds18b20-faults.md"
     },
     "docs/validation/2026-09-29-detection-time.md": {
       "blob": "c812e85896a3692319c594466f337f9253e08b2e",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics",
-      "destination": "docs/validation/2026-09-29-detection-time.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-29-detection-time.md"
     },
     "docs/validation/2026-09-29-latency.md": {
       "blob": "77b5ec3174b8fe25245a53ddc92ab5bc89979989",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics",
-      "destination": "docs/validation/2026-09-29-latency.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-29-latency.md"
     },
     "docs/validation/2026-09-29-recovery-and-delivery.md": {
       "blob": "e6f07744d50cc1bb8cbfe471cd14b0cdf6732244",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics",
-      "destination": "docs/validation/2026-09-29-recovery-and-delivery.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-29-recovery-and-delivery.md"
     },
     "monitoring/README.md": {
       "blob": "93fe223d92c7ab9cf8ed6089260da6cd42e73af6",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "monitoring/README.md"
+      "destination": "docs/archive/pre-v3/monitoring/README.md"
     },
     "scripts/baseline/README.md": {
       "blob": "e74e114cdf178730cf352d15c2abf3246ced3ac8",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "scripts/baseline/README.md"
+      "destination": "docs/archive/pre-v3/scripts/baseline/README.md"
     },
     "docs/ai/prompts/v2.3.0.md": {
       "blob": "d0c87775d3d90292812d01b35dc810616c140f28",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/ai/prompts/v2.3.0.md"
+      "destination": "docs/archive/pre-v3/docs/ai/prompts/v2.3.0.md"
     },
     "docs/validation/2026-09-29-security-evidence.md": {
       "blob": "3c7364ba06cf427374ec56a803da47af5a45d620",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening",
-      "destination": "docs/validation/2026-09-29-security-evidence.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-29-security-evidence.md"
     },
     "docs/ai/prompts/2026-09-29-yyy-tom.md": {
       "blob": "b1f8ca75f8a2bfc6c88c20015a648c066495b0ab",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation",
-      "destination": "docs/ai/prompts/2026-09-29-yyy-tom.md"
+      "destination": "docs/archive/pre-v3/docs/ai/prompts/2026-09-29-yyy-tom.md"
     },
     "docs/validation/2026-09-24-ci-evaluation.md": {
       "blob": "d9350e950bfdc4c5f4c7daae6d31a877fd2bbf93",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation",
-      "destination": "docs/validation/2026-09-24-ci-evaluation.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-24-ci-evaluation.md"
     },
     "docs/validation/2026-09-29-ci-effectiveness.md": {
       "blob": "f36fecbadab672a7397496ad8d4e2809d3bfc972",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation",
-      "destination": "docs/validation/2026-09-29-ci-effectiveness.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-29-ci-effectiveness.md"
     },
     "docs/validation/2026-09-29-deployment-rehearsal.md": {
       "blob": "99b4485ff3c19f3af994e61a944517a9a1f076fd",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation",
-      "destination": "docs/validation/2026-09-29-deployment-rehearsal.md"
+      "destination": "docs/archive/pre-v3/docs/validation/2026-09-29-deployment-rehearsal.md"
     },
     "docs/ai/prompts/v2.1.0-notes.md": {
       "blob": "89a7643b08cbd16bce1538b6003b86b08cd1637d",
       "commit": "566e12c7fbe56739aa686c2722fc89333366639e",
       "ref": null,
-      "destination": "docs/history/superseded/v2.1.0-notes.md"
+      "destination": "docs/archive/history/superseded/v2.1.0-notes.md"
     },
     "docs/ai/prompts/2026-09-15.md": {
       "blob": "69d5d9c3ad82a433924fae9732f2f1e111a1d11e",
       "commit": "c3c3ef22e7986069df5aa49831fe53992dcebfca",
       "ref": null,
-      "destination": "docs/history/superseded/2026-09-15.md"
+      "destination": "docs/archive/history/superseded/2026-09-15.md"
     },
     "docs/ai/prompts/2026-09-24.md": {
       "blob": "ef18f72956a5af0edb98285686595fa96b7ae9be",
       "commit": "c3c3ef22e7986069df5aa49831fe53992dcebfca",
       "ref": null,
-      "destination": "docs/history/superseded/2026-09-24.md"
+      "destination": "docs/archive/history/superseded/2026-09-24.md"
     }
   },
   "additional_snapshots": [
     {
       "source": "README.md",
-      "destination": "docs/history/branches/secure-channel-hardening/README.md",
+      "destination": "docs/archive/history/branches/secure-channel-hardening/README.md",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "blob": "5c6379c5ec6dc961d5a02fd3b32f6dc41635f218",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening"
     },
     {
       "source": "docs/ai/prompts/2026-09-24-yyy-tom.md",
-      "destination": "docs/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+      "destination": "docs/archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "blob": "1f6ccbdbadf2d306a7d03b652d764f424ada2338",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening"
     },
     {
       "source": "docs/operations/ci.md",
-      "destination": "docs/history/branches/secure-channel-hardening/docs/operations/ci.md",
+      "destination": "docs/archive/history/branches/secure-channel-hardening/docs/operations/ci.md",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "blob": "853864de31b9034548b0fb319b85f10b9f672c1c",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening"
     },
     {
       "source": "docs/operations/deployment.md",
-      "destination": "docs/history/branches/secure-channel-hardening/docs/operations/deployment.md",
+      "destination": "docs/archive/history/branches/secure-channel-hardening/docs/operations/deployment.md",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "blob": "5904ab3f0666afbdd4dd93b033f848ff46b89845",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening"
     },
     {
       "source": "docs/testing/ml-kem-verification.md",
-      "destination": "docs/history/branches/secure-channel-hardening/docs/testing/ml-kem-verification.md",
+      "destination": "docs/archive/history/branches/secure-channel-hardening/docs/testing/ml-kem-verification.md",
       "commit": "4f2b22d761ca7d7bbb631732c6189790b7aabe99",
       "blob": "9cc725fcbb7a7ffd63f86f947341dbc4e4bd0dfb",
       "ref": "refs/remotes/origin/feat/secure-channel-hardening"
     },
     {
       "source": "README.md",
-      "destination": "docs/history/branches/ci-deploy-evaluation/README.md",
+      "destination": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "blob": "62dc004d2d4cdc42fe8cca68ac5c7645ab08f3f0",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation"
     },
     {
       "source": "docs/ai/notes/pending-tasks.md",
-      "destination": "docs/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+      "destination": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "blob": "94f6505e4ae6340f4b0d28f351fe9e98a6369a1d",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation"
     },
     {
       "source": "docs/monitoring/future-features.md",
-      "destination": "docs/history/branches/ci-deploy-evaluation/docs/monitoring/future-features.md",
+      "destination": "docs/archive/history/branches/ci-deploy-evaluation/docs/monitoring/future-features.md",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "blob": "6a5492ef525adbf97d3c5f528ba3db759cf578ae",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation"
     },
     {
       "source": "docs/operations/monitoring.md",
-      "destination": "docs/history/branches/ci-deploy-evaluation/docs/operations/monitoring.md",
+      "destination": "docs/archive/history/branches/ci-deploy-evaluation/docs/operations/monitoring.md",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "blob": "91ed3340dbf9184faa104fa886c8e153cb756865",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation"
     },
     {
       "source": "docs/project-plan.md",
-      "destination": "docs/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+      "destination": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "blob": "40b0d82b7a27bf6337ccd26b2a53c200119cee72",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation"
     },
     {
       "source": "docs/security/ml-kem-integration.md",
-      "destination": "docs/history/branches/ci-deploy-evaluation/docs/security/ml-kem-integration.md",
+      "destination": "docs/archive/history/branches/ci-deploy-evaluation/docs/security/ml-kem-integration.md",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "blob": "fef5316b100806b495c61ee01dead9cd292d47e1",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation"
     },
     {
       "source": "monitoring/README.md",
-      "destination": "docs/history/branches/ci-deploy-evaluation/monitoring/README.md",
+      "destination": "docs/archive/history/branches/ci-deploy-evaluation/monitoring/README.md",
       "commit": "82599b23ba46c71811f405c50310acb859862ed8",
       "blob": "45c4235fb011c4079b4ae4058b0c0359d3c2d019",
       "ref": "refs/remotes/origin/tom/ci-deploy-evaluation"
     },
     {
       "source": "README.md",
-      "destination": "docs/history/branches/issue4-remaining-metrics/README.md",
+      "destination": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "blob": "14a18dc81b3e01bcc8246410b6b26dc8cbaf7140",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics"
     },
     {
       "source": "docs/ai/notes/pending-tasks.md",
-      "destination": "docs/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md",
+      "destination": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "blob": "57cc1204c567b2b89820d1d0d7d27d1edd5c5664",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics"
     },
     {
       "source": "docs/ai/prompts/2026-09-24-yyy-tom.md",
-      "destination": "docs/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+      "destination": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "blob": "1f6ccbdbadf2d306a7d03b652d764f424ada2338",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics"
     },
     {
       "source": "docs/monitoring/future-features.md",
-      "destination": "docs/history/branches/issue4-remaining-metrics/docs/monitoring/future-features.md",
+      "destination": "docs/archive/history/branches/issue4-remaining-metrics/docs/monitoring/future-features.md",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "blob": "6a5492ef525adbf97d3c5f528ba3db759cf578ae",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics"
     },
     {
       "source": "docs/operations/ci.md",
-      "destination": "docs/history/branches/issue4-remaining-metrics/docs/operations/ci.md",
+      "destination": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/ci.md",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "blob": "853864de31b9034548b0fb319b85f10b9f672c1c",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics"
     },
     {
       "source": "docs/operations/deployment.md",
-      "destination": "docs/history/branches/issue4-remaining-metrics/docs/operations/deployment.md",
+      "destination": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/deployment.md",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "blob": "5904ab3f0666afbdd4dd93b033f848ff46b89845",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics"
     },
     {
       "source": "docs/operations/monitoring.md",
-      "destination": "docs/history/branches/issue4-remaining-metrics/docs/operations/monitoring.md",
+      "destination": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/monitoring.md",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "blob": "91ed3340dbf9184faa104fa886c8e153cb756865",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics"
     },
     {
       "source": "docs/security/ml-kem-integration.md",
-      "destination": "docs/history/branches/issue4-remaining-metrics/docs/security/ml-kem-integration.md",
+      "destination": "docs/archive/history/branches/issue4-remaining-metrics/docs/security/ml-kem-integration.md",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "blob": "2c62428977cf9aa14efa2237028f5b3695a645ff",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics"
     },
     {
       "source": "docs/testing/ml-kem-verification.md",
-      "destination": "docs/history/branches/issue4-remaining-metrics/docs/testing/ml-kem-verification.md",
+      "destination": "docs/archive/history/branches/issue4-remaining-metrics/docs/testing/ml-kem-verification.md",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "blob": "9cc725fcbb7a7ffd63f86f947341dbc4e4bd0dfb",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics"
     },
     {
       "source": "monitoring/README.md",
-      "destination": "docs/history/branches/issue4-remaining-metrics/monitoring/README.md",
+      "destination": "docs/archive/history/branches/issue4-remaining-metrics/monitoring/README.md",
       "commit": "0d9f085a2895910871e1dadf10d9ef07ba88a8c0",
       "blob": "45c4235fb011c4079b4ae4058b0c0359d3c2d019",
       "ref": "refs/remotes/origin/tom/issue4-remaining-metrics"
     },
     {
       "source": "README.md",
-      "destination": "docs/history/local-2026-10-05/README.md",
+      "destination": "docs/archive/history/local-2026-10-05/README.md",
       "commit": "b297b28fd7ed31177babdebe7a7dcbc3481fbd90",
       "local_sha256": "6dbb9416865e4dddb972a006bbf726bdf3502e31046963ce573a1da63cfcf996",
       "ref": "uncommitted original checkout"
     },
     {
       "source": "docs/README.md",
-      "destination": "docs/history/local-2026-10-05/docs/README.md",
+      "destination": "docs/archive/history/local-2026-10-05/docs/README.md",
       "commit": "b297b28fd7ed31177babdebe7a7dcbc3481fbd90",
       "local_sha256": "c5aec3f28a613a06804089b87e400e6d7005e8edeb64ec520bf147422d902edd",
       "ref": "uncommitted original checkout"
     },
     {
       "source": "docs/project-plan.md",
-      "destination": "docs/history/local-2026-10-05/docs/project-plan.md",
+      "destination": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
       "commit": "b297b28fd7ed31177babdebe7a7dcbc3481fbd90",
       "local_sha256": "b79a020c82081d830f8e4801bb30f0c86889911d88e1ed584bf7fda107c259a7",
       "ref": "uncommitted original checkout"
@@ -6657,5 +6657,2171 @@
       "target": "https://github.com/Rolko6/Software-Development-and-Maintenance-Project/blob/b297b28fd7ed31177babdebe7a7dcbc3481fbd90/cloud/app/crypto/mode.py"
     }
   ],
-  "preexisting_source_link_issues": []
+  "preexisting_source_link_issues": [],
+  "layout_updates": [
+    {
+      "date": "2026-10-05",
+      "reason": "Use the groupmate human documentation as the standard; retain old evidence for agents.",
+      "moves": {
+        "docs/project-plan.md": "docs/archive/pre-v3/docs/project-plan.md",
+        "docs/README.md": "docs/archive/recovery-index-before-reorganisation.md",
+        "docs/project-description.pdf": "docs/archive/pre-v3/docs/project-description.pdf",
+        "docs/security/plaintext-ingestion-bypass.md": "docs/archive/pre-v3/docs/security/plaintext-ingestion-bypass.md",
+        "docs/security/ml-kem-integration.md": "docs/archive/pre-v3/docs/security/ml-kem-integration.md",
+        "docs/decisions/0001-shared-agent-instructions.md": "docs/archive/pre-v3/docs/decisions/0001-shared-agent-instructions.md",
+        "docs/decisions/0002-ml-kem-key-establishment.md": "docs/archive/pre-v3/docs/decisions/0002-ml-kem-key-establishment.md",
+        "docs/operations/deployment.md": "docs/archive/pre-v3/docs/operations/deployment.md",
+        "docs/operations/monitoring.md": "docs/archive/pre-v3/docs/operations/monitoring.md",
+        "docs/operations/ci.md": "docs/archive/pre-v3/docs/operations/ci.md",
+        "docs/testing/ml-kem-verification.md": "docs/archive/pre-v3/docs/testing/ml-kem-verification.md",
+        "docs/history/pre-v3-documentation-index.md": "docs/archive/history/pre-v3-documentation-index.md",
+        "docs/monitoring/future-features.md": "docs/archive/pre-v3/docs/monitoring/future-features.md",
+        "docs/validation/2026-09-15-ml-kem-tests.md": "docs/archive/pre-v3/docs/validation/2026-09-15-ml-kem-tests.md",
+        "docs/validation/2026-09-15-tests-and-ci.md": "docs/archive/pre-v3/docs/validation/2026-09-15-tests-and-ci.md",
+        "docs/validation/2026-09-15-integration.md": "docs/archive/pre-v3/docs/validation/2026-09-15-integration.md",
+        "docs/validation/2026-09-29-latency.md": "docs/archive/pre-v3/docs/validation/2026-09-29-latency.md",
+        "docs/validation/2026-09-15-measurement-method.md": "docs/archive/pre-v3/docs/validation/2026-09-15-measurement-method.md",
+        "docs/validation/2026-09-15-documentation.md": "docs/archive/pre-v3/docs/validation/2026-09-15-documentation.md",
+        "docs/validation/2026-09-24-ci-evaluation.md": "docs/archive/pre-v3/docs/validation/2026-09-24-ci-evaluation.md",
+        "docs/validation/2026-09-15-reliability.md": "docs/archive/pre-v3/docs/validation/2026-09-15-reliability.md",
+        "docs/validation/2026-09-29-ci-effectiveness.md": "docs/archive/pre-v3/docs/validation/2026-09-29-ci-effectiveness.md",
+        "docs/validation/2026-09-29-detection-time.md": "docs/archive/pre-v3/docs/validation/2026-09-29-detection-time.md",
+        "docs/validation/2026-09-28-ds18b20-faults.md": "docs/archive/pre-v3/docs/validation/2026-09-28-ds18b20-faults.md",
+        "docs/validation/2026-09-15-device-modularization.md": "docs/archive/pre-v3/docs/validation/2026-09-15-device-modularization.md",
+        "docs/validation/2026-09-29-security-evidence.md": "docs/archive/pre-v3/docs/validation/2026-09-29-security-evidence.md",
+        "docs/validation/2026-09-15-baseline.md": "docs/archive/pre-v3/docs/validation/2026-09-15-baseline.md",
+        "docs/validation/2026-09-29-deployment-rehearsal.md": "docs/archive/pre-v3/docs/validation/2026-09-29-deployment-rehearsal.md",
+        "docs/validation/2026-09-29-recovery-and-delivery.md": "docs/archive/pre-v3/docs/validation/2026-09-29-recovery-and-delivery.md",
+        "docs/history/superseded/2026-09-24.md": "docs/archive/history/superseded/2026-09-24.md",
+        "docs/history/superseded/2026-09-15.md": "docs/archive/history/superseded/2026-09-15.md",
+        "docs/history/superseded/v2.1.0-notes.md": "docs/archive/history/superseded/v2.1.0-notes.md",
+        "docs/history/local-2026-10-05/README.md": "docs/archive/history/local-2026-10-05/README.md",
+        "docs/history/branches/secure-channel-hardening/README.md": "docs/archive/history/branches/secure-channel-hardening/README.md",
+        "docs/history/branches/issue4-remaining-metrics/README.md": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+        "docs/history/branches/ci-deploy-evaluation/README.md": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+        "docs/history/branches/ci-deploy-evaluation/docs/project-plan.md": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+        "docs/history/branches/ci-deploy-evaluation/monitoring/README.md": "docs/archive/history/branches/ci-deploy-evaluation/monitoring/README.md",
+        "docs/history/branches/ci-deploy-evaluation/docs/security/ml-kem-integration.md": "docs/archive/history/branches/ci-deploy-evaluation/docs/security/ml-kem-integration.md",
+        "docs/history/branches/ci-deploy-evaluation/docs/operations/monitoring.md": "docs/archive/history/branches/ci-deploy-evaluation/docs/operations/monitoring.md",
+        "docs/history/branches/ci-deploy-evaluation/docs/monitoring/future-features.md": "docs/archive/history/branches/ci-deploy-evaluation/docs/monitoring/future-features.md",
+        "docs/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+        "docs/history/branches/issue4-remaining-metrics/monitoring/README.md": "docs/archive/history/branches/issue4-remaining-metrics/monitoring/README.md",
+        "docs/history/branches/issue4-remaining-metrics/docs/security/ml-kem-integration.md": "docs/archive/history/branches/issue4-remaining-metrics/docs/security/ml-kem-integration.md",
+        "docs/history/branches/issue4-remaining-metrics/docs/operations/deployment.md": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/deployment.md",
+        "docs/history/branches/issue4-remaining-metrics/docs/operations/monitoring.md": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/monitoring.md",
+        "docs/history/branches/issue4-remaining-metrics/docs/operations/ci.md": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/ci.md",
+        "docs/history/branches/issue4-remaining-metrics/docs/testing/ml-kem-verification.md": "docs/archive/history/branches/issue4-remaining-metrics/docs/testing/ml-kem-verification.md",
+        "docs/history/branches/issue4-remaining-metrics/docs/monitoring/future-features.md": "docs/archive/history/branches/issue4-remaining-metrics/docs/monitoring/future-features.md",
+        "docs/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md",
+        "docs/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+        "docs/history/branches/secure-channel-hardening/docs/operations/deployment.md": "docs/archive/history/branches/secure-channel-hardening/docs/operations/deployment.md",
+        "docs/history/branches/secure-channel-hardening/docs/operations/ci.md": "docs/archive/history/branches/secure-channel-hardening/docs/operations/ci.md",
+        "docs/history/branches/secure-channel-hardening/docs/testing/ml-kem-verification.md": "docs/archive/history/branches/secure-channel-hardening/docs/testing/ml-kem-verification.md",
+        "docs/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md": "docs/archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+        "docs/history/local-2026-10-05/docs/project-plan.md": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+        "docs/history/local-2026-10-05/docs/README.md": "docs/archive/history/local-2026-10-05/docs/README.md",
+        "docs/ai/notes/pending-tasks.md": "docs/archive/pre-v3/docs/ai/notes/pending-tasks.md",
+        "docs/ai/notes/ai-docs-guide.md": "docs/archive/pre-v3/docs/ai/notes/ai-docs-guide.md",
+        "docs/ai/prompts/v2.0.0.md": "docs/archive/pre-v3/docs/ai/prompts/v2.0.0.md",
+        "docs/ai/prompts/2026-09-29-Rolko6.md": "docs/archive/pre-v3/docs/ai/prompts/2026-09-29-Rolko6.md",
+        "docs/ai/prompts/v2.1.0.md": "docs/archive/pre-v3/docs/ai/prompts/v2.1.0.md",
+        "docs/ai/prompts/2026-09-29-yyy-tom.md": "docs/archive/pre-v3/docs/ai/prompts/2026-09-29-yyy-tom.md",
+        "docs/ai/prompts/2026-09-28-Rolko6.md": "docs/archive/pre-v3/docs/ai/prompts/2026-09-28-Rolko6.md",
+        "docs/ai/prompts/2026-09-24-yyy-tom.md": "docs/archive/pre-v3/docs/ai/prompts/2026-09-24-yyy-tom.md",
+        "docs/ai/prompts/2026-09-26-Rolko6.md": "docs/archive/pre-v3/docs/ai/prompts/2026-09-26-Rolko6.md",
+        "docs/ai/prompts/2026-09-15-yyy-tom.md": "docs/archive/pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md",
+        "docs/ai/prompts/v1.0.0.md": "docs/archive/pre-v3/docs/ai/prompts/v1.0.0.md",
+        "docs/ai/prompts/v2.2.0.md": "docs/archive/pre-v3/docs/ai/prompts/v2.2.0.md",
+        "docs/ai/prompts/v2.3.0.md": "docs/archive/pre-v3/docs/ai/prompts/v2.3.0.md",
+        "monitoring/README.md": "docs/archive/pre-v3/monitoring/README.md",
+        "scripts/baseline/README.md": "docs/archive/pre-v3/scripts/baseline/README.md",
+        ".github/pull_request_template.md": "docs/archive/pre-v3/.github/pull_request_template.md"
+      },
+      "navigation_repairs": [
+        {
+          "file": "README.md",
+          "original": "docs/README.md",
+          "target": "docs/archive/recovery-index-before-reorganisation.md"
+        },
+        {
+          "file": "AGENTS.md",
+          "original": "docs/README.md",
+          "target": "docs/archive/recovery-index-before-reorganisation.md"
+        },
+        {
+          "file": "docs/current-follow-ups.md",
+          "original": "security/plaintext-ingestion-bypass.md",
+          "target": "archive/pre-v3/docs/security/plaintext-ingestion-bypass.md"
+        },
+        {
+          "file": "docs/archive/recovery-README-before-reorganisation.md",
+          "original": "docs/README.md",
+          "target": "recovery-index-before-reorganisation.md"
+        },
+        {
+          "file": "docs/archive/recovery-README-before-reorganisation.md",
+          "original": "AGENTS.md",
+          "target": "../../AGENTS.md"
+        },
+        {
+          "file": "docs/archive/recovery-README-before-reorganisation.md",
+          "original": "CLAUDE.md",
+          "target": "../../CLAUDE.md"
+        },
+        {
+          "file": "docs/archive/recovery-README-before-reorganisation.md",
+          "original": "docs/ai/README.md",
+          "target": "../ai/README.md"
+        },
+        {
+          "file": "docs/archive/recovery-README-before-reorganisation.md",
+          "original": "docs/recovery/2026-10-05-documentation-recovery.md#version-map",
+          "target": "../recovery/2026-10-05-documentation-recovery.md#version-map"
+        },
+        {
+          "file": "docs/archive/recovery-README-before-reorganisation.md",
+          "original": "documentation/phases/v1.0.0.md",
+          "target": "../../documentation/phases/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-README-before-reorganisation.md",
+          "original": "documentation/phases/v1.1.0.md",
+          "target": "../../documentation/phases/v1.1.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-README-before-reorganisation.md",
+          "original": "documentation/phases/v1.2.0.md",
+          "target": "../../documentation/phases/v1.2.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-README-before-reorganisation.md",
+          "original": "documentation/phases/v1.3.0.md",
+          "target": "../../documentation/phases/v1.3.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-README-before-reorganisation.md",
+          "original": "documentation/phases/v2.0.0.md",
+          "target": "../../documentation/phases/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-README-before-reorganisation.md",
+          "original": "documentation/phases/v3.0.0.md",
+          "target": "../../documentation/phases/v3.0.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "../README.md",
+          "target": "../../README.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "recovery/2026-10-05-documentation-recovery.md",
+          "target": "../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "../AGENTS.md",
+          "target": "../../AGENTS.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "../CLAUDE.md",
+          "target": "../../CLAUDE.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/README.md",
+          "target": "../ai/README.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/2026-10-05-yyy-tom.md",
+          "target": "../ai/prompts/2026-10-05-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "current-follow-ups.md",
+          "target": "../current-follow-ups.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "project-description.pdf",
+          "target": "pre-v3/docs/project-description.pdf"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "recovery/2026-10-05-documentation-recovery.md",
+          "target": "../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "recovery/2026-10-05-manifest.json",
+          "target": "../recovery/2026-10-05-manifest.json"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "../documentation/phases/v1.0.0.md",
+          "target": "../../documentation/phases/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "../documentation/phases/v1.1.0.md",
+          "target": "../../documentation/phases/v1.1.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "../documentation/phases/v1.2.0.md",
+          "target": "../../documentation/phases/v1.2.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "../documentation/phases/v1.3.0.md",
+          "target": "../../documentation/phases/v1.3.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "../documentation/phases/v2.0.0.md",
+          "target": "../../documentation/phases/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "../documentation/phases/v3.0.0.md",
+          "target": "../../documentation/phases/v3.0.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "../documentation/template.md",
+          "target": "../../documentation/template.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/v1.0.0.md",
+          "target": "pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/v2.0.0.md",
+          "target": "pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/v2.1.0.md",
+          "target": "pre-v3/docs/ai/prompts/v2.1.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/v2.2.0.md",
+          "target": "pre-v3/docs/ai/prompts/v2.2.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/v2.3.0.md",
+          "target": "pre-v3/docs/ai/prompts/v2.3.0.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/2026-09-15-yyy-tom.md",
+          "target": "pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/2026-09-24-yyy-tom.md",
+          "target": "pre-v3/docs/ai/prompts/2026-09-24-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/2026-09-29-yyy-tom.md",
+          "target": "pre-v3/docs/ai/prompts/2026-09-29-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/2026-09-26-Rolko6.md",
+          "target": "pre-v3/docs/ai/prompts/2026-09-26-Rolko6.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/2026-09-28-Rolko6.md",
+          "target": "pre-v3/docs/ai/prompts/2026-09-28-Rolko6.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/prompts/2026-09-29-Rolko6.md",
+          "target": "pre-v3/docs/ai/prompts/2026-09-29-Rolko6.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "decisions/0001-shared-agent-instructions.md",
+          "target": "pre-v3/docs/decisions/0001-shared-agent-instructions.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "decisions/0002-ml-kem-key-establishment.md",
+          "target": "pre-v3/docs/decisions/0002-ml-kem-key-establishment.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "security/ml-kem-integration.md",
+          "target": "pre-v3/docs/security/ml-kem-integration.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "testing/ml-kem-verification.md",
+          "target": "pre-v3/docs/testing/ml-kem-verification.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "operations/ci.md",
+          "target": "pre-v3/docs/operations/ci.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "operations/deployment.md",
+          "target": "pre-v3/docs/operations/deployment.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "operations/monitoring.md",
+          "target": "pre-v3/docs/operations/monitoring.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "monitoring/future-features.md",
+          "target": "pre-v3/docs/monitoring/future-features.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/notes/pending-tasks.md",
+          "target": "pre-v3/docs/ai/notes/pending-tasks.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "project-plan.md",
+          "target": "pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "ai/notes/ai-docs-guide.md",
+          "target": "pre-v3/docs/ai/notes/ai-docs-guide.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "security/plaintext-ingestion-bypass.md",
+          "target": "pre-v3/docs/security/plaintext-ingestion-bypass.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-15-baseline.md",
+          "target": "pre-v3/docs/validation/2026-09-15-baseline.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-15-device-modularization.md",
+          "target": "pre-v3/docs/validation/2026-09-15-device-modularization.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-15-documentation.md",
+          "target": "pre-v3/docs/validation/2026-09-15-documentation.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-15-integration.md",
+          "target": "pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-15-measurement-method.md",
+          "target": "pre-v3/docs/validation/2026-09-15-measurement-method.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-15-ml-kem-tests.md",
+          "target": "pre-v3/docs/validation/2026-09-15-ml-kem-tests.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-15-reliability.md",
+          "target": "pre-v3/docs/validation/2026-09-15-reliability.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-15-tests-and-ci.md",
+          "target": "pre-v3/docs/validation/2026-09-15-tests-and-ci.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-24-ci-evaluation.md",
+          "target": "pre-v3/docs/validation/2026-09-24-ci-evaluation.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-28-ds18b20-faults.md",
+          "target": "pre-v3/docs/validation/2026-09-28-ds18b20-faults.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-29-ci-effectiveness.md",
+          "target": "pre-v3/docs/validation/2026-09-29-ci-effectiveness.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-29-deployment-rehearsal.md",
+          "target": "pre-v3/docs/validation/2026-09-29-deployment-rehearsal.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-29-detection-time.md",
+          "target": "pre-v3/docs/validation/2026-09-29-detection-time.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-29-latency.md",
+          "target": "pre-v3/docs/validation/2026-09-29-latency.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-29-recovery-and-delivery.md",
+          "target": "pre-v3/docs/validation/2026-09-29-recovery-and-delivery.md"
+        },
+        {
+          "file": "docs/archive/recovery-index-before-reorganisation.md",
+          "original": "validation/2026-09-29-security-evidence.md",
+          "target": "pre-v3/docs/validation/2026-09-29-security-evidence.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/v2.0.0.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/superseded/v2.1.0-notes.md",
+          "target": "../archive/history/superseded/v2.1.0-notes.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/superseded/2026-09-15.md",
+          "target": "../archive/history/superseded/2026-09-15.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/superseded/2026-09-24.md",
+          "target": "../archive/history/superseded/2026-09-24.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../../.github/pull_request_template.md",
+          "target": "../archive/pre-v3/.github/pull_request_template.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/pre-v3-documentation-index.md",
+          "target": "../archive/history/pre-v3-documentation-index.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/notes/ai-docs-guide.md",
+          "target": "../archive/pre-v3/docs/ai/notes/ai-docs-guide.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/notes/pending-tasks.md",
+          "target": "../archive/pre-v3/docs/ai/notes/pending-tasks.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/2026-09-15-yyy-tom.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/superseded/2026-09-15.md",
+          "target": "../archive/history/superseded/2026-09-15.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/2026-09-24-yyy-tom.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/2026-09-24-yyy-tom.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/superseded/2026-09-24.md",
+          "target": "../archive/history/superseded/2026-09-24.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/2026-09-26-Rolko6.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/2026-09-26-Rolko6.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/2026-09-28-Rolko6.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/2026-09-28-Rolko6.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/2026-09-29-Rolko6.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/2026-09-29-Rolko6.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/2026-09-29-yyy-tom.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/2026-09-29-yyy-tom.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/v1.0.0.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/v2.0.0.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/superseded/v2.1.0-notes.md",
+          "target": "../archive/history/superseded/v2.1.0-notes.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/v2.1.0.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/v2.1.0.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/v2.2.0.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/v2.2.0.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../ai/prompts/v2.3.0.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/v2.3.0.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../decisions/0001-shared-agent-instructions.md",
+          "target": "../archive/pre-v3/docs/decisions/0001-shared-agent-instructions.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../decisions/0002-ml-kem-key-establishment.md",
+          "target": "../archive/pre-v3/docs/decisions/0002-ml-kem-key-establishment.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../monitoring/future-features.md",
+          "target": "../archive/pre-v3/docs/monitoring/future-features.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../operations/ci.md",
+          "target": "../archive/pre-v3/docs/operations/ci.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../operations/deployment.md",
+          "target": "../archive/pre-v3/docs/operations/deployment.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../operations/monitoring.md",
+          "target": "../archive/pre-v3/docs/operations/monitoring.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../project-description.pdf",
+          "target": "../archive/pre-v3/docs/project-description.pdf"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../project-plan.md",
+          "target": "../archive/pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../security/ml-kem-integration.md",
+          "target": "../archive/pre-v3/docs/security/ml-kem-integration.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../testing/ml-kem-verification.md",
+          "target": "../archive/pre-v3/docs/testing/ml-kem-verification.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-15-baseline.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-15-baseline.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-15-device-modularization.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-15-device-modularization.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-15-documentation.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-15-documentation.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-15-integration.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-15-measurement-method.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-15-measurement-method.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-15-ml-kem-tests.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-15-ml-kem-tests.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-15-reliability.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-15-reliability.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-15-tests-and-ci.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-15-tests-and-ci.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-24-ci-evaluation.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-24-ci-evaluation.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-28-ds18b20-faults.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-28-ds18b20-faults.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-29-ci-effectiveness.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-29-ci-effectiveness.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-29-deployment-rehearsal.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-29-deployment-rehearsal.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-29-detection-time.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-29-detection-time.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-29-latency.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-29-latency.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-29-recovery-and-delivery.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-29-recovery-and-delivery.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../validation/2026-09-29-security-evidence.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-29-security-evidence.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../../monitoring/README.md",
+          "target": "../archive/pre-v3/monitoring/README.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../../scripts/baseline/README.md",
+          "target": "../archive/pre-v3/scripts/baseline/README.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/secure-channel-hardening/README.md",
+          "target": "../archive/history/branches/secure-channel-hardening/README.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "target": "../archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/secure-channel-hardening/docs/operations/ci.md",
+          "target": "../archive/history/branches/secure-channel-hardening/docs/operations/ci.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/secure-channel-hardening/docs/operations/deployment.md",
+          "target": "../archive/history/branches/secure-channel-hardening/docs/operations/deployment.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/secure-channel-hardening/docs/testing/ml-kem-verification.md",
+          "target": "../archive/history/branches/secure-channel-hardening/docs/testing/ml-kem-verification.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/ci-deploy-evaluation/README.md",
+          "target": "../archive/history/branches/ci-deploy-evaluation/README.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+          "target": "../archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/ci-deploy-evaluation/docs/monitoring/future-features.md",
+          "target": "../archive/history/branches/ci-deploy-evaluation/docs/monitoring/future-features.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/ci-deploy-evaluation/docs/operations/monitoring.md",
+          "target": "../archive/history/branches/ci-deploy-evaluation/docs/operations/monitoring.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/ci-deploy-evaluation/docs/project-plan.md",
+          "target": "../archive/history/branches/ci-deploy-evaluation/docs/project-plan.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/ci-deploy-evaluation/docs/security/ml-kem-integration.md",
+          "target": "../archive/history/branches/ci-deploy-evaluation/docs/security/ml-kem-integration.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/ci-deploy-evaluation/monitoring/README.md",
+          "target": "../archive/history/branches/ci-deploy-evaluation/monitoring/README.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/issue4-remaining-metrics/README.md",
+          "target": "../archive/history/branches/issue4-remaining-metrics/README.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md",
+          "target": "../archive/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "target": "../archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/issue4-remaining-metrics/docs/monitoring/future-features.md",
+          "target": "../archive/history/branches/issue4-remaining-metrics/docs/monitoring/future-features.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/issue4-remaining-metrics/docs/operations/ci.md",
+          "target": "../archive/history/branches/issue4-remaining-metrics/docs/operations/ci.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/issue4-remaining-metrics/docs/operations/deployment.md",
+          "target": "../archive/history/branches/issue4-remaining-metrics/docs/operations/deployment.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/issue4-remaining-metrics/docs/operations/monitoring.md",
+          "target": "../archive/history/branches/issue4-remaining-metrics/docs/operations/monitoring.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/issue4-remaining-metrics/docs/security/ml-kem-integration.md",
+          "target": "../archive/history/branches/issue4-remaining-metrics/docs/security/ml-kem-integration.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/issue4-remaining-metrics/docs/testing/ml-kem-verification.md",
+          "target": "../archive/history/branches/issue4-remaining-metrics/docs/testing/ml-kem-verification.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/branches/issue4-remaining-metrics/monitoring/README.md",
+          "target": "../archive/history/branches/issue4-remaining-metrics/monitoring/README.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/local-2026-10-05/README.md",
+          "target": "../archive/history/local-2026-10-05/README.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/local-2026-10-05/docs/README.md",
+          "target": "../archive/history/local-2026-10-05/docs/README.md"
+        },
+        {
+          "file": "docs/recovery/2026-10-05-documentation-recovery.md",
+          "original": "../history/local-2026-10-05/docs/project-plan.md",
+          "target": "../archive/history/local-2026-10-05/docs/project-plan.md"
+        },
+        {
+          "file": "docs/ai/README.md",
+          "original": "prompts/2026-09-15-yyy-tom.md",
+          "target": "../archive/pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
+        },
+        {
+          "file": "docs/ai/README.md",
+          "original": "../decisions/0001-shared-agent-instructions.md",
+          "target": "../archive/pre-v3/docs/decisions/0001-shared-agent-instructions.md"
+        },
+        {
+          "file": "docs/ai/README.md",
+          "original": "../validation/2026-09-15-documentation.md",
+          "target": "../archive/pre-v3/docs/validation/2026-09-15-documentation.md"
+        },
+        {
+          "file": "docs/ai/prompts/2026-10-05-yyy-tom.md",
+          "original": "../../project-plan.md",
+          "target": "../../archive/pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/ai/prompts/2026-10-05-yyy-tom.md",
+          "original": "../../security/plaintext-ingestion-bypass.md",
+          "target": "../../archive/pre-v3/docs/security/plaintext-ingestion-bypass.md"
+        },
+        {
+          "file": "docs/ai/prompts/2026-10-05-yyy-tom.md",
+          "original": "../../README.md",
+          "target": "../../archive/recovery-index-before-reorganisation.md"
+        },
+        {
+          "file": "docs/ai/prompts/2026-10-05-yyy-tom.md",
+          "original": "../../README.md",
+          "target": "../../archive/recovery-index-before-reorganisation.md"
+        },
+        {
+          "file": "docs/ai/prompts/2026-10-05-yyy-tom.md",
+          "original": "../../README.md",
+          "target": "../../archive/recovery-index-before-reorganisation.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../project-plan.md",
+          "target": "../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../ai/prompts/2026-09-15-yyy-tom.md",
+          "target": "../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../ai/prompts/v1.0.0.md",
+          "target": "../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../ai/prompts/v2.0.0.md",
+          "target": "../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../ai/prompts/v2.1.0.md",
+          "target": "../pre-v3/docs/ai/prompts/v2.1.0.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../ai/prompts/v2.2.0.md",
+          "target": "../pre-v3/docs/ai/prompts/v2.2.0.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../ai/prompts/2026-09-26-Rolko6.md",
+          "target": "../pre-v3/docs/ai/prompts/2026-09-26-Rolko6.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../ai/prompts/2026-09-28-Rolko6.md",
+          "target": "../pre-v3/docs/ai/prompts/2026-09-28-Rolko6.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../ai/prompts/2026-09-29-Rolko6.md",
+          "target": "../pre-v3/docs/ai/prompts/2026-09-29-Rolko6.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../decisions/0001-shared-agent-instructions.md",
+          "target": "../pre-v3/docs/decisions/0001-shared-agent-instructions.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../security/ml-kem-integration.md",
+          "target": "../pre-v3/docs/security/ml-kem-integration.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../decisions/0002-ml-kem-key-establishment.md",
+          "target": "../pre-v3/docs/decisions/0002-ml-kem-key-establishment.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../operations/monitoring.md",
+          "target": "../pre-v3/docs/operations/monitoring.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../validation/2026-09-15-documentation.md",
+          "target": "../pre-v3/docs/validation/2026-09-15-documentation.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../validation/2026-09-15-baseline.md",
+          "target": "../pre-v3/docs/validation/2026-09-15-baseline.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../validation/2026-09-15-reliability.md",
+          "target": "../pre-v3/docs/validation/2026-09-15-reliability.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../validation/2026-09-15-integration.md",
+          "target": "../pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../validation/2026-09-15-measurement-method.md",
+          "target": "../pre-v3/docs/validation/2026-09-15-measurement-method.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../validation/2026-09-15-device-modularization.md",
+          "target": "../pre-v3/docs/validation/2026-09-15-device-modularization.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../validation/2026-09-15-tests-and-ci.md",
+          "target": "../pre-v3/docs/validation/2026-09-15-tests-and-ci.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../validation/2026-09-28-ds18b20-faults.md",
+          "target": "../pre-v3/docs/validation/2026-09-28-ds18b20-faults.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../validation/2026-09-29-security-evidence.md",
+          "target": "../pre-v3/docs/validation/2026-09-29-security-evidence.md"
+        },
+        {
+          "file": "docs/archive/history/pre-v3-documentation-index.md",
+          "original": "../project-description.pdf",
+          "target": "../pre-v3/docs/project-description.pdf"
+        },
+        {
+          "file": "docs/archive/history/superseded/2026-09-24.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/superseded/2026-09-15.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/superseded/2026-09-15.md",
+          "original": "../../validation/2026-09-15-ml-kem-tests.md",
+          "target": "../../pre-v3/docs/validation/2026-09-15-ml-kem-tests.md"
+        },
+        {
+          "file": "docs/archive/history/superseded/2026-09-15.md",
+          "original": "../../validation/2026-09-15-ml-kem-tests.md",
+          "target": "../../pre-v3/docs/validation/2026-09-15-ml-kem-tests.md"
+        },
+        {
+          "file": "docs/archive/history/superseded/2026-09-15.md",
+          "original": "../../validation/2026-09-15-integration.md",
+          "target": "../../pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/history/superseded/v2.1.0-notes.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../ai/prompts/v1.0.0.md",
+          "target": "../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../ai/prompts/v2.0.0.md",
+          "target": "../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../ai/prompts/v2.0.0.md#migrating-from-v100",
+          "target": "../../pre-v3/docs/ai/prompts/v2.0.0.md#migrating-from-v100"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../../AGENTS.md",
+          "target": "../../../../AGENTS.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../../CLAUDE.md",
+          "target": "../../../../CLAUDE.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../validation/2026-09-15-device-modularization.md",
+          "target": "../../pre-v3/docs/validation/2026-09-15-device-modularization.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../security/plaintext-ingestion-bypass.md",
+          "target": "../../pre-v3/docs/security/plaintext-ingestion-bypass.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../security/ml-kem-integration.md",
+          "target": "../../pre-v3/docs/security/ml-kem-integration.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../security/plaintext-ingestion-bypass.md",
+          "target": "../../pre-v3/docs/security/plaintext-ingestion-bypass.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../security/ml-kem-integration.md",
+          "target": "../../pre-v3/docs/security/ml-kem-integration.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../validation/2026-09-15-integration.md",
+          "target": "../../pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../validation/2026-09-24-ci-evaluation.md",
+          "target": "../../pre-v3/docs/validation/2026-09-24-ci-evaluation.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../project-plan.md",
+          "target": "../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../ai/README.md",
+          "target": "../../../ai/README.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../ai/prompts/2026-09-15-yyy-tom.md",
+          "target": "../../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../ai/prompts/v1.0.0.md",
+          "target": "../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../ai/prompts/v2.0.0.md",
+          "target": "../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/README.md",
+          "original": "../../validation/2026-09-15-documentation.md",
+          "target": "../../pre-v3/docs/validation/2026-09-15-documentation.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../ai/prompts/v1.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../ai/prompts/v2.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../ai/prompts/v2.1.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.1.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../ai/prompts/v2.2.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.2.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../ai/prompts/v2.0.0.md#migrating-from-v100",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.0.0.md#migrating-from-v100"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../../monitoring/README.md",
+          "target": "../../../pre-v3/monitoring/README.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../validation/2026-09-15-device-modularization.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-device-modularization.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../security/ml-kem-integration.md",
+          "target": "../../../pre-v3/docs/security/ml-kem-integration.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../../monitoring/README.md",
+          "target": "../../../pre-v3/monitoring/README.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../security/ml-kem-integration.md",
+          "target": "../../../pre-v3/docs/security/ml-kem-integration.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../validation/2026-09-28-ds18b20-faults.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-28-ds18b20-faults.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../validation/2026-09-15-integration.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../../monitoring/README.md",
+          "target": "../../../pre-v3/monitoring/README.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../project-plan.md",
+          "target": "../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../ai/prompts/2026-09-15-yyy-tom.md",
+          "target": "../../../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../ai/prompts/v1.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../ai/prompts/v2.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/README.md",
+          "original": "../../../validation/2026-09-15-documentation.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-documentation.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../ai/prompts/v1.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../ai/prompts/v2.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../ai/prompts/v2.1.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.1.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../ai/prompts/v2.2.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.2.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../ai/prompts/v2.0.0.md#migrating-from-v100",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.0.0.md#migrating-from-v100"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../validation/2026-09-15-device-modularization.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-device-modularization.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../validation/2026-09-28-ds18b20-faults.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-28-ds18b20-faults.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../validation/2026-09-15-integration.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../project-plan.md",
+          "target": "../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../ai/prompts/2026-09-15-yyy-tom.md",
+          "target": "../../../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../ai/prompts/v1.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../ai/prompts/v2.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/README.md",
+          "original": "../../../validation/2026-09-15-documentation.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-documentation.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../ai/prompts/v1.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../ai/prompts/v2.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../ai/prompts/v2.1.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.1.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../ai/prompts/v2.2.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.2.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../ai/prompts/v2.0.0.md#migrating-from-v100",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.0.0.md#migrating-from-v100"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../validation/2026-09-15-device-modularization.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-device-modularization.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../validation/2026-09-28-ds18b20-faults.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-28-ds18b20-faults.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../validation/2026-09-15-integration.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../validation/2026-09-24-ci-evaluation.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-24-ci-evaluation.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../ai/prompts/2026-09-15-yyy-tom.md",
+          "target": "../../../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../ai/prompts/v1.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../ai/prompts/v2.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/README.md",
+          "original": "../../../validation/2026-09-15-documentation.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-documentation.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+          "original": "../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+          "original": "../../../../ai/prompts/2026-09-15-yyy-tom.md#p001-next-work-suggestions",
+          "target": "../../../../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md#p001-next-work-suggestions"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+          "original": "../../../../validation/2026-09-15-baseline.md",
+          "target": "../../../../pre-v3/docs/validation/2026-09-15-baseline.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+          "original": "../../../../validation/2026-09-15-integration.md",
+          "target": "../../../../pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+          "original": "../../../../validation/2026-09-15-reliability.md",
+          "target": "../../../../pre-v3/docs/validation/2026-09-15-reliability.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+          "original": "../../../../decisions/0002-ml-kem-key-establishment.md",
+          "target": "../../../../pre-v3/docs/decisions/0002-ml-kem-key-establishment.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+          "original": "../../../../validation/2026-09-24-ci-evaluation.md",
+          "target": "../../../../pre-v3/docs/validation/2026-09-24-ci-evaluation.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+          "original": "../../../../operations/ci.md",
+          "target": "../../../../pre-v3/docs/operations/ci.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+          "original": "../../../../operations/deployment.md",
+          "target": "../../../../pre-v3/docs/operations/deployment.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/project-plan.md",
+          "original": "../../../../validation/2026-09-15-integration.md",
+          "target": "../../../../pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/monitoring/README.md",
+          "original": "../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/security/ml-kem-integration.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/security/ml-kem-integration.md",
+          "original": "../../../../../decisions/0002-ml-kem-key-establishment.md",
+          "target": "../../../../../pre-v3/docs/decisions/0002-ml-kem-key-establishment.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/operations/monitoring.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/operations/monitoring.md",
+          "original": "../../../../../validation/2026-09-15-measurement-method.md",
+          "target": "../../../../../pre-v3/docs/validation/2026-09-15-measurement-method.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/monitoring/future-features.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../operations/deployment.md",
+          "target": "../../../../../../pre-v3/docs/operations/deployment.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../ai/prompts/v1.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../ai/prompts/v2.1.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v2.1.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../ai/notes/ai-docs-guide.md",
+          "target": "../../../../../../pre-v3/docs/ai/notes/ai-docs-guide.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../validation/2026-09-29-ci-effectiveness.md",
+          "target": "../../../../../../pre-v3/docs/validation/2026-09-29-ci-effectiveness.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../validation/2026-09-29-deployment-rehearsal.md",
+          "target": "../../../../../../pre-v3/docs/validation/2026-09-29-deployment-rehearsal.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../operations/deployment.md",
+          "target": "../../../../../../pre-v3/docs/operations/deployment.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../ai/prompts/v2.1.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v2.1.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/ci-deploy-evaluation/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../ai/notes/ai-docs-guide.md",
+          "target": "../../../../../../pre-v3/docs/ai/notes/ai-docs-guide.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/monitoring/README.md",
+          "original": "../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/security/ml-kem-integration.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/security/ml-kem-integration.md",
+          "original": "../../../../../decisions/0002-ml-kem-key-establishment.md",
+          "target": "../../../../../pre-v3/docs/decisions/0002-ml-kem-key-establishment.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/deployment.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/deployment.md",
+          "original": "../../../../../project-plan.md",
+          "target": "../../../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/monitoring.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/monitoring.md",
+          "original": "../../../../../validation/2026-09-15-measurement-method.md",
+          "target": "../../../../../pre-v3/docs/validation/2026-09-15-measurement-method.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/ci.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/operations/ci.md",
+          "original": "../../../../../project-plan.md",
+          "target": "../../../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/testing/ml-kem-verification.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/testing/ml-kem-verification.md",
+          "original": "../../../../../validation/2026-09-15-ml-kem-tests.md",
+          "target": "../../../../../pre-v3/docs/validation/2026-09-15-ml-kem-tests.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/testing/ml-kem-verification.md",
+          "original": "../../../../../project-plan.md",
+          "target": "../../../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/testing/ml-kem-verification.md",
+          "original": "../../../../../project-plan.md",
+          "target": "../../../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/monitoring/future-features.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../project-plan.md",
+          "target": "../../../../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../ai/prompts/v1.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../ai/prompts/v2.1.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v2.1.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../ai/notes/ai-docs-guide.md",
+          "target": "../../../../../../pre-v3/docs/ai/notes/ai-docs-guide.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../ai/prompts/v2.1.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v2.1.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/notes/pending-tasks.md",
+          "original": "../../../../../../ai/notes/ai-docs-guide.md",
+          "target": "../../../../../../pre-v3/docs/ai/notes/ai-docs-guide.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v1.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v1.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v2.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/2026-09-15-yyy-tom.md#p008-addendum-recorded-2026-09-15-after-the-merge",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md#p008-addendum-recorded-2026-09-15-after-the-merge"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v1.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/2026-09-15-yyy-tom.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v1.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/issue4-remaining-metrics/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v2.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/operations/deployment.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/operations/deployment.md",
+          "original": "../../../../../project-plan.md",
+          "target": "../../../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/operations/deployment.md",
+          "original": "../../../../../operations/monitoring.md",
+          "target": "../../../../../pre-v3/docs/operations/monitoring.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/operations/deployment.md",
+          "original": "../../../../../operations/monitoring.md",
+          "target": "../../../../../pre-v3/docs/operations/monitoring.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/operations/ci.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/operations/ci.md",
+          "original": "../../../../../project-plan.md",
+          "target": "../../../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/testing/ml-kem-verification.md",
+          "original": "../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/testing/ml-kem-verification.md",
+          "original": "../../../../../validation/2026-09-15-ml-kem-tests.md",
+          "target": "../../../../../pre-v3/docs/validation/2026-09-15-ml-kem-tests.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/testing/ml-kem-verification.md",
+          "original": "../../../../../project-plan.md",
+          "target": "../../../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/testing/ml-kem-verification.md",
+          "original": "../../../../../project-plan.md",
+          "target": "../../../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v1.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v1.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v2.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/2026-09-15-yyy-tom.md#p008-addendum-recorded-2026-09-15-after-the-merge",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md#p008-addendum-recorded-2026-09-15-after-the-merge"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v1.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/2026-09-15-yyy-tom.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v1.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/branches/secure-channel-hardening/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../../../../../ai/prompts/v2.0.0.md",
+          "target": "../../../../../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../ai/prompts/2026-09-15-yyy-tom.md#p001-next-work-suggestions",
+          "target": "../../../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md#p001-next-work-suggestions"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../validation/2026-09-15-baseline.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-baseline.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../validation/2026-09-15-integration.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../validation/2026-09-15-reliability.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-reliability.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../decisions/0002-ml-kem-key-establishment.md",
+          "target": "../../../pre-v3/docs/decisions/0002-ml-kem-key-establishment.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../security/ml-kem-integration.md",
+          "target": "../../../pre-v3/docs/security/ml-kem-integration.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../validation/2026-09-24-ci-evaluation.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-24-ci-evaluation.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../operations/ci.md",
+          "target": "../../../pre-v3/docs/operations/ci.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../operations/deployment.md",
+          "target": "../../../pre-v3/docs/operations/deployment.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../operations/monitoring.md",
+          "target": "../../../pre-v3/docs/operations/monitoring.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../validation/2026-09-15-integration.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../../README.md",
+          "target": "../../../../../README.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../security/plaintext-ingestion-bypass.md",
+          "target": "../../../pre-v3/docs/security/plaintext-ingestion-bypass.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/project-plan.md",
+          "original": "../../../ai/prompts/2026-10-05-yyy-tom.md#p012-record-the-plaintext-ingestion-bypass-and-suggest-a-fix",
+          "target": "../../../../ai/prompts/2026-10-05-yyy-tom.md#p012-record-the-plaintext-ingestion-bypass-and-suggest-a-fix"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../../README.md",
+          "target": "../../../../../README.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../../AGENTS.md",
+          "target": "../../../../../AGENTS.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../project-plan.md",
+          "target": "../../../pre-v3/docs/project-plan.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../ai/README.md",
+          "target": "../../../../ai/README.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../ai/prompts/2026-09-15-yyy-tom.md",
+          "target": "../../../pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../ai/prompts/v1.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v1.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../ai/prompts/v2.0.0.md",
+          "target": "../../../pre-v3/docs/ai/prompts/v2.0.0.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../ai/prompts/2026-09-24-yyy-tom.md",
+          "target": "../../../pre-v3/docs/ai/prompts/2026-09-24-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../decisions/0001-shared-agent-instructions.md",
+          "target": "../../../pre-v3/docs/decisions/0001-shared-agent-instructions.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../security/ml-kem-integration.md",
+          "target": "../../../pre-v3/docs/security/ml-kem-integration.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../security/plaintext-ingestion-bypass.md",
+          "target": "../../../pre-v3/docs/security/plaintext-ingestion-bypass.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../ai/prompts/2026-10-05-yyy-tom.md",
+          "target": "../../../../ai/prompts/2026-10-05-yyy-tom.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../decisions/0002-ml-kem-key-establishment.md",
+          "target": "../../../pre-v3/docs/decisions/0002-ml-kem-key-establishment.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../operations/ci.md",
+          "target": "../../../pre-v3/docs/operations/ci.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../operations/deployment.md",
+          "target": "../../../pre-v3/docs/operations/deployment.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../operations/monitoring.md",
+          "target": "../../../pre-v3/docs/operations/monitoring.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../testing/ml-kem-verification.md",
+          "target": "../../../pre-v3/docs/testing/ml-kem-verification.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../validation/2026-09-15-documentation.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-documentation.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../validation/2026-09-15-baseline.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-baseline.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../validation/2026-09-15-reliability.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-reliability.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../validation/2026-09-15-integration.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-integration.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../validation/2026-09-15-measurement-method.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-measurement-method.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../validation/2026-09-15-device-modularization.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-device-modularization.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../validation/2026-09-15-tests-and-ci.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-15-tests-and-ci.md"
+        },
+        {
+          "file": "docs/archive/history/local-2026-10-05/docs/README.md",
+          "original": "../../../validation/2026-09-24-ci-evaluation.md",
+          "target": "../../../pre-v3/docs/validation/2026-09-24-ci-evaluation.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/project-plan.md",
+          "original": "recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/.github/pull_request_template.md",
+          "original": "../docs/ai/README.md",
+          "target": "../../../ai/README.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/monitoring/README.md",
+          "original": "../docs/recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/scripts/baseline/README.md",
+          "original": "../../docs/recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/security/plaintext-ingestion-bypass.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/security/plaintext-ingestion-bypass.md",
+          "original": "../ai/prompts/2026-10-05-yyy-tom.md#p012-record-the-plaintext-ingestion-bypass-and-suggest-a-fix",
+          "target": "../../../../ai/prompts/2026-10-05-yyy-tom.md#p012-record-the-plaintext-ingestion-bypass-and-suggest-a-fix"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/security/plaintext-ingestion-bypass.md",
+          "original": "../../docker-compose.yml",
+          "target": "../../../../../docker-compose.yml"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/security/plaintext-ingestion-bypass.md",
+          "original": "../../cloud/app/main.py",
+          "target": "../../../../../cloud/app/main.py"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/security/ml-kem-integration.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/decisions/0001-shared-agent-instructions.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/decisions/0002-ml-kem-key-establishment.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/operations/deployment.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/operations/monitoring.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/operations/ci.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/testing/ml-kem-verification.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/monitoring/future-features.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-15-ml-kem-tests.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-15-tests-and-ci.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-15-tests-and-ci.md",
+          "original": "../history/pre-v3-documentation-index.md",
+          "target": "../../../history/pre-v3-documentation-index.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-15-integration.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-29-latency.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-15-measurement-method.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-15-documentation.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-24-ci-evaluation.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-15-reliability.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-15-reliability.md",
+          "original": "../history/pre-v3-documentation-index.md",
+          "target": "../../../history/pre-v3-documentation-index.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-29-ci-effectiveness.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-29-detection-time.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-28-ds18b20-faults.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-15-device-modularization.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-29-security-evidence.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-15-baseline.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-29-deployment-rehearsal.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/validation/2026-09-29-recovery-and-delivery.md",
+          "original": "../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/notes/pending-tasks.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/notes/ai-docs-guide.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/v2.0.0.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/2026-09-29-Rolko6.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/v2.1.0.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/2026-09-29-yyy-tom.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/2026-09-28-Rolko6.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/2026-09-24-yyy-tom.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/2026-09-26-Rolko6.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md",
+          "original": "../../history/pre-v3-documentation-index.md",
+          "target": "../../../../history/pre-v3-documentation-index.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/2026-09-15-yyy-tom.md",
+          "original": "../../history/pre-v3-documentation-index.md",
+          "target": "../../../../history/pre-v3-documentation-index.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/v1.0.0.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/v2.2.0.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        },
+        {
+          "file": "docs/archive/pre-v3/docs/ai/prompts/v2.3.0.md",
+          "original": "../../recovery/2026-10-05-documentation-recovery.md",
+          "target": "../../../../../recovery/2026-10-05-documentation-recovery.md"
+        }
+      ],
+      "human_documentation_base": "0529036664a83d498c5484674a61c6d7cd124ac5",
+      "phase_files_byte_identical_to_base": true,
+      "root_readme_change": "Only one short AI instructions/navigation footer added to the complete original README.",
+      "additional_preserved_recovery_snapshot": {
+        "source": "README.md",
+        "commit": "f7f26fa862388622edfd8deefcf687b93675c3a1",
+        "destination": "docs/archive/recovery-README-before-reorganisation.md",
+        "changes": "Only relative navigation rewritten for relocation."
+      },
+      "active_instruction_changes": {
+        "AGENTS.md": "Shared workflow retained; added human-documentation priority, relevant archive consultation and live-rule boundaries.",
+        "CLAUDE.md": "Thin @AGENTS.md import and fallback link; duplicate rules removed."
+      }
+    }
+  ]
 }
