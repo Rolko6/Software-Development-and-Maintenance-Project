@@ -1,0 +1,9 @@
+apiVersion: 1
+providers:
+  - name: edge-cloud
+    folder: Edge Cloud
+    type: file
+    disableDeletion: false
+    allowUiUpdates: false
+    options:
+      path: /etc/grafana/dashboards

@@ -86,4 +86,27 @@ def test_send_data_skips_when_sensor_disconnected(mock_post, monkeypatch):
 
     device.send_data()
 
-    mock_post.assert_not_called()
+    mock_post.assert_called_once_with(
+        device.DEVICE_STATUS_URL,
+        json={"device_id": device.DEVICE_ID, "status": "disconnected"},
+        timeout=5,
+    )
+
+
+def test_status_url_is_derived_next_to_reading_endpoint():
+    assert device._derive_status_url(
+        "http://gateway:8000/api/device-data?ignored=yes"
+    ) == "http://gateway:8000/api/device-status"
+    assert device._derive_status_url(
+        "http://gateway:8000/device-data/"
+    ) == "http://gateway:8000/device-status"
+
+
+@patch("device.requests.post")
+def test_send_data_handles_status_request_exception(mock_post, monkeypatch):
+    monkeypatch.setattr(device, "DISCONNECT_RATE", 1.0)
+    mock_post.side_effect = requests.RequestException("connection refused")
+
+    device.send_data()  # must not raise
+
+    mock_post.assert_called_once()

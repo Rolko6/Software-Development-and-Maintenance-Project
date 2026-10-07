@@ -49,8 +49,9 @@ operational suitability.
 
 Device→gateway stays plaintext HTTP (that was never in scope for encryption).
 Gateway→cloud is encrypted end-to-end with ML-KEM-768 key establishment and
-AES-256-GCM. The old plaintext `/data` endpoint still exists on the cloud for
-backward compatibility, but every use of it is logged as a warning.
+AES-256-GCM. Direct plaintext cloud `POST /data` is disabled by default. Explicit compatibility
+mode retains it with warning logs; the device continues using the gateway unchanged.
+Readings are committed to SQLite on a named volume before the cloud acknowledges them.
 
 ## Getting Started (clone → run → verify)
 
@@ -63,27 +64,37 @@ git clone https://github.com/Rolko6/Software-Development-and-Maintenance-Project
 cd Software-Development-and-Maintenance-Project
 ```
 
-**2. Build and start everything (detached, keeps your terminal free)**
+**2. Generate the ML-KEM keys (once per machine)**
+```powershell
+pip install -r requirements-dev.txt
+python scripts/generate_keys.py
+```
+This writes a new key pair to `.env`, which Docker Compose reads
+automatically. `.env` is ignored by Git and must never be committed: anyone
+with the private key can decrypt the gateway→cloud traffic. Without it,
+`docker compose up` stops and tells you to run the script.
+
+**3. Build and start everything (detached, keeps your terminal free)**
 ```powershell
 docker compose up --build -d
 ```
-First build takes a bit longer (installs `kyber-py`, `cryptography`, etc.);
+First build takes a bit longer (installs `cryptography`, `fastapi`, etc.);
 later runs are fast since layers are cached.
 
-**3. Check everything is actually running**
+**4. Check everything is actually running**
 ```powershell
 docker compose ps
 ```
 All three services (`device`, `gateway`, `cloud`) should show `Up`.
 
-**4. Health checks**
+**5. Health checks**
 ```powershell
 curl http://localhost:8000/health
 curl http://localhost:8001/health
 ```
 Both should return `{"status":"healthy"}`.
 
-**5. Watch it working**
+**6. Watch it working**
 ```powershell
 docker compose logs -f device
 ```
@@ -95,7 +106,7 @@ docker compose logs -f cloud
 Look for `Received data on secure endpoint from device ...` — that confirms
 the ML-KEM-encrypted path is working end-to-end.
 
-**6. Manually exercise the API** (optional — interactive docs also work at
+**7. Manually exercise the API** (optional — interactive docs also work at
 `http://localhost:8000/docs` and `http://localhost:8001/docs`)
 ```powershell
 # send data through the gateway (gets encrypted before forwarding to cloud)
@@ -105,7 +116,7 @@ curl -X POST http://localhost:8000/device-data -H "Content-Type: application/jso
 curl http://localhost:8001/data
 ```
 
-**7. Run the automated tests**
+**8. Run the automated tests**
 
 Each service has its own `tests/` folder and must be run **separately**
 (gateway and cloud both use a package named `app`, so running them in the
@@ -117,8 +128,9 @@ python -m pytest gateway/tests
 python -m pytest cloud/tests
 ```
 CI runs all of this automatically on every push — see `.github/workflows/ci.yml`.
+For the CI checks and reproducible v3 measurements, see the [validation guide](documentation/validation/2026-10-05-v3-ci-evaluation.md).
 
-**8. Stop everything**
+**9. Stop everything**
 ```powershell
 docker compose down
 ```
@@ -127,25 +139,38 @@ docker compose down
 
 **Covered:**
 - Gateway→cloud traffic is encrypted with ML-KEM-768 (post-quantum key
-  establishment) + AES-256-GCM (payload confidentiality and integrity)
+  establishment, from the `cryptography` package, i.e. OpenSSL's
+  implementation) + AES-256-GCM (payload confidentiality and integrity)
 - Replay protection via a 30-second timestamp window on encrypted requests
 - Tampering (ciphertext, nonce, or the ML-KEM ciphertext itself) is detected
   and rejected
 - The cloud's private key never leaves the cloud process; keys are
-  pre-shared via deployment config rather than fetched over the network, so
-  there's nothing to intercept on bootstrap
+  generated per machine into an untracked `.env` and pre-shared rather than
+  fetched over the network, so there's nothing to intercept on bootstrap
 
 **Not covered (known, documented limitations):**
 - Device→gateway traffic is plaintext — out of scope for this project
-- The legacy `/data` endpoint on the cloud still accepts unencrypted
-  requests from anyone who reaches it; the only protection is an audit-trail
-  warning log, not a technical control
+- Explicit `CLOUD_ALLOW_LEGACY_INGESTION=true` reopens plaintext cloud ingestion
+  for migration; it is disabled by default
 - The 30-second replay window is a bounded mitigation, not a complete one —
   a captured request can still be replayed within that window
 - No authentication/authorization on any endpoint (anyone who can reach the
   service can post data under any `device_id`)
+- The key pair committed in `docker-compose.yml` up to v3.0.0 is still in the
+  public Git history and must be treated as compromised; it is no longer used
 
 Full reasoning behind each of these is in `documentation/phases/v2.0.0.md`.
+
+## Reliability and optional monitoring
+
+Readings survive cloud restarts and container recreation on the `cloud-data`
+volume. Device disconnect reports, repeated-value suspicions and silence have
+separate gateway metrics. An optional Compose overlay provides 30-day Prometheus
+history, a provisioned Grafana dashboard, alerts and a persistent local inbox.
+See the [runbook](documentation/operations/reliability-monitoring.md) for setup,
+configuration and reproducible checks, and the
+[implementation phase](documentation/phases/reliability-follow-ups.md) for scope
+and evidence. Existing phase documents below retain their historical results.
 
 ## Version History / Documentation
 

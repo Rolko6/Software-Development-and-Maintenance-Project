@@ -1,13 +1,13 @@
 import os
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from kyber_py.ml_kem.default_parameters import ML_KEM_768
+from cryptography.hazmat.primitives.asymmetric.mlkem import MLKEM768PrivateKey
 
 from app.crypto import encapsulate, encrypt_payload
 
 
 def test_encapsulate_produces_correct_sizes():
-    public_key, _ = ML_KEM_768.keygen()
+    public_key = MLKEM768PrivateKey.generate().public_key().public_bytes_raw()
 
     shared_secret, kem_ciphertext = encapsulate(public_key)
 
@@ -18,10 +18,11 @@ def test_encapsulate_produces_correct_sizes():
 def test_encapsulate_output_decapsulates_correctly_on_the_other_side():
     # Simulates the cloud side using the raw library directly — gateway's
     # own crypto.py only ever implements the client (encapsulate) half.
-    public_key, private_key = ML_KEM_768.keygen()
+    private_key = MLKEM768PrivateKey.generate()
+    public_key = private_key.public_key().public_bytes_raw()
 
     shared_secret, kem_ciphertext = encapsulate(public_key)
-    shared_secret_on_cloud_side = ML_KEM_768.decaps(private_key, kem_ciphertext)
+    shared_secret_on_cloud_side = private_key.decapsulate(kem_ciphertext)
 
     assert shared_secret == shared_secret_on_cloud_side
 

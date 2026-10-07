@@ -3,7 +3,7 @@ import json
 from unittest.mock import MagicMock, patch
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from kyber_py.ml_kem.default_parameters import ML_KEM_768
+from cryptography.hazmat.primitives.asymmetric.mlkem import MLKEM768PrivateKey
 
 from app.cloud_client import send_to_cloud
 
@@ -13,7 +13,8 @@ def test_send_to_cloud_encrypts_the_payload(mock_post, monkeypatch):
     # Gateway never holds cloud's private key, so to verify the envelope is
     # genuinely decryptable, generate our OWN keypair, point cloud_client at
     # its public half, and decrypt with the matching private half.
-    public_key, private_key = ML_KEM_768.keygen()
+    private_key = MLKEM768PrivateKey.generate()
+    public_key = private_key.public_key().public_bytes_raw()
     monkeypatch.setattr("app.cloud_client.CLOUD_PUBLIC_KEY", public_key)
 
     mock_post.return_value = MagicMock(status_code=200, json=lambda: {"status": "stored"})
@@ -27,7 +28,7 @@ def test_send_to_cloud_encrypts_the_payload(mock_post, monkeypatch):
     nonce = base64.b64decode(sent_json["nonce"])
     ciphertext = base64.b64decode(sent_json["ciphertext"])
 
-    shared_secret = ML_KEM_768.decaps(private_key, kem_ciphertext)
+    shared_secret = private_key.decapsulate(kem_ciphertext)
     plaintext = AESGCM(shared_secret).decrypt(nonce, ciphertext, None)
     payload = json.loads(plaintext)
 

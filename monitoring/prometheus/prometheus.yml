@@ -1,0 +1,26 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+storage:
+  tsdb:
+    retention:
+      time: 30d
+
+rule_files:
+  - /etc/prometheus/alerts.yml
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: [alertmanager:9093]
+
+scrape_configs:
+  - job_name: gateway
+    metrics_path: /metrics/
+    static_configs:
+      - targets: [gateway:8000]
+  - job_name: cloud
+    metrics_path: /metrics/
+    static_configs:
+      - targets: [cloud:8001]

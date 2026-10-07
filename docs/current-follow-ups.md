@@ -2,6 +2,17 @@
 
 These are proposals for the rewritten v3 implementation. The source findings were checked during earlier chats against an older checkout and, for storage, the v3 source. The prompt history is preserved in [P012 and P013](ai/prompts/2026-10-05-yyy-tom.md). No runtime or deployment change was implemented in the documentation recovery.
 
+## Implementation follow-up — 2026-10-05
+
+The user subsequently authorized implementing these proposals against active v3
+on `codex/reliability-monitoring`, targeting `develop`. See the
+[design](superpowers/specs/2026-10-05-reliability-design.md),
+[current runbook](../documentation/operations/reliability-monitoring.md),
+[new phase summary](../documentation/phases/reliability-follow-ups.md), and
+[P021](ai/prompts/2026-10-05-yyy-tom.md#p021-implement-four-reliability-and-monitoring-plans).
+The original findings below describe the pre-implementation baseline and remain
+as proposal history; they do not describe the new behavior.
+
 ## Persist readings across restarts
 
 The v3 cloud uses `stored_data = []` in `cloud/app/storage.py`; both legacy `/data` and decrypted `/data/secure` submissions call `save_sensor_data`. Each cloud-process restart creates a fresh empty list. Earlier v2 used a bounded in-memory collection, which also lost data on restart.
