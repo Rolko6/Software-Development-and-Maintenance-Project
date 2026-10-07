@@ -80,6 +80,23 @@ def test_data_model_has_no_device_id_length_limit(monkeypatch):
     assert response.status_code == 200
 
 
+@pytest.mark.parametrize("literal", ["NaN", "Infinity", "-Infinity"])
+def test_legacy_data_rejects_non_finite_temperature(monkeypatch, literal):
+    # A stored NaN cannot be written back as JSON, so it would make every later
+    # GET /data fail with 500, and with SQLite storage it survives restarts.
+    monkeypatch.setattr(cloud_main, "ALLOW_LEGACY_INGESTION", True)
+
+    response = client.post(
+        "/data",
+        content=f'{{"device_id": "sensor-1", "temperature": {literal}}}',
+        headers={"Content-Type": "application/json"},
+    )
+
+    assert response.status_code == 422
+    assert get_all_data() == []
+    assert client.get("/data").status_code == 200
+
+
 def test_legacy_data_endpoint_logs_a_warning(caplog, monkeypatch):
     # /data stays for backward compatibility, but every use should be visibly
     # flagged as insecure (see documentation/phases/v2.0.0.md, Section 2).
