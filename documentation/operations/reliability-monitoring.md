@@ -6,6 +6,7 @@ The monitoring overlay adds Prometheus, Grafana, Alertmanager and a local alert 
 ## Run the base stack
 
 ```sh
+python scripts/generate_keys.py   # once per machine: ML-KEM keys into .env
 docker compose up --build -d
 curl http://localhost:8001/data
 docker compose down
@@ -40,8 +41,7 @@ or `.env`, recreate the cloud container, and observe accepted legacy submissions
 in warnings/metrics. Set it back to `false` and recreate the cloud to close the
 bypass. Opt-in permits reachable callers to bypass encryption; it is not needed
 for the device→gateway legacy link. Secure success metrics count committed
-readings. The gateway/read API remain unauthenticated, development keys are still
-visible in Compose, and replay within the existing timestamp window remains possible.
+readings. The gateway/read API remain unauthenticated, and replay within the existing timestamp window remains possible.
 
 ## Sensor signals
 

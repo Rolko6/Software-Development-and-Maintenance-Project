@@ -3,22 +3,23 @@ import os
 import pytest
 from cryptography.exceptions import InvalidTag
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from kyber_py.ml_kem.default_parameters import ML_KEM_768
+from cryptography.hazmat.primitives.asymmetric.mlkem import MLKEM768PublicKey
 
 from app.crypto import decapsulate, decrypt_payload, generate_keypair
 
 
 def test_generate_keypair_sizes():
-    # ML-KEM-768 sizes per FIPS 203.
+    # ML-KEM-768 public key size per FIPS 203; the private key is stored as
+    # its 64-byte seed, from which the full key is derived.
     public_key, private_key = generate_keypair()
 
     assert len(public_key) == 1184
-    assert len(private_key) == 2400
+    assert len(private_key) == 64
 
 
 def test_decapsulate_matches_encapsulation():
     public_key, private_key = generate_keypair()
-    shared_secret, kem_ciphertext = ML_KEM_768.encaps(public_key)
+    shared_secret, kem_ciphertext = MLKEM768PublicKey.from_public_bytes(public_key).encapsulate()
 
     assert decapsulate(private_key, kem_ciphertext) == shared_secret
 
@@ -26,7 +27,7 @@ def test_decapsulate_matches_encapsulation():
 def test_decapsulate_wrong_private_key_gives_different_secret():
     public_key, _ = generate_keypair()
     _, wrong_private_key = generate_keypair()
-    shared_secret, kem_ciphertext = ML_KEM_768.encaps(public_key)
+    shared_secret, kem_ciphertext = MLKEM768PublicKey.from_public_bytes(public_key).encapsulate()
 
     assert decapsulate(wrong_private_key, kem_ciphertext) != shared_secret
 
@@ -35,7 +36,7 @@ def test_decapsulate_tampered_ciphertext_gives_different_secret():
     # FIPS 203 "implicit rejection": a tampered ciphertext doesn't raise,
     # it silently decapsulates to a different (wrong) secret.
     public_key, private_key = generate_keypair()
-    shared_secret, kem_ciphertext = ML_KEM_768.encaps(public_key)
+    shared_secret, kem_ciphertext = MLKEM768PublicKey.from_public_bytes(public_key).encapsulate()
 
     tampered = bytearray(kem_ciphertext)
     tampered[0] ^= 0xFF

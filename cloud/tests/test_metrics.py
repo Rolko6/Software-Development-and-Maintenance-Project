@@ -9,7 +9,7 @@ import time
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from fastapi.testclient import TestClient
-from kyber_py.ml_kem.default_parameters import ML_KEM_768
+from cryptography.hazmat.primitives.asymmetric.mlkem import MLKEM768PublicKey
 
 from app import main as cloud_main
 from app.main import app
@@ -25,7 +25,7 @@ CLOUD_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _build_envelope(public_key, payload: dict):
-    shared_secret, kem_ciphertext = ML_KEM_768.encaps(public_key)
+    shared_secret, kem_ciphertext = MLKEM768PublicKey.from_public_bytes(public_key).encapsulate()
     nonce = os.urandom(12)
     ciphertext = AESGCM(shared_secret).encrypt(nonce, json.dumps(payload).encode(), None)
 

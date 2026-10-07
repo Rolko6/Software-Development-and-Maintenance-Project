@@ -3,13 +3,14 @@ import base64
 from unittest.mock import Mock
 
 import pytest
-from kyber_py.ml_kem.default_parameters import ML_KEM_768
+from cryptography.hazmat.primitives.asymmetric.mlkem import MLKEM768PrivateKey
 
 from app import cloud_client
 
 
 def test_consecutive_readings_use_fresh_kem_material(monkeypatch):
-    public, private = ML_KEM_768.keygen()
+    private = MLKEM768PrivateKey.generate()
+    public = private.public_key().public_bytes_raw()
     monkeypatch.setattr(cloud_client, "CLOUD_PUBLIC_KEY", public)
     post = Mock(return_value=Mock(json=lambda: {"status": "stored"}))
     monkeypatch.setattr(cloud_client.requests, "post", post)
@@ -18,7 +19,7 @@ def test_consecutive_readings_use_fresh_kem_material(monkeypatch):
     envelopes = [call.kwargs["json"] for call in post.call_args_list]
     ciphertexts = [base64.b64decode(e["kem_ciphertext"]) for e in envelopes]
     assert ciphertexts[0] != ciphertexts[1]
-    assert ML_KEM_768.decaps(private, ciphertexts[0]) != ML_KEM_768.decaps(private, ciphertexts[1])
+    assert private.decapsulate(ciphertexts[0]) != private.decapsulate(ciphertexts[1])
     assert envelopes[0]["nonce"] != envelopes[1]["nonce"]
 
 

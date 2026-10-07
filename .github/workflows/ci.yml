@@ -31,7 +31,7 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
       - name: Check v3 dependencies import
-        run: python -c "import fastapi, requests, prometheus_client; from kyber_py.ml_kem.default_parameters import ML_KEM_768; from cryptography.hazmat.primitives.ciphers.aead import AESGCM"
+        run: python -c "import fastapi, requests, prometheus_client; from cryptography.hazmat.primitives.asymmetric.mlkem import MLKEM768PrivateKey; from cryptography.hazmat.primitives.ciphers.aead import AESGCM"
       - name: Run device tests
         run: python -m pytest device/tests -v --junitxml=device-report.xml
       - name: Summarize results and enforce skip budgets
@@ -58,7 +58,7 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
       - name: Check v3 dependencies import
-        run: python -c "import fastapi, requests, prometheus_client; from kyber_py.ml_kem.default_parameters import ML_KEM_768; from cryptography.hazmat.primitives.ciphers.aead import AESGCM"
+        run: python -c "import fastapi, requests, prometheus_client; from cryptography.hazmat.primitives.asymmetric.mlkem import MLKEM768PrivateKey; from cryptography.hazmat.primitives.ciphers.aead import AESGCM"
       - name: Run gateway tests
         run: python -m pytest gateway/tests -v --junitxml=gateway-report.xml
       - name: Summarize results and enforce skip budgets
@@ -85,7 +85,7 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
       - name: Check v3 dependencies import
-        run: python -c "import fastapi, requests, prometheus_client; from kyber_py.ml_kem.default_parameters import ML_KEM_768; from cryptography.hazmat.primitives.ciphers.aead import AESGCM"
+        run: python -c "import fastapi, requests, prometheus_client; from cryptography.hazmat.primitives.asymmetric.mlkem import MLKEM768PrivateKey; from cryptography.hazmat.primitives.ciphers.aead import AESGCM"
       - name: Run cloud tests
         run: python -m pytest cloud/tests -v --junitxml=cloud-report.xml
       - name: Summarize results and enforce skip budgets
@@ -137,6 +137,10 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
+      # docker-compose.yml reads the ML-KEM keys from .env; these throwaway
+      # keys exist only for this job.
+      - name: Generate throwaway ML-KEM keys
+        run: python scripts/generate_keys.py
       - name: Exercise encrypted delivery and v3 measurement scenarios
         run: python scripts/evaluation/run_isolated.py --samples 6 --json-out v3-evaluation.json
       - name: Upload raw measurement evidence
@@ -152,6 +156,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      # docker-compose.yml reads the ML-KEM keys from .env; these throwaway
+      # keys exist only for this job.
+      - name: Generate throwaway ML-KEM keys
+        run: python scripts/generate_keys.py
       - run: docker compose config --quiet
       - run: docker compose build
 
@@ -159,6 +171,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      # docker-compose.yml reads the ML-KEM keys from .env; these throwaway
+      # keys exist only for this job.
+      - name: Generate throwaway ML-KEM keys
+        run: python scripts/generate_keys.py
       - name: Validate optional Compose overlay
         env:
           GRAFANA_ADMIN_PASSWORD: ci-validation-only
@@ -180,6 +200,10 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
+      # docker-compose.yml reads the ML-KEM keys from .env; these throwaway
+      # keys exist only for this job.
+      - name: Generate throwaway ML-KEM keys
+        run: python scripts/generate_keys.py
       - name: Verify persistence, security, sensor state and outage notifications
         run: python scripts/evaluation/verify_reliability.py --json-out reliability-evaluation.json
       - name: Upload reliability evidence
